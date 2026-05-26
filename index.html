@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Sono Sem Choro — Myrnna Gurgel</title>
+<link rel="icon" type="image/jpeg" href="https://i.imgur.com/n4jXPMo.jpeg">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════ LIQUID MINIMAL — SONO SEM CHORO ══════════ */
+:root {
+  /* Brand */
+  --plum:        #3D2260;   /* topbar only */
+  --purple:      #7C5CBF;
+  --purple-lt:   #A07ED4;
+  --purple-pale: #F2EDFB;
+  --purple-soft: #E8DFF5;
+  --gold:        #C8A96E;
+  --gold-lt:     #DFC08A;
+
+  /* Neutrals */
+  --bg:          #F8F7FA;
+  --card:        #FFFFFF;
+  --txt:         #1A1125;
+  --txt-mid:     #6B5C80;
+  --txt-soft:    #A99BBB;
+  --border:      #EDE8F5;
+
+  /* Liquid blobs */
+  --blob1: rgba(160,126,212,0.18);
+  --blob2: rgba(200,169,110,0.12);
+
+  /* Dims */
+  --r:     18px;
+  --r-sm:  12px;
+  --r-xs:  8px;
+  --sh:    0 2px 16px rgba(61,34,96,.07);
+  --sh-md: 0 6px 28px rgba(61,34,96,.11);
+
+  /* Layout */
+  --sb-w:  260px;
+  --top-h: 60px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button{font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:none}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--top-h);
+  background:var(--plum);
+  display:flex;align-items:center;gap:10px;
+  padding:0 16px;z-index:300;
+}
+.topbar-burger{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,.12);
+  display:none;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;flex-shrink:0;
+}
+.topbar-logo{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.topbar-logo img{width:100%;height:100%;object-fit:cover}
+.topbar-info{flex-shrink:0}
+.topbar-title{
+  font-family:'Playfair Display',serif;
+  font-size:15px;color:#fff;font-weight:700;line-height:1.2;
+}
+.topbar-sub{font-size:10.5px;color:rgba(255,255,255,.6);margin-top:1px}
+.topbar-spacer{flex:1}
+.lang-row{display:flex;gap:4px}
+.lang-btn{
+  font-size:10px;font-weight:800;padding:4px 9px;border-radius:8px;
+  border:1.5px solid rgba(255,255,255,.3);
+  color:rgba(255,255,255,.7);transition:.2s;
+}
+.lang-btn.on{background:#fff;border-color:#fff;color:var(--plum)}
+
+/* ══ LAYOUT ══ */
+.wrap{display:flex;padding-top:var(--top-h);min-height:100vh}
+
+/* ══ SIDEBAR — clean white, liquid feel ══ */
+.sidebar{
+  width:var(--sb-w);
+  position:fixed;top:var(--top-h);bottom:0;left:0;
+  background:#fff;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;z-index:200;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.sb-nav{flex:1;padding:10px 0 16px}
+
+.grp{}
+.grp-hd{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 18px;cursor:pointer;
+  transition:background .15s;
+  border-left:3px solid transparent;
+}
+.grp-hd:hover{background:var(--purple-pale)}
+.grp-hd.active-group{
+  border-left-color:var(--purple);
+  background:var(--purple-pale);
+}
+.grp-icon{
+  display:flex;align-items:center;justify-content:center;
+  color:var(--txt-soft);flex-shrink:0;transition:.15s;
+}
+.grp-hd.active-group .grp-icon{color:var(--purple)}
+.grp-lbl{
+  flex:1;font-size:12.5px;font-weight:700;
+  color:#3D2260;line-height:1.3;
+}
+.grp-hd.active-group .grp-lbl{color:var(--purple)}
+.grp-arr{font-size:10px;color:var(--txt-soft);transition:transform .25s;flex-shrink:0}
+.grp.open .grp-arr{transform:rotate(180deg)}
+.grp-items{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.grp.open .grp-items{max-height:900px}
+.grp+.grp .grp-hd{border-top:1px solid var(--border)}
+
+.sb-item{
+  display:flex;align-items:flex-start;gap:7px;
+  padding:8px 18px 8px 42px;
+  font-size:12px;color:var(--txt-soft);
+  cursor:pointer;transition:.15s;
+  border-left:3px solid transparent;
+  line-height:1.35;
+}
+.sb-item:hover{color:var(--purple);background:var(--purple-pale)}
+.sb-item.on{color:var(--purple);border-left-color:var(--purple);background:var(--purple-pale);font-weight:700}
+
+/* upsell button in sidebar */
+.sb-upsell{
+  margin:10px 14px 4px;padding:11px 14px;
+  background:linear-gradient(135deg,var(--purple),var(--purple-lt));
+  border-radius:var(--r-sm);color:#fff;
+  font-size:12px;font-weight:800;
+  cursor:pointer;transition:.2s;
+  display:flex;align-items:center;gap:8px;
+  box-shadow:0 4px 16px rgba(124,92,191,.3);
+}
+.sb-upsell:hover{opacity:.92;transform:translateY(-1px)}
+.sb-upsell-icon{font-size:16px}
+
+/* sidebar footer */
+.sb-foot{padding:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.btn-wa,.btn-ig{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 12px;border-radius:var(--r-sm);
+  font-size:12px;font-weight:700;transition:.2s;
+  line-height:1.3;text-align:center;
+}
+.btn-wa{background:#25D366;color:#fff;animation:wapulse 2.5s infinite}
+.btn-wa:hover{background:#20c05d}
+.btn-ig{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff}
+@keyframes wapulse{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.25)}50%{box-shadow:0 0 0 7px rgba(37,211,102,0)}}
+
+/* overlay */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:190;backdrop-filter:blur(3px)}
+.overlay.show{display:block}
+
+/* ══ CONTENT ══ */
+.content{margin-left:var(--sb-w);flex:1;min-width:0;background:var(--bg)}
+.page{display:none;animation:fadein .28s ease}
+.page.on{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ PILLS ══ */
+.pills{
+  display:flex;gap:6px;padding:10px 18px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;background:#fff;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:var(--top-h);z-index:10;
+}
+.pills::-webkit-scrollbar{display:none}
+.pill{
+  flex-shrink:0;padding:6px 14px;border-radius:50px;
+  border:1.5px solid var(--purple);
+  color:var(--purple);font-size:11.5px;font-weight:700;
+  white-space:nowrap;transition:.2s;
+}
+.pill:hover,.pill.on{background:var(--purple);color:#fff;border-color:var(--purple)}
+
+/* ══ CONTENT BODY ══ */
+.cb{padding:22px 20px 28px;max-width:680px}
+.txt{font-size:15px;color:var(--txt);line-height:1.85;margin-bottom:16px}
+.txt strong{color:var(--plum)}
+
+/* ══ MAIN HERO — liquid blob background ══ */
+.main-hero{
+  background:var(--plum);
+  padding:32px 20px 28px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.main-hero::before{
+  content:'';position:absolute;
+  top:-80px;left:-60px;
+  width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(160,126,212,.35) 0%,transparent 70%);
+  pointer-events:none;
+}
+.main-hero::after{
+  content:'';position:absolute;
+  bottom:-60px;right:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,169,110,.25) 0%,transparent 70%);
+  pointer-events:none;
+}
+.mh-tag{
+  display:inline-block;
+  background:rgba(255,255,255,.15);
+  color:rgba(255,255,255,.9);
+  font-size:10px;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 14px;border-radius:50px;
+  border:1px solid rgba(255,255,255,.2);
+  margin-bottom:14px;
+}
+.main-hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:28px;color:#fff;line-height:1.25;margin-bottom:10px;
+  position:relative;z-index:1;
+}
+.main-hero p{
+  font-size:13.5px;color:rgba(255,255,255,.7);
+  line-height:1.6;margin-bottom:16px;
+  position:relative;z-index:1;
+}
+.mh-badge{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
+  color:#3D2260;
+  font-size:12.5px;font-weight:800;
+  padding:8px 20px;border-radius:50px;
+  box-shadow:0 4px 16px rgba(200,169,110,.4);
+  position:relative;z-index:1;
+}
+
+/* ══ CHAPTER DIVIDER ══ */
+.chap{
+  padding:20px 18px;
+  border-left:4px solid var(--purple);
+  background:#fff;
+  margin:0 0 0 0;
+  border-bottom:1px solid var(--border);
+}
+.chap-n{
+  font-size:9.5px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:5px;
+}
+.chap h2{
+  font-family:'Playfair Display',serif;
+  font-size:19px;color:var(--plum);line-height:1.3;margin-bottom:4px;
+}
+.chap p{font-size:13.5px;color:var(--txt-mid)}
+
+/* ══ SECTION HEADING ══ */
+.sh{font-size:15.5px;font-weight:800;color:var(--txt);margin:22px 0 13px;display:flex;align-items:center;gap:8px}
+
+/* ══ CARD BASE ══ */
+.card{
+  background:var(--card);border-radius:var(--r);
+  box-shadow:var(--sh);
+  overflow:hidden;
+}
+
+/* ══ HIGHLIGHT CARD ══ */
+.hc{
+  background:var(--card);border-radius:var(--r);
+  border-left:3px solid var(--gold);
+  padding:14px 16px;
+  display:flex;gap:12px;align-items:flex-start;
+  box-shadow:var(--sh);margin-bottom:14px;
+}
+.hc-i{font-size:20px;flex-shrink:0;margin-top:1px}
+.hc h4{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:3px}
+.hc p{font-size:14px;color:var(--txt-mid);line-height:1.65}
+
+/* ══ TIP ══ */
+.tip{background:linear-gradient(135deg,rgba(200,169,110,.1),rgba(200,169,110,.06));border-radius:var(--r-sm);border-left:3px solid var(--gold);padding:14px 16px;font-size:14px;color:var(--txt);line-height:1.6;margin-bottom:16px}
+
+/* ══ QUOTE — liquid style ══ */
+.quote{background:var(--purple-pale);border-radius:var(--r);padding:22px 20px 18px;font-family:'Playfair Display',serif;font-style:italic;font-size:15.5px;color:var(--plum);line-height:1.75;position:relative;margin-bottom:18px;border:1px solid var(--purple-soft)}
+.quote::before{
+  content:'C';font-size:60px;
+  position:absolute;top:-8px;left:14px;
+  color:rgba(124,92,191,.15);line-height:1;
+}
+.quote-by{
+  display:block;font-size:10px;font-style:normal;
+  font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--purple);margin-top:12px;
+}
+
+/* ══ ANSWER BOX ══ */
+.answer{
+  background:var(--purple-pale);
+  border:1.5px solid var(--purple-soft);
+  border-radius:var(--r);
+  padding:14px 16px;display:flex;gap:12px;align-items:center;
+  margin-bottom:14px;
+}
+.answer-i{font-size:26px;flex-shrink:0}
+.answer p{font-size:14px;color:var(--plum);line-height:1.4;font-weight:600}
+
+/* ══ STATS 2-col ══ */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{
+  background:var(--card);border-radius:var(--r);
+  padding:16px 12px;text-align:center;
+  box-shadow:var(--sh);
+  border-top:2px solid transparent;
+  background-clip:padding-box;
+  position:relative;overflow:hidden;
+}
+.stat::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--purple),var(--gold));
+}
+.stat-i{font-size:24px;display:block;margin-bottom:6px}
+.stat h3{
+  font-family:'Playfair Display',serif;
+  font-size:22px;color:var(--plum);margin-bottom:2px;
+}
+.stat p{font-size:11px;color:var(--txt-mid);line-height:1.4}
+
+/* ══ STEPS ══ */
+.steps{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.step{
+  display:flex;gap:12px;align-items:flex-start;
+  background:var(--card);border-radius:var(--r);
+  padding:14px;box-shadow:var(--sh);
+}
+.step-n{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:var(--purple-pale);color:var(--purple);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11.5px;font-weight:800;border:1.5px solid var(--purple-soft);
+}
+.step h4{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:4px}
+.step p{font-size:13.5px;color:var(--txt-mid);line-height:1.6}
+
+/* ══ RITUAL FLOW ══ */
+.ritual{display:flex;flex-direction:column;gap:3px;margin-bottom:14px}
+.rit{
+  display:flex;gap:12px;align-items:center;
+  background:var(--card);border-radius:var(--r-sm);
+  padding:12px 14px;box-shadow:var(--sh);
+}
+.rit.hl{
+  background:var(--purple-pale);
+  border:1.5px solid var(--purple-soft);
+}
+.rit.hl .rit-l{color:var(--purple)}
+.rit.hl .rit-s{color:var(--txt-mid)}
+.rit-i{font-size:20px;flex-shrink:0}
+.rit-l{font-size:14px;font-weight:700;color:var(--txt);display:block}
+.rit-s{font-size:13px;color:var(--txt-soft)}
+.rit-arr{text-align:center;color:var(--purple-soft);font-size:14px;padding-left:18px;line-height:1}
+
+/* ══ COMPARE (stacked) ══ */
+.compare{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.cc{
+  background:var(--card);border-radius:var(--r);
+  padding:14px;box-shadow:var(--sh);
+  overflow:hidden;position:relative;
+}
+.cc::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+.cc.bad::before{background:linear-gradient(90deg,#E05C5C,#F08080)}
+.cc.good::before{background:linear-gradient(90deg,#5CAE82,#7DCCA0)}
+.cc.neutral::before{background:linear-gradient(90deg,var(--gold),var(--gold-lt))}
+.cc-l{
+  font-size:10px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--txt-soft);margin-bottom:8px;
+}
+.cc ul{padding-left:16px;font-size:14px;color:var(--txt);line-height:2.1}
+.cc p{font-size:14px;color:var(--txt);line-height:1.7}
+
+/* ══ PROGRESSION ══ */
+.prog{display:flex;flex-direction:column;gap:3px;margin-bottom:14px}
+.ps{
+  background:var(--card);border-radius:var(--r-sm);
+  padding:13px 15px;box-shadow:var(--sh);
+}
+.ps.hl{background:var(--purple-pale);border:1.5px solid var(--purple-soft)}
+.ps-d{
+  font-size:10px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:4px;
+}
+.ps-t{font-size:14px;color:var(--txt-mid);line-height:1.6}
+.ps-arr{text-align:left;padding-left:18px;color:var(--purple-soft);font-size:14px;line-height:1}
+
+/* ══ CYCLE ══ */
+.cycle{
+  background:var(--purple-pale);border-radius:var(--r);
+  border:1px solid var(--purple-soft);
+  padding:16px;margin-bottom:14px;
+}
+.cycle-l{
+  font-size:10px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:12px;
+}
+.cycle-f{
+  display:flex;align-items:center;gap:6px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;padding-bottom:2px;
+}
+.cycle-f::-webkit-scrollbar{display:none}
+.cn{flex-shrink:0;text-align:center;min-width:68px}
+.cn span{display:block;font-size:12px;font-weight:700;color:var(--purple);margin-bottom:3px}
+.cn p{font-size:10.5px;color:var(--txt-mid);line-height:1.3}
+.cn.hl span{color:var(--plum);font-weight:800}
+.cn.hl p{color:var(--txt)}
+.c-sep{color:var(--purple-soft);font-size:14px;flex-shrink:0}
+
+/* ══ RESULT ══ */
+.result{
+  background:var(--purple-pale);border-radius:var(--r);
+  border:1px solid var(--purple-soft);
+  padding:16px;margin-bottom:14px;
+}
+.rnums{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.rn{text-align:center;flex:1;min-width:80px}
+.rn span{
+  font-family:'Playfair Display',serif;
+  font-size:26px;color:var(--purple);display:block;
+}
+.rn p{font-size:11px;color:var(--txt-mid);line-height:1.4}
+
+/* ══ SITUATION CARD ══ */
+.situ{
+  background:var(--card);border-radius:var(--r);
+  overflow:hidden;box-shadow:var(--sh);margin-bottom:12px;
+}
+.situ-hd{
+  background:var(--purple-pale);
+  padding:12px 16px;display:flex;gap:10px;align-items:center;
+  border-bottom:1px solid var(--purple-soft);
+}
+.situ-hd-i{font-size:20px;color:var(--purple)}
+.situ-hd h3{font-size:14.5px;font-weight:700;color:var(--plum)}
+.situ-bd{padding:16px 18px}
+
+/* ══ DO LIST ══ */
+.dolist{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.doi{display:flex;gap:10px;align-items:flex-start}
+.doi span{font-size:14px;flex-shrink:0;margin-top:1px}
+.doi p{font-size:14px;color:var(--txt);line-height:1.65}
+
+/* ══ ERROR CARD ══ */
+.errcard{
+  background:var(--card);border-radius:var(--r);
+  padding:16px;box-shadow:var(--sh);margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.errcard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#E05C5C,#F08080);
+}
+.err-hd{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.err-n{
+  font-size:9.5px;font-weight:800;letter-spacing:.09em;
+  text-transform:uppercase;
+  background:rgba(224,92,92,.1);color:#D04040;
+  padding:3px 9px;border-radius:50px;white-space:nowrap;
+}
+.err-hd h3{font-size:14px;font-weight:700;color:var(--txt);line-height:1.35}
+
+/* ══ AGES GRID ══ */
+.ages{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.age{
+  background:var(--purple-pale);border-radius:var(--r-sm);
+  padding:12px;text-align:center;
+  border:1px solid var(--purple-soft);
+}
+.age strong{font-size:13.5px;color:var(--plum);display:block;margin-bottom:4px}
+.age span{font-size:13px;color:var(--txt-mid);line-height:1.5}
+
+/* ══ PASO ══ */
+.paso{
+  background:var(--card);border-radius:var(--r);
+  padding:16px;box-shadow:var(--sh);margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.paso::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--purple),var(--gold));
+}
+.paso-n{
+  font-size:9.5px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:5px;
+}
+.paso h3{font-size:15px;font-weight:700;color:var(--txt);margin-bottom:7px}
+.paso p{font-size:14px;color:var(--txt-mid);line-height:1.7}
+
+/* ══ INTRO CARD ══ */
+.intro-c{
+  background:var(--card);border-radius:var(--r);
+  padding:18px;box-shadow:var(--sh);margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.intro-c::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--purple),var(--gold));
+}
+.intro-c h3{
+  font-family:'Playfair Display',serif;
+  font-size:17px;color:var(--plum);margin-bottom:8px;
+}
+.intro-c p{font-size:14.5px;color:var(--txt-mid);line-height:1.7;margin-bottom:8px}
+
+/* ══ PROMISE BLOCK ══ */
+.promise{
+  background:var(--purple-pale);border-radius:var(--r);
+  border:1px solid var(--purple-soft);
+  padding:18px;margin-bottom:16px;
+}
+.promise-l{
+  font-size:10px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:12px;
+}
+.p-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.p-item:last-child{margin-bottom:0}
+.p-item span{font-size:14px;flex-shrink:0;margin-top:1px}
+.p-item p{font-size:14px;color:var(--txt);line-height:1.6}
+
+/* ══ SIGNALS GRID ══ */
+.signals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.sig{
+  background:var(--card);border-radius:var(--r-sm);
+  padding:12px;box-shadow:var(--sh);
+  display:flex;gap:9px;align-items:flex-start;
+}
+.sig span{font-size:18px;flex-shrink:0}
+.sig p{font-size:13.5px;color:var(--txt-mid);line-height:1.5}
+
+/* ══ ALERT ══ */
+.alert{background:rgba(224,92,92,.06);border:1.5px solid rgba(224,92,92,.18);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;font-size:14.5px;color:var(--txt)}
+.alert ul{padding-left:16px;margin-top:8px;line-height:2.1;font-size:14px}
+
+/* ══ CONQUISTAS ══ */
+.conqs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.conq{
+  background:var(--card);border-radius:var(--r);
+  padding:16px 12px;text-align:center;
+  box-shadow:var(--sh);position:relative;overflow:hidden;
+}
+.conq::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--purple),var(--gold));
+}
+.conq-i{font-size:26px;display:block;margin-bottom:8px}
+.conq h4{font-size:13.5px;font-weight:700;color:var(--txt);margin-bottom:5px}
+.conq p{font-size:13px;color:var(--txt-mid);line-height:1.55}
+
+/* ══ ACTIONS ══ */
+.actions{
+  background:var(--purple-pale);border-radius:var(--r);
+  border:1px solid var(--purple-soft);
+  padding:18px;margin-bottom:16px;
+}
+.actions-l{
+  font-size:10px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:12px;
+}
+.act{display:flex;gap:12px;margin-bottom:12px}
+.act:last-child{margin-bottom:0}
+.act-n{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:var(--purple);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;
+}
+.act strong{font-size:14px;color:var(--plum);display:block;margin-bottom:3px}
+.act p{font-size:13.5px;color:var(--txt-mid);line-height:1.6}
+
+/* ══ INLINE UPSELL — liquid gradient ══ */
+.upsell-inline{
+  background:linear-gradient(150deg,var(--plum) 0%,#5C3A9A 100%);
+  border-radius:var(--r);padding:24px 18px;
+  text-align:center;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.upsell-inline::before{
+  content:'';position:absolute;top:-60px;right:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(160,126,212,.3) 0%,transparent 70%);
+  pointer-events:none;
+}
+.ui-badge{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
+  color:var(--plum);font-size:9.5px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 14px;border-radius:50px;margin-bottom:12px;
+}
+.upsell-inline h3{
+  font-family:'Playfair Display',serif;
+  font-size:19px;color:#fff;margin-bottom:9px;line-height:1.3;
+  position:relative;
+}
+.upsell-inline p{
+  font-size:13px;color:rgba(255,255,255,.65);
+  line-height:1.65;margin-bottom:14px;position:relative;
+}
+.ui-price{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:16px}
+.ui-price strong{
+  font-family:'Playfair Display',serif;
+  font-size:30px;color:var(--gold);
+}
+.btn-main{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
+  color:var(--plum);border-radius:50px;
+  padding:13px 28px;font-size:14px;font-weight:800;
+  box-shadow:0 6px 24px rgba(200,169,110,.4);
+  transition:.25s;position:relative;
+  animation:gpulse 2.5s infinite;
+}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(200,169,110,.5)}
+@keyframes gpulse{0%,100%{box-shadow:0 6px 24px rgba(200,169,110,.4)}50%{box-shadow:0 6px 36px rgba(200,169,110,.6)}}
+.ui-guar{font-size:11px;color:rgba(255,255,255,.35);margin-top:10px}
+
+/* ══ UPSELL PAGE ══ */
+.up-hero{
+  background:linear-gradient(150deg,var(--plum) 0%,#5C3A9A 100%);
+  padding:28px 18px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.up-hero::before{
+  content:'';position:absolute;top:-50px;left:-40px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(160,126,212,.3) 0%,transparent 70%);
+}
+.up-badge{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
+  color:var(--plum);font-size:9.5px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 14px;border-radius:50px;margin-bottom:12px;
+}
+.up-hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:23px;color:#fff;margin-bottom:9px;line-height:1.3;
+}
+.up-hero p{font-size:13px;color:rgba(255,255,255,.65);line-height:1.65;margin-bottom:18px}
+.up-price-tag{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:var(--r-sm);
+  padding:14px 24px;display:inline-block;margin-bottom:18px;
+}
+.up-from{font-size:12px;color:rgba(255,255,255,.4);text-decoration:line-through;margin-bottom:2px}
+.up-price{font-family:'Playfair Display',serif;font-size:34px;color:var(--gold);line-height:1}
+.up-price sup{font-size:15px;vertical-align:super}
+.up-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.up-guar{font-size:11px;color:rgba(255,255,255,.35);margin-top:10px}
+.feat{
+  background:var(--card);border-radius:var(--r);
+  padding:14px 16px;box-shadow:var(--sh);
+  display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;
+}
+.feat-i{font-size:22px;flex-shrink:0}
+.feat h4{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:4px}
+.feat p{font-size:13.5px;color:var(--txt-mid);line-height:1.6}
+
+/* ══ AWAIT ══ */
+.await{
+  background:var(--card);border-radius:var(--r);
+  border:2px dashed var(--purple-soft);
+  padding:40px 20px;text-align:center;margin-bottom:16px;
+}
+.await-i{font-size:44px;display:block;margin-bottom:12px}
+.await h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--plum);margin-bottom:10px}
+.await p{font-size:15px;color:var(--txt-mid);line-height:1.7}
+
+/* ══ HOME grp header (clickable) ══ */
+.sb-item-home{cursor:pointer}
+.sb-item-home:hover{background:var(--purple-pale)}
+
+/* ══ MOBILE ══ */
+@media(max-width:768px){
+  :root{--top-h:56px;--sb-w:260px}
+
+  .topbar-burger{display:flex}
+  .topbar-sub{display:none}
+  .topbar-logo{width:32px;height:32px}
+  .topbar-title{font-size:14px}
+
+  .sidebar{
+    left:calc(-1 * var(--sb-w));
+    transition:left .3s cubic-bezier(.4,0,.2,1);
+  }
+  .sidebar.open{left:0;box-shadow:8px 0 32px rgba(0,0,0,.2)}
+
+  .content{margin-left:0;width:100%}
+
+  .cb{padding:20px 18px 26px}
+  .main-hero{padding:26px 16px 22px}
+  .main-hero h1{font-size:23px}
+  .chap{padding:18px 16px}
+  .chap h2{font-size:17px}
+  .up-hero{padding:24px 16px}
+  .up-hero h1{font-size:19px}
+  .pills{padding:9px 16px}
+
+  .stats{grid-template-columns:1fr 1fr}
+  .conqs{grid-template-columns:1fr 1fr}
+  .ages{grid-template-columns:1fr 1fr}
+  .signals{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="topbar-burger" id="burgerBtn">☰</button>
+  <div class="topbar-logo"><img src="https://i.imgur.com/n4jXPMo.jpeg" alt="Myrnna Gurgel" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
+  <div class="topbar-info">
+    <div class="topbar-title">Sono Sem Choro</div>
+    <div class="topbar-sub">por Myrnna Gurgel</div>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="lang-row">
+    <button class="lang-btn on" onclick="setLang('pt')">PT</button>
+    <button class="lang-btn" onclick="setLang('es')">ES</button>
+  </div>
+</header>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="wrap">
+
+<!-- ══ SIDEBAR CLARA ══ -->
+<aside class="sidebar" id="sidebar">
+  <nav class="sb-nav">
+
+    <!-- Sono Sem Choro -->
+    <div class="grp">
+      <div class="grp-hd active-group sb-item-home" onclick="goHome(this)" id="homeGrpHd">
+        <span class="grp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <span class="grp-lbl" data-key="nav_home">Sono Sem Choro</span>
+      </div>
+    </div>
+
+    <!-- Master Aulas -->
+    <div class="grp">
+      <div class="grp-hd" onclick="toggleGrp(this)">
+        <span class="grp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+        <span class="grp-lbl" data-key="nav_ma">Master Aulas</span>
+        <span class="grp-arr">›</span>
+      </div>
+      <div class="grp-items">
+        <div class="sb-item" onclick="go('ma1',this)" data-key="nav_ma1">Sono Dia 1 — Métodos e Soluções</div>
+        <div class="sb-item" onclick="go('ma2',this)" data-key="nav_ma2">Sono Dia 2 — Noites Tranquilas</div>
+        <div class="sb-item" onclick="go('ma3',this)" data-key="nav_ma3">Mentoria com Thaís Neves</div>
+        <div class="sb-item" onclick="go('ma4',this)" data-key="nav_ma4">Aula 1 — Manual do Sono</div>
+        <div class="sb-item" onclick="go('ma5',this)" data-key="nav_ma5">Aula 2 — Manual do Sono Prático</div>
+      </div>
+    </div>
+
+    <!-- Técnicas -->
+    <div class="grp">
+      <div class="grp-hd" onclick="toggleGrp(this)">
+        <span class="grp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <span class="grp-lbl" data-key="nav_ts">Técnicas Secretas Desmame Noturno</span>
+        <span class="grp-arr">›</span>
+      </div>
+      <div class="grp-items">
+        <div class="sb-item" onclick="go('ts1',this)" data-key="nav_ts1">Técnicas Secretas</div>
+        <div class="sb-item" onclick="go('ts2',this)" data-key="nav_ts2">Tabela de Rotina Ideal</div>
+        <div class="sb-item" onclick="go('ts3',this)" data-key="nav_ts3">Checklist Organização do Sono</div>
+        <div class="sb-item" onclick="go('ts4',this)" data-key="nav_ts4">Frases de Acolhimento</div>
+      </div>
+    </div>
+
+    <!-- Bônus -->
+    <div class="grp">
+      <div class="grp-hd" onclick="toggleGrp(this)">
+        <span class="grp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span>
+        <span class="grp-lbl" data-key="nav_bonus">Bônus Exclusivos</span>
+        <span class="grp-arr">›</span>
+      </div>
+      <div class="grp-items">
+        <div class="sb-item" onclick="go('b1',this)" data-key="nav_b1">Mapa de Crise do Sono</div>
+        <div class="sb-item" onclick="go('b2',this)" data-key="nav_b2">Guia de Emergência</div>
+      </div>
+    </div>
+
+    <!-- Mentoria -->
+    <div class="grp">
+      <div class="grp-hd" onclick="toggleGrp(this)">
+        <span class="grp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span>
+        <span class="grp-lbl" data-key="nav_mt">Mentoria com Profissionais</span>
+        <span class="grp-arr">›</span>
+      </div>
+      <div class="grp-items">
+        <div class="sb-item" onclick="go('mt1',this)" data-key="nav_mt1">Sono do Bebê — Thaís Neves</div>
+        <div class="sb-item" onclick="go('mt2',this)" data-key="nav_mt2">Pediatra Camila Bastos</div>
+        <div class="sb-item" onclick="go('mt3',this)" data-key="nav_mt3">Psicóloga Rayanny Cavalcanti</div>
+        <div class="sb-item" onclick="go('mt4',this)" data-key="nav_mt4">Maquiagem — Júlia Pavanelli</div>
+        <div class="sb-item" onclick="go('mt5',this)" data-key="nav_mt5">Psicóloga Beatriz Rodrigues</div>
+        <div class="sb-item" onclick="go('mt6',this)" data-key="nav_mt6">Personal Carol Cavalcanti pt.1</div>
+        <div class="sb-item" onclick="go('mt7',this)" data-key="nav_mt7">Personal Carol Cavalcanti pt.2</div>
+        <div class="sb-item" onclick="go('mt8',this)" data-key="nav_mt8">Nutri. Renata Magalhães</div>
+        <div class="sb-item" onclick="go('mt9',this)" data-key="nav_mt9">Nutricionista Myrthe Emilyana</div>
+      </div>
+    </div>
+
+    <!-- Material -->
+    <div class="grp">
+      <div class="grp-hd" onclick="toggleGrp(this)">
+        <span class="grp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+        <span class="grp-lbl" data-key="nav_mc">Material Complementar</span>
+        <span class="grp-arr">›</span>
+      </div>
+      <div class="grp-items">
+        <div class="sb-item" onclick="go('mc1',this)" data-key="nav_mc1">Cardápio — Alimentos Para Dormir</div>
+        <div class="sb-item" onclick="go('mc2',this)" data-key="nav_mc2">Manual — Rituais Que Funcionam</div>
+      </div>
+    </div>
+
+    <!-- Plano (upsell destacado) -->
+    <div class="grp" style="padding:10px 12px 4px">
+      <div class="sb-upsell" onclick="go('plano',this)">
+        <span class="sb-upsell-icon">⭐</span>
+        <span data-key="nav_plano">Plano de Sono Personalizado</span>
+      </div>
+    </div>
+
+  </nav>
+
+  <div class="sb-foot">
+    <a class="btn-wa" href="https://www.myrnnagurgel.com.br/app-sono-red" target="_blank">
+      💬 <span data-key="btn_wa">Resgatar meu brinde e salvar o link do app!</span>
+    </a>
+    <a class="btn-ig" href="https://instagram.com/myrnnagurgel" target="_blank">
+      📸 <span data-key="btn_ig">Seguir no Instagram!</span>
+    </a>
+  </div>
+</aside>
+
+<!-- ══ CONTENT ══ -->
+<main class="content" id="content">
+
+<!-- ═══ HOME ═══ -->
+<div class="page on" id="pg-home">
+
+  <!-- PILLS -->
+  <div class="pills">
+    <button class="pill on" onclick="scrl('intro',this)">✨ Intro</button>
+    <button class="pill" onclick="scrl('cap1',this)">😴 Cap. 1</button>
+    <button class="pill" onclick="scrl('cap2',this)">🗓️ Cap. 2</button>
+    <button class="pill" onclick="scrl('cap3',this)">🛏️ Cap. 3</button>
+    <button class="pill" onclick="scrl('cap4',this)">✈️ Cap. 4</button>
+    <button class="pill" onclick="scrl('cap5',this)">⚠️ Cap. 5</button>
+    <button class="pill" onclick="scrl('cap6',this)">🎯 Cap. 6</button>
+    <button class="pill" onclick="scrl('concl',this)">🌙 Conclusão</button>
+  </div>
+
+  <!-- HERO -->
+  <div class="main-hero" id="intro">
+    <span class="mh-tag">Método Comprovado · +4.000 Mães</span>
+    <h1>Sono Sem Choro</h1>
+    <p>O Guia Definitivo Para Ensinar Seu Bebê a Dormir a Noite Inteira</p>
+    <div class="mh-badge">Funciona em apenas <strong>3 dias</strong></div>
+  </div>
+
+  <!-- INTRODUÇÃO -->
+  <div class="cb">
+
+    <p class="txt">Você já tentou de tudo para fazer seu bebê dormir a noite toda, mas nada parece funcionar? Seu bebê acorda várias vezes, só volta a dormir no peito e você já está exausta, sem energia e sem esperança de uma noite completa de sono?</p>
+
+    <div class="intro-c">
+      <h3>Se acalma, porque você encontrou a solução! 🤍</h3>
+      <p>O Sono Sem Choro não é mais um daqueles métodos rígidos que fazem você se sentir culpada ou que envolvem deixar seu bebê chorando sozinho no berço. Esse método já ajudou mais de <strong>4.000 mães</strong> a ensinar seus bebês a dormirem a noite inteira, sem precisar de colo, peito ou sofrimento.</p>
+      <p>E o melhor? <strong>Funciona em apenas 3 dias!</strong></p>
+    </div>
+
+    <div class="sh">📋 O que você pode esperar desse material?</div>
+    <p class="txt">Aqui, você vai aprender um passo a passo simples e direto para:</p>
+
+    <div class="promise">
+      <div class="promise-l">Você vai aprender a:</div>
+      <div class="p-item"><span>✅</span><p>Criar uma rotina de sono que funciona para o seu bebê e sua família.</p></div>
+      <div class="p-item"><span>✅</span><p>Ensinar seu bebê a dormir sozinho, sem choro e sem traumas.</p></div>
+      <div class="p-item"><span>✅</span><p>Parar de acordar de hora em hora para amamentar.</p></div>
+      <div class="p-item"><span>✅</span><p>Fazer a transição do peito para o sono de forma leve e natural.</p></div>
+      <div class="p-item"><span>✅</span><p>Ter noites tranquilas, dormir bem e acordar com energia para curtir o seu bebê.</p></div>
+    </div>
+
+    <p class="txt">E tudo isso sem precisar tentar mil técnicas diferentes, sem fórmulas mágicas e sem sofrimento! Esse método é baseado em ciência do sono infantil, na experiência de especialistas e, principalmente, no que realmente FUNCIONA para mães que já passaram por isso.</p>
+
+    <div class="quote">
+      Se você já tentou de tudo e ainda sente que seu bebê só dorme se estiver grudado em você, fica tranquila. Esse método foi feito para você!
+      <span class="quote-by">— Myrnna Gurgel</span>
+    </div>
+
+  </div>
+
+  <!-- CAP 1 -->
+  <div class="chap" id="cap1">
+    <div class="chap-n">Capítulo 1</div>
+    <h2>Por Que Seu Bebê Acorda Tanto à Noite?</h2>
+    <p>Entender é o primeiro passo para transformar</p>
+  </div>
+
+  <div class="cb">
+    <p class="txt">Se você está lendo isso, é porque já passou por noites intermináveis tentando fazer seu bebê dormir. Você o coloca no berço com todo o cuidado do mundo, mas basta sair do quarto e ele acorda chorando. Ou então, ele dorme, mas acorda de hora em hora e só volta a dormir no peito ou no colo.</p>
+    <p class="txt">A pergunta que não quer calar: por que isso acontece?</p>
+
+    <div class="hc"><span class="hc-i">💡</span><div><h4>A boa notícia</h4><p>O problema não é seu bebê e nem você! O sono infantil tem um funcionamento próprio, e entender isso vai te ajudar a virar esse jogo.</p></div></div>
+
+    <div class="sh">😴 O Sono do Bebê: Como Ele Funciona?</div>
+    <p class="txt">Os bebês não dormem como os adultos. O sono deles é mais leve, tem ciclos mais curtos e despertares frequentes. Isso é normal e faz parte do desenvolvimento neurológico. Mas então, por que algumas mães dizem que seus bebês dormem a noite inteira e o seu não?</p>
+
+    <div class="answer"><span class="answer-i">🔑</span><p>A resposta está nas <strong>associações de sono.</strong></p></div>
+
+    <div class="sh">🔗 O Que São Associações de Sono?</div>
+    <p class="txt">Bebês aprendem a dormir associando o sono a alguma coisa. Se seu bebê só dorme mamando, no colo ou sendo balançado, ele aprendeu que precisa disso para dormir. Então, toda vez que ele entra em um despertar natural, ele sente falta dessa mesma condição para voltar a dormir.</p>
+
+    <div class="hc"><span class="hc-i">🛋️</span><div><h4>A analogia do sofá</h4><p>Imagine que você dormiu na sua cama e acordou no sofá. Você levaria um susto, certo? É assim que o seu bebê se sente quando dorme no peito ou no colo e acorda no berço. Ele estranha, chora e precisa que você o ajude a dormir de novo.</p></div></div>
+
+    <p class="txt">A chave para noites tranquilas é ensinar seu bebê a dormir sem depender dessas associações.</p>
+
+    <div class="sh">😬 O Erro Que Muitas Mães Cometem (Sem Perceber)</div>
+    <p class="txt">A maioria das mães, na tentativa de ajudar o bebê a dormir, acabam reforçando ainda mais as associações de sono. Como?</p>
+
+    <div class="compare">
+      <div class="cc bad">
+        <div class="cc-l">❌ O que reforça o problema</div>
+        <ul>
+          <li>Colocam o bebê para dormir sempre mamando</li>
+          <li>Ficam balançando ou ninando até ele apagar</li>
+          <li>Deitam com ele no colo e só colocam no berço depois que já está em sono profundo</li>
+        </ul>
+      </div>
+      <div class="cc good">
+        <div class="cc-l">✅ A solução</div>
+        <ul>
+          <li>Criar uma nova associação de sono que permita que ele durma sozinho</li>
+          <li>É exatamente isso que vamos te ensinar no próximo capítulo</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cycle" style="background:rgba(107,79,160,0.07);border:1.5px solid rgba(107,79,160,0.15)">
+      <div class="cycle-l" style="color:var(--purple-dk)">🔄 Ciclo do Sono do Bebê</div>
+      <div class="cycle-f">
+        <div class="cn"><span style="color:var(--purple-dk)">40–50min</span><p style="color:var(--txt-mid)">Por ciclo</p></div>
+        <span class="c-sep" style="color:rgba(107,79,160,.4)">→</span>
+        <div class="cn"><span style="color:var(--purple-dk)">😴</span><p style="color:var(--txt-mid)">Despertar natural</p></div>
+        <span class="c-sep" style="color:rgba(107,79,160,.4)">→</span>
+        <div class="cn"><span style="color:var(--purple)">Volta a dormir</span><p style="color:var(--txt)">Com ou sem ajuda</p></div>
+        <span class="c-sep" style="color:rgba(107,79,160,.4)">→</span>
+        <div class="cn"><span style="color:var(--purple-dk)">🔁</span><p style="color:var(--txt-mid)">Novo ciclo</p></div>
+      </div>
+    </div>
+
+    <p class="txt">Está pronta para dar o primeiro passo rumo a noites de sono tranquilas? Então continue!</p>
+  </div>
+
+  <!-- CAP 2 -->
+  <div class="chap" id="cap2">
+    <div class="chap-n">Capítulo 2</div>
+    <h2>Criando a Rotina Perfeita para o Sono do Bebê</h2>
+    <p>A chave para ensinar seu bebê a dormir bem está aqui</p>
+  </div>
+
+  <div class="cb">
+    <p class="txt">Agora que você já entendeu por que seu bebê acorda tanto à noite, chegou a hora de resolver isso de vez. A chave para ensinar seu bebê a dormir bem e por mais tempo está em uma <strong>rotina de sono estruturada e previsível.</strong></p>
+    <p class="txt">Muitos pais acreditam que bebês dormem quando sentem sono e que não precisam de uma rotina específica. Mas a verdade é o contrário! Bebês precisam de previsibilidade. Quando eles sabem o que esperar, o corpo se ajusta, e o sono acontece de forma muito mais natural.</p>
+
+    <div class="sh">🗓️ O Que é uma Rotina de Sono e Por Que Ela é Essencial?</div>
+    <p class="txt">A rotina de sono é um conjunto de hábitos e horários que ajudam o bebê a entender quando é hora de dormir e como dormir melhor. Quando um bebê segue uma rotina estruturada, ele:</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-n">😌</div><div><h4>Sente menos ansiedade</h4><p>Na hora de dormir, porque sabe o que vai acontecer.</p></div></div>
+      <div class="step"><div class="step-n">⚡</div><div><h4>Adormece mais rápido</h4><p>Sem precisar de peito, colo ou balanço.</p></div></div>
+      <div class="step"><div class="step-n">🌙</div><div><h4>Acorda menos durante a noite</h4><p>Porque seu corpo está regulado.</p></div></div>
+      <div class="step"><div class="step-n">🌱</div><div><h4>Tem desenvolvimento mais saudável</h4><p>Aproveita melhor o sono e cresce melhor.</p></div></div>
+    </div>
+
+    <p class="txt">Mas calma... criar uma rotina de sono não significa prender o bebê a um relógio rígido. Significa apenas estabelecer um fluxo previsível que faça sentido para a família.</p>
+
+    <div class="sh">⚙️ Os 3 Elementos Essenciais de uma Boa Rotina de Sono</div>
+
+    <div class="paso"><div class="paso-n">Elemento 1</div><h3>Horários Fixos para Dormir e Acordar</h3><p>Seu bebê precisa ter um horário regular para dormir e acordar, pois o corpo funciona como um relógio biológico. Se todo dia ele dorme em um horário diferente, fica mais difícil para ele entender quando é hora de descansar.</p></div>
+    <div class="tip">💡 Dica prática: Escolha um horário fixo para o sono da noite e para as sonecas do dia. O ideal é que o bebê durma entre <strong>19h e 21h</strong>, dependendo da rotina da família.</div>
+
+    <div class="paso"><div class="paso-n">Elemento 2</div><h3>O Ritual de Sono — Passo a Passo para o Bebê Relaxar</h3><p>O ritual de sono é uma sequência de ações simples e repetitivas que preparam o bebê para dormir. Repita todas as noites, sempre na mesma ordem.</p></div>
+
+    <div class="ritual">
+      <div class="rit"><span class="rit-i">🛁</span><div><span class="rit-l">Banho Relaxante</span><span class="rit-s">Ajuda a relaxar os músculos do bebê e sinaliza que é hora de se acalmar</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit"><span class="rit-i">👶</span><div><span class="rit-l">Troca e Pijama</span><span class="rit-s">Fralda limpa e pijama confortável preparam o bebê fisicamente para o sono</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit"><span class="rit-i">📖</span><div><span class="rit-l">Momento de Carinho</span><span class="rit-s">Leitura ou música tranquila cria conexão emocional e ajuda o bebê a relaxar mentalmente</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit"><span class="rit-i">🤱</span><div><span class="rit-l">Amamentação (se ainda houver mamada noturna)</span><span class="rit-s">Entra aqui no ritual — mas não como último passo antes de dormir</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit hl"><span class="rit-i">🛏️</span><div><span class="rit-l">Berço — Sonolento, mas Acordado</span><span class="rit-s">Ensina o bebê a adormecer sozinho — o passo mais importante de todos!</span></div></div>
+    </div>
+
+    <div class="tip">💡 Dica prática: Repita esse ritual todas as noites, sempre na mesma ordem. Isso cria um padrão que faz o bebê entender que está na hora de dormir.</div>
+
+    <div class="paso"><div class="paso-n">Elemento 3</div><h3>Ambiente Ideal para o Sono</h3><p>O ambiente onde o bebê dorme tem um impacto direto na qualidade do sono.</p></div>
+
+    <div class="steps">
+      <div class="step"><div class="step-n">🌑</div><div><h4>Quarto Escuro</h4><p>Use blackout para bloquear a luz externa e criar um ambiente propício para o sono profundo do bebê.</p></div></div>
+      <div class="step"><div class="step-n">🌡️</div><div><h4>Temperatura Agradável</h4><p>Em torno de 21-24°C é o ideal. Nem muito quente, nem muito frio.</p></div></div>
+      <div class="step"><div class="step-n">🌊</div><div><h4>Ruído Branco</h4><p>Sons suaves como barulho de chuva ou ventilador ajudam a bloquear barulhos externos e acalmam o bebê.</p></div></div>
+      <div class="step"><div class="step-n">🛡️</div><div><h4>Berço Seguro e Confortável</h4><p>Um colchão firme, sem travesseiros ou cobertores soltos, garante o sono de qualidade e a segurança do bebê.</p></div></div>
+    </div>
+
+    <div class="tip">💡 Dica prática: Evite telas (TV, celular, tablet) pelo menos <strong>1 hora antes de dormir</strong>. A luz azul atrapalha a produção de melatonina, o hormônio do sono.</div>
+
+    <div class="sh">🚫 O Que Evitar na Rotina do Sono?</div>
+    <div class="alert">
+      <strong>Evite estes erros comuns:</strong>
+      <ul>
+        <li><strong>Deixar o bebê dormir muito tarde:</strong> Quanto mais tarde, mais cansado ele fica, e mais difícil será para dormir.</li>
+        <li><strong>Trocar o bebê de ambiente toda hora:</strong> Ele precisa associar um único lugar ao sono.</li>
+        <li><strong>Fazer atividades agitadas antes de dormir:</strong> Isso só deixa o bebê mais elétrico.</li>
+      </ul>
+    </div>
+
+    <div class="quote">
+      Sua rotina começa hoje! Agora você já sabe como criar uma rotina de sono previsível e eficiente, que fará seu bebê dormir melhor sem precisar de peito, colo ou sofrimento.
+      <span class="quote-by">— Myrnna Gurgel</span>
+    </div>
+  </div>
+
+  <!-- CAP 3 -->
+  <div class="chap" id="cap3">
+    <div class="chap-n">Capítulo 3</div>
+    <h2>Como Ensinar o Bebê a Dormir Sozinho</h2>
+    <p>Sem Choro e Sem Trauma!</p>
+  </div>
+
+  <div class="cb">
+    <p class="txt">Chegou a hora da transformação! Seu bebê pode aprender a dormir sozinho de forma tranquila e sem sofrimento.</p>
+    <p class="txt">Se hoje você precisa embalar, dar peito ou até ficar andando pela casa de madrugada para fazer seu bebê dormir, saiba que isso pode mudar! O segredo está em ensinar o bebê a adormecer sozinho, sem depender de você o tempo todo.</p>
+
+    <div class="sh">🔄 Por Que Bebês Acordam Tantas Vezes Durante a Noite?</div>
+    <p class="txt">O sono do bebê é dividido em ciclos. Cada ciclo dura de 40 a 50 minutos e, no final de cada um, ele pode ter um despertar leve.</p>
+
+    <div class="compare">
+      <div class="cc good"><div class="cc-l">✅ Bebê que aprendeu a dormir sozinho</div><p>Volta a dormir sem ajuda após cada despertar natural.</p></div>
+      <div class="cc bad"><div class="cc-l">❌ Bebê com associações de sono</div><p>Acorda e chora pedindo ajuda (peito, colo, balanço) para pegar no sono novamente.</p></div>
+    </div>
+
+    <div class="sh">🪜 Os 3 Passos para Ensinar Seu Bebê a Dormir Sozinho</div>
+    <p class="txt">Você não precisa deixar seu bebê chorando para ensiná-lo a dormir. O método que você vai aprender aqui é <strong>gentil, respeitoso e eficaz.</strong></p>
+
+    <div class="hc"><span class="hc-i">⚠️</span><div><h4>Antes de começar</h4><p>Certifique-se de que você já seguiu as orientações do Capítulo 2 e criou uma rotina de sono bem estruturada.</p></div></div>
+
+    <div class="paso"><div class="paso-n">Passo 1</div><h3>Reduzindo a Dependência do Peito, Colo e Balanço</h3><p>Se hoje seu bebê só dorme mamando, no colo ou sendo balançado, o primeiro passo é reduzir essa dependência.</p></div>
+
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div><h4>Identificar as Dependências</h4><p>Observe o que seu bebê precisa para dormir: peito, colo, balanço ou outros hábitos que criam associações negativas.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div><h4>Reduzir Gradualmente</h4><p>Diminua aos poucos a intensidade da ajuda — menos tempo no peito, balanço mais suave, menos tempo no colo.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div><h4>Introduzir Alternativas</h4><p>Substitua as associações antigas por novos sinais de conforto como naninha, música suave ou um toque gentil.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div><h4>Berço Sonolento</h4><p>Coloque o bebê no berço ainda acordado mas sonolento, permitindo que ele complete o processo de adormecer sozinho.</p></div></div>
+    </div>
+
+    <div class="tip">💡 Dica prática: Troque a mamada por outro sinal de conforto, como um paninho macio, um brinquedo de apego ou um toque suave.</div>
+
+    <div class="paso"><div class="paso-n">Passo 2</div><h3>Criando um "Sinal de Sono"</h3><p>O bebê precisa entender que chegou a hora de dormir. Para isso, escolha um sinal de sono — algo que será repetido todas as noites para ajudá-lo a relaxar.</p></div>
+
+    <div class="signals">
+      <div class="sig"><span>🎵</span><p>Uma música calma ou som de ruído branco</p></div>
+      <div class="sig"><span>💬</span><p>"Boa noite, agora é hora de dormir."</p></div>
+      <div class="sig"><span>🤲</span><p>Um carinho suave na cabeça ou nas costas</p></div>
+      <div class="sig"><span>🧸</span><p>Objeto de apego — naninha ou bichinho</p></div>
+    </div>
+
+    <div class="tip">💡 Dica prática: Esse sinal deve ser usado <strong>sempre</strong> na hora de dormir, para que o bebê associe com o momento de descanso.</div>
+
+    <div class="paso"><div class="paso-n">Passo 3</div><h3>Saindo de Perto Aos Poucos — Técnica da Presença Progressiva</h3><p>Muitos pais acham que, para o bebê dormir sozinho, é preciso simplesmente colocá-lo no berço e sair do quarto. <strong>Isso não funciona!</strong> O método correto é a presença progressiva.</p></div>
+
+    <div class="prog">
+      <div class="ps"><div class="ps-d">Fase 1 — Contato Próximo</div><div class="ps-t">Fique ao lado do berço, tocando o bebê e falando com ele suavemente até ele dormir.</div></div>
+      <div class="ps-arr">↓</div>
+      <div class="ps"><div class="ps-d">Fase 2 — Distância Parcial</div><div class="ps-t">Afaste-se um pouco, sentando em uma cadeira próxima, mantendo contato visual e verbal.</div></div>
+      <div class="ps-arr">↓</div>
+      <div class="ps hl"><div class="ps-d">Fase 3 — Saída Gradual</div><div class="ps-t">Saia do quarto antes que o bebê durma completamente, permitindo que ele termine o processo sozinho. 🎉</div></div>
+    </div>
+
+    <div class="tip">💡 Dica prática: Se o bebê chorar, volte um passo, acalme-o e tente de novo. O segredo é persistência e paciência!</div>
+
+    <div class="sh">😢 O Que Fazer Se o Bebê Chorar?</div>
+    <p class="txt">O choro pode acontecer, porque é uma mudança de hábito. Mas existe diferença entre um choro de desespero e um choro de protesto.</p>
+
+    <div class="compare">
+      <div class="cc neutral"><div class="cc-l">😤 Choro de Protesto</div><p>Um choro mais brando, intermitente, onde o bebê está expressando descontentamento com a mudança, mas <strong>não está em sofrimento real.</strong> Continue com o método, oferecendo apoio verbal e presença.</p></div>
+      <div class="cc bad"><div class="cc-l">😭 Choro de Desespero</div><p>Um choro intenso, contínuo, onde o bebê demonstra real angústia. <strong>Pegue no colo, acalme-o completamente</strong> e depois tente novamente quando ele estiver mais tranquilo.</p></div>
+    </div>
+
+    <div class="sh">⏱️ Quanto Tempo Leva Para o Bebê Aprender?</div>
+    <p class="txt">Muitas mães veem resultados em 3 dias! Mas cada bebê tem seu tempo.</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-n">3</div><div><h4>Dias em Média</h4><p>A maioria dos bebês mostra melhoras significativas após três dias de implementação consistente do método.</p></div></div>
+      <div class="step"><div class="step-n">7–14</div><div><h4>Dias para Adaptação</h4><p>Alguns bebês podem precisar de uma a duas semanas para se adaptarem completamente à nova rotina de sono.</p></div></div>
+      <div class="step"><div class="step-n">✓</div><div><h4>100% de Eficácia</h4><p>Com persistência e consistência, todos os bebês podem aprender a dormir melhor.</p></div></div>
+    </div>
+
+    <p class="txt">O mais importante é manter a rotina e seguir o plano.</p>
+    <div class="quote">Você está a um passo de noites tranquilas! Continue — sua vida está prestes a mudar!<span class="quote-by">— Myrnna Gurgel</span></div>
+  </div>
+
+  <!-- CAP 4 -->
+  <div class="chap" id="cap4">
+    <div class="chap-n">Capítulo 4</div>
+    <h2>Como Manter o Sono do Bebê em Qualquer Situação</h2>
+    <p>Viagens, Picos de Crescimento e Mudanças na Rotina</p>
+  </div>
+
+  <div class="cb">
+    <p class="txt">Você já aprendeu como ensinar seu bebê a dormir sozinho e a importância de uma rotina estruturada. Mas e quando a rotina for quebrada? Viagens, mudanças na casa, dentição, saltos de desenvolvimento... Tudo isso pode afetar o sono do bebê. Mas a boa notícia é que você pode evitar que ele "desaprenda" a dormir sozinho!</p>
+
+    <div class="situ">
+      <div class="situ-hd"><span class="situ-hd-i">✈️</span><h3>1. Viagens e Mudança de Ambiente</h3></div>
+      <div class="situ-bd">
+        <p class="txt" style="margin-bottom:10px">Uma viagem pode ser um caos para o sono do bebê se você não souber como manter a rotina mínima necessária.</p>
+        <div class="dolist">
+          <div class="doi"><span>✅</span><p>Leve o berço portátil ou tente manter o mesmo tipo de cama que ele está acostumado</p></div>
+          <div class="doi"><span>✅</span><p>Leve itens familiares (naninha, paninho, travesseiro) para o bebê sentir um ambiente conhecido</p></div>
+          <div class="doi"><span>✅</span><p>Mantenha o ritual do sono (banho, música, frase de segurança) — mesmo que a hora mude um pouco</p></div>
+          <div class="doi"><span>❌</span><p>Evite colocar o bebê para dormir na cama com você — pode criar um novo hábito difícil de reverter depois</p></div>
+        </div>
+        <div class="tip">💡 Dica prática: No primeiro dia de viagem, tente não deixar o bebê exausto. O ideal é garantir uma boa soneca antes do momento de dormir à noite.</div>
+      </div>
+    </div>
+
+    <div class="situ">
+      <div class="situ-hd"><span class="situ-hd-i">📈</span><h3>2. Picos de Crescimento e Saltos de Desenvolvimento</h3></div>
+      <div class="situ-bd">
+        <p class="txt" style="margin-bottom:10px">Durante certos períodos, o bebê pode ter mais despertares, ficar mais inquieto ou resistir ao sono. Mas atenção: <strong>isso não significa que seu bebê esqueceu como dormir sozinho!</strong></p>
+        <div class="compare">
+          <div class="cc neutral"><div class="cc-l">📈 Picos de Crescimento</div><ul><li>Mamando mais do que o normal</li><li>Mais irritado e choroso</li><li>Quer mais contato físico e colo</li><li>Geralmente dura 2–3 dias</li></ul></div>
+          <div class="cc neutral"><div class="cc-l">🧠 Saltos de Desenvolvimento</div><ul><li>Aprendendo algo novo (rolar, engatinhar, falar balbucios)</li><li>Fica mais agitado antes de dormir</li><li>Parece não querer dormir, mesmo com sono</li><li>Pode durar 1–2 semanas</li></ul></div>
+        </div>
+        <div class="hc"><span class="hc-i">🎯</span><div><h4>O que fazer</h4><p>Mantenha a rotina o mais próxima possível do normal. Evite criar novos hábitos (como voltar a dar peito para dormir). Tenha paciência! Isso dura apenas alguns dias e o bebê volta ao padrão normal se você não mudar tudo.</p></div></div>
+        <div class="tip">💡 Dica prática: Se o bebê estiver muito agitado antes de dormir, um banho morno mais demorado e uma massagem podem ajudar a relaxar.</div>
+      </div>
+    </div>
+
+    <div class="situ">
+      <div class="situ-hd"><span class="situ-hd-i">🦷</span><h3>3. Dentição e Desconforto Físico</h3></div>
+      <div class="situ-bd">
+        <p class="txt" style="margin-bottom:10px">A dentição é um dos principais motivos para os bebês acordarem mais vezes à noite. Afinal, o incômodo na gengiva pode atrapalhar o sono profundo.</p>
+        <p class="txt" style="margin-bottom:10px"><strong>Como saber se a dentição está afetando o sono?</strong> Ele está babando mais do que o normal, quer morder tudo o que vê e fica mais irritado e choroso, especialmente à noite.</p>
+        <div class="steps">
+          <div class="step"><div class="step-n">1</div><div><h4>Alívio Natural</h4><p>Ofereça mordedores resfriados (mas não congelados!). Massageie a gengiva com o dedo limpo ou com uma gaze úmida.</p></div></div>
+          <div class="step"><div class="step-n">2</div><div><h4>Manter a Rotina</h4><p>Mesmo com o desconforto, tente manter a rotina de sono o mais normal possível para não criar novos hábitos negativos.</p></div></div>
+          <div class="step"><div class="step-n">3</div><div><h4>Consulte o Pediatra</h4><p>Para indicar pomadas seguras para o desconforto. Evite qualquer medicação sem orientação médica.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="situ">
+      <div class="situ-hd"><span class="situ-hd-i">🤒</span><h3>4. Quando o Bebê Adoece</h3></div>
+      <div class="situ-bd">
+        <p class="txt" style="margin-bottom:10px">Resfriados, gripes e febres podem deixar o bebê mais sensível e afetar o sono. E, claro, como mãe, sua prioridade é o bem-estar do bebê!</p>
+        <div class="dolist">
+          <div class="doi"><span>✅</span><p>Mantenha-o confortável — ele pode precisar de mais colo nesses dias</p></div>
+          <div class="doi"><span>✅</span><p>Ajuste o ambiente: ar mais úmido, roupas leves e quarto arejado ajudam a melhorar o sono</p></div>
+          <div class="doi"><span>✅</span><p>Assim que ele melhorar, retome a rotina normal <strong>imediatamente</strong>, para evitar que ele se acostume com novos padrões</p></div>
+        </div>
+        <div class="tip">💡 Dica prática: Se precisar, fique mais perto durante a noite, mas evite criar hábitos difíceis de reverter.</div>
+      </div>
+    </div>
+
+    <div class="situ">
+      <div class="situ-hd"><span class="situ-hd-i">👴👵</span><h3>5. Quando o Bebê Dorme Fora de Casa</h3></div>
+      <div class="situ-bd">
+        <p class="txt" style="margin-bottom:10px">Se o bebê for dormir na casa dos avós ou ficar com uma babá, é importante que todos sigam a mesma rotina que você ensinou.</p>
+        <div class="dolist">
+          <div class="doi"><span>📋</span><p>Explique exatamente como o bebê dorme e qual é o ritual que ele está acostumado</p></div>
+          <div class="doi"><span>🌑</span><p>Peça para manter o mesmo horário e ambiente mais escuro e tranquilo</p></div>
+          <div class="doi"><span>🧸</span><p>Se for possível, mande itens familiares, como um brinquedo de apego ou um travesseiro</p></div>
+        </div>
+        <div class="tip">💡 Dica prática: Se a casa dos avós for mais agitada, peça para diminuírem os estímulos pelo menos uma hora antes do sono.</div>
+      </div>
+    </div>
+
+    <div class="quote">Você está preparada para qualquer situação! Mudanças acontecem, mas com as estratégias certas, você evita que tudo que conquistou seja perdido!<span class="quote-by">— Myrnna Gurgel</span></div>
+  </div>
+
+  <!-- CAP 5 -->
+  <div class="chap" id="cap5">
+    <div class="chap-n">Capítulo 5</div>
+    <h2>Erros Comuns que Fazem os Bebês Acordarem à Noite</h2>
+    <p>E Como Evitá-los!</p>
+  </div>
+
+  <div class="cb">
+    <p class="txt">Se você chegou até aqui, já sabe o caminho certo para ensinar seu bebê a dormir bem. Mas, às vezes, pequenos deslizes podem atrapalhar todo o progresso. <strong>A boa notícia? A maioria desses erros pode ser corrigida rapidamente!</strong></p>
+
+    <div class="errcard">
+      <div class="err-hd"><span class="err-n">Erro 1</span><h3>Criar Associações Erradas ao Sono</h3></div>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">Esse é o erro número 1! Se o bebê sempre dorme no peito, no colo ou sendo ninado, toda vez que ele acorda de madrugada vai precisar da mesma coisa para voltar a dormir.</p>
+      <div class="compare">
+        <div class="cc bad"><div class="cc-l">❌ Associações Negativas</div><ul><li>Dormir sempre no peito</li><li>Precisar de colo para adormecer</li><li>Depender de balanço constante</li><li>Adormecer apenas com chupeta</li></ul></div>
+        <div class="cc good"><div class="cc-l">✅ Associações Positivas</div><ul><li>Adormecer no próprio berço</li><li>Usar objeto de apego (naninha)</li><li>Responder a sinais verbais de segurança</li><li>Capacidade de se auto-acalmar</li></ul></div>
+      </div>
+      <div class="tip">💡 Dica prática: Se o bebê chorar ao ser colocado no berço, permaneça ao lado dele e faça carinho, mas sem pegá-lo no colo imediatamente.</div>
+    </div>
+
+    <div class="errcard">
+      <div class="err-hd"><span class="err-n">Erro 2</span><h3>Não Criar uma Rotina de Sono Clara</h3></div>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">O bebê precisa de pistas claras para saber que chegou a hora de dormir. Se cada noite for diferente — um dia dorme no sofá, outro dia na cama dos pais, outro dia com barulho de TV — ele não vai entender que tem um padrão de sono.</p>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div><h4>Banho Relaxante</h4><p>Sempre no mesmo horário, com temperatura agradável e produtos suaves.</p></div></div>
+        <div class="step"><div class="step-n">2</div><div><h4>Troca e Pijama</h4><p>Momento tranquilo de preparação física para o sono.</p></div></div>
+        <div class="step"><div class="step-n">3</div><div><h4>Ambiente Calmo</h4><p>Luzes baixas, ruídos reduzidos, estimulação diminuída.</p></div></div>
+        <div class="step"><div class="step-n">4</div><div><h4>Ritual Final</h4><p>História, música suave ou frase de segurança antes de colocar no berço.</p></div></div>
+      </div>
+      <div class="tip">💡 Dica prática: Mesmo se o dia foi atípico, tente seguir pelo menos o ritual do sono para dar previsibilidade ao bebê.</div>
+    </div>
+
+    <div class="errcard">
+      <div class="err-hd"><span class="err-n">Erro 3</span><h3>Colocar o Bebê para Dormir Muito Cansado</h3></div>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">Muita gente pensa que, se o bebê estiver bem cansado, ele vai dormir mais rápido e por mais tempo. <strong>ERRADO!</strong> Um bebê muito cansado fica irritado, agitado e pode ter mais despertares noturnos.</p>
+      <div class="compare">
+        <div class="cc neutral"><div class="cc-l">👀 Sinais de Sono</div><ul><li>Bocejos frequentes</li><li>Esfregar os olhos</li><li>Olhar vago ou distante</li><li>Puxar as orelhas</li></ul></div>
+        <div class="cc bad"><div class="cc-l">⚠️ Cansaço Excessivo</div><ul><li>Agitação e hiperatividade</li><li>Irritabilidade extrema</li><li>Choro inconsolável</li><li>Dificuldade para acalmar</li></ul></div>
+      </div>
+      <div class="sh" style="margin-top:14px">⏰ Janelas de Sono Ideais</div>
+      <div class="ages">
+        <div class="age"><strong>0–3 meses</strong><span>45–60 minutos</span></div>
+        <div class="age"><strong>3–6 meses</strong><span>1,5–2,5 horas</span></div>
+        <div class="age"><strong>6–12 meses</strong><span>2–3 horas</span></div>
+        <div class="age"><strong>12+ meses</strong><span>3–4 horas</span></div>
+      </div>
+      <div class="tip" style="margin-top:10px">💡 Dica prática: Se o bebê já está muito irritado, um banho morno e uma luz mais baixa ajudam a acalmá-lo antes do sono.</div>
+    </div>
+
+    <div class="errcard">
+      <div class="err-hd"><span class="err-n">Erro 4</span><h3>Acordar o Bebê para Amamentar Sem Necessidade</h3></div>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">Muitas mães acreditam que precisam acordar o bebê para mamar, mesmo quando ele já consegue dormir longos períodos. Isso acaba criando um hábito desnecessário e faz com que ele acorde todas as noites, mesmo sem fome!</p>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div><h4>Quando Acordar para Mamar</h4><p>Apenas bebês recém-nascidos ou com baixo peso precisam ser acordados para mamar durante a noite, e somente sob orientação médica.</p></div></div>
+        <div class="step"><div class="step-n">2</div><div><h4>Identificar Fome Real</h4><p>Bebês com fome real mostram sinais específicos como sugar as mãos, fazer barulhos de sucção ou procurar o peito ativamente.</p></div></div>
+        <div class="step"><div class="step-n">3</div><div><h4>Redução Gradual</h4><p>Diminua o tempo de amamentação noturna aos poucos, oferecendo outras formas de conforto como carinho ou palavras suaves.</p></div></div>
+      </div>
+      <div class="tip">💡 Dica prática: Se o bebê acordar e chorar, espere um pouco antes de oferecer o peito. Muitas vezes, ele consegue voltar a dormir sozinho!</div>
+    </div>
+
+    <div class="errcard">
+      <div class="err-hd"><span class="err-n">Erro 5</span><h3>Excesso de Estímulos Antes de Dormir</h3></div>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">Se a última hora antes do sono for cheia de agitação, luzes fortes, televisão e barulhos altos, o bebê pode demorar mais para pegar no sono e acordar mais vezes durante a noite.</p>
+      <div class="compare">
+        <div class="cc bad"><div class="cc-l">❌ Estímulos a Evitar</div><ul><li>Telas (TV, celular, tablet)</li><li>Luzes fortes e brilhantes</li><li>Brincadeiras agitadas</li><li>Música alta ou estimulante</li><li>Visitas ou ambientes barulhentos</li></ul></div>
+        <div class="cc good"><div class="cc-l">✅ Atividades Recomendadas</div><ul><li>Leitura de histórias calmas</li><li>Massagem suave</li><li>Banho morno relaxante</li><li>Música instrumental suave</li><li>Conversa tranquila em voz baixa</li></ul></div>
+      </div>
+      <div class="tip">💡 Dica prática: Aposte em atividades mais calmas, como massagem, banho relaxante ou ler uma historinha.</div>
+    </div>
+
+    <div class="errcard">
+      <div class="err-hd"><span class="err-n">Erro 6</span><h3>Quarto Muito Claro ou Desconfortável</h3></div>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">O ambiente influencia diretamente no sono do bebê. Se o quarto estiver muito claro, quente ou barulhento, ele pode ter despertares frequentes.</p>
+      <div class="steps">
+        <div class="step"><div class="step-n">🌑</div><div><h4>Escuridão Adequada</h4><p>Use cortinas blackout para bloquear a luz externa. O quarto deve estar escuro o suficiente para não conseguir ler um livro.</p></div></div>
+        <div class="step"><div class="step-n">🌡️</div><div><h4>Temperatura Ideal</h4><p>Mantenha o quarto entre 21-24°C. Nem muito quente (causa agitação) nem muito frio (causa desconforto).</p></div></div>
+        <div class="step"><div class="step-n">🌊</div><div><h4>Ruído Branco</h4><p>Um ventilador, máquina de ruído branco ou aplicativo pode mascarar barulhos externos e criar um ambiente sonoro constante.</p></div></div>
+        <div class="step"><div class="step-n">👕</div><div><h4>Roupas Confortáveis</h4><p>Vista o bebê com roupas adequadas à temperatura, evitando excesso ou falta de camadas que possam causar desconforto.</p></div></div>
+      </div>
+      <div class="tip">💡 Dica prática: Se o bebê acorda muito cedo por causa da luz da manhã, experimente escurecer melhor o quarto.</div>
+    </div>
+
+    <div class="quote">Pequenos Ajustes = Noites Tranquilas! A maior parte dos problemas de sono do bebê pode ser resolvida com pequenos ajustes na rotina e no ambiente.<span class="quote-by">— Myrnna Gurgel</span></div>
+  </div>
+
+  <!-- CAP 6 -->
+  <div class="chap" id="cap6">
+    <div class="chap-n">Capítulo 6</div>
+    <h2>O Passo a Passo Definitivo para Ensinar Seu Bebê a Dormir Sozinho</h2>
+    <p>Sem precisar de peito, colo ou sofrimento</p>
+  </div>
+
+  <div class="cb">
+    <p class="txt">Agora que você já sabe os erros mais comuns que fazem o bebê acordar várias vezes à noite, chegou a hora de aprender o método definitivo para ensinar seu bebê a dormir sozinho. Se você aplicar esse passo a passo, em poucos dias seu bebê vai aprender a dormir melhor e por mais tempo, e toda a família vai recuperar as noites de sono.</p>
+
+    <div class="paso"><div class="paso-n">Passo 1</div><h3>Crie um Ritual de Sono Poderoso</h3><p>Os bebês adoram previsibilidade. Quando seguem um ritual todos os dias, entendem que é hora de dormir e relaxam mais rápido. Escolha 3 a 5 passos simples e repita na mesma ordem toda noite.</p></div>
+    <div class="ritual">
+      <div class="rit"><span class="rit-i">🛁</span><div><span class="rit-l">Banho Relaxante</span><span class="rit-s">5-10 minutos para relaxar o corpo do bebê e sinalizar o início do ritual</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit"><span class="rit-i">💆</span><div><span class="rit-l">Massagem Suave</span><span class="rit-s">Movimentos gentis nas costas, braços e pernas para acalmar o sistema nervoso</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit"><span class="rit-i">👶</span><div><span class="rit-l">Troca e Pijama</span><span class="rit-s">Fralda limpa e pijama confortável, adequado à temperatura do ambiente</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit"><span class="rit-i">📖</span><div><span class="rit-l">História ou Música</span><span class="rit-s">Momento tranquilo de conexão com uma história curta ou canção de ninar suave</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit hl"><span class="rit-i">💬</span><div><span class="rit-l">Frase de Segurança</span><span class="rit-s">Uma frase repetida todas as noites que sinaliza o momento final antes do sono</span></div></div>
+    </div>
+    <div class="tip">💡 Dica prática: O segredo do sucesso não está no que você faz, mas na <strong>repetição diária do ritual!</strong></div>
+
+    <div class="paso"><div class="paso-n">Passo 2</div><h3>Estabeleça o Lugar Certo para Dormir</h3><p>Se o bebê dorme cada dia em um lugar diferente, ele nunca vai entender onde é o local seguro para dormir.</p></div>
+    <div class="steps">
+      <div class="step"><div class="step-n">🛏️</div><div><h4>Berço Seguro</h4><p>Um berço com colchão firme, sem travesseiros, cobertores soltos ou brinquedos que possam representar risco de sufocamento.</p></div></div>
+      <div class="step"><div class="step-n">🌑</div><div><h4>Ambiente Adequado</h4><p>Quarto escuro com cortinas blackout, temperatura entre 21-24°C e ruído branco para mascarar sons externos.</p></div></div>
+      <div class="step"><div class="step-n">📍</div><div><h4>Transição Gradual</h4><p>Se o bebê está acostumado a dormir em outro local, faça a mudança gradualmente para evitar resistência e ansiedade.</p></div></div>
+    </div>
+    <div class="tip">💡 Dica prática: Se o bebê dormia na cama dos pais, faça a transição aos poucos, primeiro colocando o colchão no chão antes de levá-lo ao berço.</div>
+
+    <div class="paso"><div class="paso-n">Passo 3</div><h3>Ensine o Bebê a Adormecer Sem Ajuda</h3><p>O maior erro que impede o bebê de dormir bem é depender de algo para pegar no sono — peito, colo, balanço. Se ele precisar disso para dormir no começo da noite, vai precisar de novo toda vez que acordar!</p></div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div><h4>Identificar o Momento Certo</h4><p>Observe os sinais de sono e coloque o bebê no berço quando ele estiver sonolento, mas ainda acordado.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div><h4>Introduzir Objeto de Apego</h4><p>Ofereça uma naninha ou bichinho de pelúcia (para bebês maiores) que possa substituir sua presença.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div><h4>Usar Frase de Segurança</h4><p><em>"Mamãe está aqui. Agora é hora de dormir."</em> Repita sempre a mesma frase.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div><h4>Permitir Auto-Regulação</h4><p>Dê espaço para o bebê praticar a habilidade de se acalmar e adormecer sozinho, intervindo apenas quando necessário.</p></div></div>
+    </div>
+    <div class="tip">💡 Dica prática: Se o bebê chorar, espere um pouco antes de pegá-lo no colo. Primeiro tente acalmá-lo com sua voz ou um carinho.</div>
+
+    <div class="paso"><div class="paso-n">Passo 4</div><h3>Use o Método de Retirada Gradual</h3><p>Seu bebê precisa aprender a se acalmar sozinho, mas isso não significa que ele deve ficar sozinho e chorando. A ideia é reduzir o contato físico gradativamente.</p></div>
+    <div class="prog">
+      <div class="ps"><div class="ps-d">Dia 1 — Presença Total</div><div class="ps-t">Fique ao lado do berço, com contato físico suave (mão no peito ou barriga) até que o bebê adormeça completamente.</div></div>
+      <div class="ps-arr">↓</div>
+      <div class="ps"><div class="ps-d">Dia 2 — Presença Parcial</div><div class="ps-t">Afaste-se um pouco do berço, sentando em uma cadeira próxima, mantendo contato visual e verbal, mas reduzindo o contato físico.</div></div>
+      <div class="ps-arr">↓</div>
+      <div class="ps"><div class="ps-d">Dia 3 — Presença Intermitente</div><div class="ps-t">Coloque o bebê no berço, diga sua frase de segurança e saia do quarto, retornando em intervalos para acalmar se necessário.</div></div>
+      <div class="ps-arr">↓</div>
+      <div class="ps hl"><div class="ps-d">Dia 4 em diante — Autonomia</div><div class="ps-t">O bebê já consegue adormecer com mínima intervenção, precisando apenas da rotina e sinais de sono estabelecidos. 🎉</div></div>
+    </div>
+
+    <div class="paso"><div class="paso-n">Passo 5</div><h3>Resista à Tentação de Ceder!</h3><p>O primeiro dia pode ser um desafio. O segundo também. Mas no terceiro dia, a maioria dos bebês já mostra uma grande melhora!</p></div>
+    <div class="compare">
+      <div class="cc bad"><div class="cc-l">❌ O que NÃO fazer</div><ul><li>Não pegue o bebê no colo imediatamente ao primeiro chorinho</li><li>Não volte atrás e deixe ele dormir no peito "só essa vez"</li><li>Não mude o método no meio do processo — a consistência é o que traz resultado!</li></ul></div>
+      <div class="cc good"><div class="cc-l">✅ O que fazer</div><ul><li>Mantenha a Consistência: siga o mesmo método todos os dias, sem exceções</li><li>Seja Firme com Amor: cuide do bebê enquanto mantém os limites necessários</li><li>Celebre os Progressos: reconheça e comemore cada pequeno avanço</li></ul></div>
+    </div>
+    <div class="tip">💡 Dica prática: O bebê pode reclamar nos primeiros dias, mas se você for firme e amorosa, ele aprenderá rapidinho!</div>
+
+    <div class="paso"><div class="paso-n">Passo 6</div><h3>O Que Fazer Se o Bebê Acordar à Noite?</h3><p>Se o bebê acordar no meio da noite, não corra para pegá-lo imediatamente.</p></div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div><h4>Pausa Observadora</h4><p>Espere alguns instantes antes de intervir — ele pode voltar a dormir sozinho.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div><h4>Intervenção Mínima</h4><p>Se continuar acordado, use a frase de segurança. Se necessário, faça carinho ou segure a mão dele.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div><h4>Toque Reconfortante</h4><p>Ofereça um toque suave ou segure a mão do bebê, sem retirá-lo do berço.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div><h4>Manter o Ambiente</h4><p>Evite pegar no colo, ligar luzes ou estimular demais.</p></div></div>
+    </div>
+    <div class="tip">💡 Dica prática: No começo, o bebê pode acordar algumas vezes, mas logo aprenderá que consegue dormir sozinho!</div>
+
+    <div class="quote">Se você aplicar esse método exatamente como foi ensinado, em poucos dias seu bebê vai dormir sozinho no berço, dormir mais horas seguidas e acordar mais descansado e feliz — e você também!<span class="quote-by">— Myrnna Gurgel</span></div>
+  </div>
+
+  <!-- CONCLUSÃO -->
+  <div class="chap" id="concl" style="background:#F0EBF9">
+    <div class="chap-n">🌙 Conclusão</div>
+    <h2>Sua Nova Vida com Noites Tranquilas Começa Agora!</h2>
+    <p>Parabéns! Você chegou até aqui e agora tem em mãos um método comprovado.</p>
+  </div>
+
+  <div class="cb">
+    <p class="txt">Se você seguir os passos que ensinamos, em poucos dias verá uma transformação incrível no sono do seu bebê e, claro, no seu também!</p>
+
+    <div class="sh">✨ O Que Você Conquistou?</div>
+    <div class="conqs">
+      <div class="conq"><span class="conq-i">🛏️</span><h4>Bebê Independente</h4><p>Dorme sozinho no berço, sem precisar de ajuda para pegar no sono</p></div>
+      <div class="conq"><span class="conq-i">👨‍👩‍👧</span><h4>Família Descansada</h4><p>Menos despertares noturnos, garantindo descanso melhor para toda a família</p></div>
+      <div class="conq"><span class="conq-i">🗓️</span><h4>Rotina Previsível</h4><p>Mais previsibilidade e tranquilidade para o dia a dia</p></div>
+      <div class="conq"><span class="conq-i">💜</span><h4>Bem-estar Emocional</h4><p>Menos estresse e mais confiança na sua capacidade como mãe</p></div>
+    </div>
+
+    <div class="sh">🚀 O Que Fazer Agora?</div>
+    <div class="actions" style="background:rgba(107,79,160,0.07);border:1.5px solid rgba(107,79,160,0.15)">
+      <div class="actions-l" style="color:var(--purple-dk)">3 passos para começar hoje:</div>
+      <div class="act"><div class="act-n">1</div><div><strong style="color:var(--txt)">Coloque o método em prática ainda hoje!</strong><p>O segredo do sucesso é a consistência. Quanto mais rápido você começar, mais rápido verá resultados!</p></div></div>
+      <div class="act"><div class="act-n">2</div><div><strong style="color:var(--txt)">Tenha paciência e confie no processo!</strong><p>Seu bebê está aprendendo uma habilidade nova. Assim como andar ou falar, pode levar alguns dias de prática. Mas ele vai aprender!</p></div></div>
+      <div class="act"><div class="act-n">3</div><div><strong style="color:var(--txt)">Celebre cada pequena vitória!</strong><p>Na primeira noite em que ele dormir mais horas seguidas, comemore! Quando ele pegar no sono sozinho pela primeira vez, vibre!</p></div></div>
+    </div>
+
+    <div class="quote">Agora é a sua vez! Parece um sonho? Pois agora é a sua nova realidade!<span class="quote-by">— Myrnna Gurgel</span></div>
+
+    <!-- UPSELL PLANO PERSONALIZADO -->
+    <div class="sh">⭐ Quer um Plano de Sono Personalizado Para Resultados Ainda Mais Rápidos?</div>
+    <p class="txt">Agora que você tem o método completo para ensinar seu bebê a dormir sozinho, imagine o quão mais fácil seria se você tivesse um plano feito sob medida para a sua rotina e as necessidades do seu bebê!</p>
+
+    <div class="upsell-inline">
+      <div class="ui-badge">⭐ Oferta Especial — Apenas R$47</div>
+      <h3>Plano de Sono Personalizado</h3>
+      <p>Um plano 100% personalizado para a sua realidade — sem achismos, sem tentativas frustradas. Resultados ainda mais rápidos, porque cada detalhe será ajustado para funcionar na sua casa.</p>
+      <div class="ui-price">Apenas <strong>R$47</strong></div>
+      <a class="btn-main" href="https://www.myrnnagurgel.com.br/app-sono-red" target="_blank">Garantir meu Plano Personalizado →</a>
+      <p class="ui-guar">🔒 Vagas limitadas! Como cada plano é feito sob medida, consigo atender apenas um número reduzido de mães por semana.</p>
+    </div>
+
+  </div>
+
+<div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div><!-- /pg-home -->
+
+<!-- ═══ OUTRAS PÁGINAS (awaiting) ═══ -->
+<div class="page" id="pg-ma1"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-ma2"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-ma3">
+  <div class="cb">
+
+    <!-- TAG -->
+    <div style="margin-bottom:14px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#EDE6F8;color:var(--purple);font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:.04em">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Mentoria
+      </span>
+    </div>
+
+    <!-- TÍTULO -->
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--purple-dk);line-height:1.3;margin-bottom:8px">O Segredo para o Bebê Dormir a Noite Toda</h1>
+    <p style="font-size:13px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Sem choro desamparado e sem desespero com a especialista em sono e desenvolvimento infantil <strong style="color:var(--purple-dk)">Thaís Neves</strong>.</p>
+
+    <!-- VÍDEO -->
+    <div style="position:relative;padding-bottom:56.25%;height:0;background:#f0ebf9;border-radius:12px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 12px rgba(80,50,130,.10)">
+      <iframe
+        src="https://www.youtube.com/embed/HKV6cPtLTLU"
+        title="Sono do Bebê com Thaís Neves"
+        frameborder="0"
+        allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+        allowfullscreen
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none">
+      </iframe>
+    </div>
+
+    <!-- DESCRIÇÃO DO VÍDEO -->
+    <div style="background:#FAFAFA;border-radius:12px;padding:14px 15px;margin-bottom:20px;border:1px solid #EDE6F8">
+      <p style="font-size:13px;font-weight:700;color:var(--purple-dk);margin-bottom:6px">🔥 O Segredo para o Bebê Dormir a Noite Toda</p>
+      <p style="font-size:12.5px;color:var(--txt-mid);line-height:1.65">Myrnna recebe a especialista Thaís Neves para destrinchar o que realmente funciona na hora de fazer o bebê dormir. Rotina previsível, papel do pai, quebras de rotina e os 3 maiores erros que deixam bebês exaustos e mães sem dormir.</p>
+    </div>
+
+    <!-- SOBRE -->
+    <div style="margin-bottom:20px">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:7px">📝 Sobre essa Mentoria</p>
+      <p style="font-size:13px;color:var(--txt-mid);line-height:1.7">Nesta mentoria profunda e reveladora, a especialista em sono e desenvolvimento infantil <strong>Thaís Neves</strong> destrincha o que realmente funciona na hora de fazer o bebê dormir. Descubra como criar uma rotina previsível, qual é o verdadeiro papel do pai nesse processo de autonomia, como lidar com quebras de rotina e os 3 maiores erros que deixam os bebês exaustos e as mães sem dormir. Um material essencial para quem quer noites mais tranquilas e saúde para toda a família, ajustando associações fortes (como o peito e o ninar) de forma respeitosa.</p>
+    </div>
+
+    <!-- TÓPICOS -->
+    <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:12px">⏱️ Principais Tópicos</p>
+
+    <div style="display:flex;flex-direction:column;gap:0;border-radius:12px;overflow:hidden;border:1px solid #EDE6F8">
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">00:14</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Introdução: O caso real da Mirna</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como ela passou a dormir a noite toda no próprio quarto em apenas 3 dias.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">05:03</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Conheça a Thaís Neves</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como a privação de sono afeta a vida da mãe e da família inteira.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">07:36</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Existe uma rotina ideal?</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">A partir de qual idade é seguro aplicar o sono noturno contínuo? A mágica do 4º mês.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">11:21</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">O poder da previsibilidade</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como criar um ritual noturno que funciona como um gatilho e "aperta o botão do sono" no cérebro do bebê.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">18:30</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">O papel fundamental do PAI</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">A figura de autonomia e a regra de ouro dos 15 minutos de atenção plena por dia.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">26:38</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Sono durante viagens e festas</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como manter o sono ajustado quando a rotina quebra ou o pai trabalha viajando.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">31:21</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #1: Sinais de sono ignorados</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Não identificar os sinais de sono e deixar o bebê passar do ponto — o perigo do pico de cortisol.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">35:21</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #2: Associações insustentáveis</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Fazer de tudo no desespero e criar associações de ninar e cama compartilhada não planejada.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">41:29</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Educar o sono sem choro</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">É possível treinar o sono do bebê sem deixá-lo chorando sozinho no berço?</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">43:51</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #3: Falta de consistência</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Tentar aplicar várias dicas soltas da internet ao mesmo tempo sem um método claro.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">45:00</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">💬 Sessão de Q&A</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como tirar a associação do ninar, ajustar sonecas do dia, desmame noturno, ciúmes do irmão recém-nascido e despertares na madrugada.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">1:14:09</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Plano de sono passo a passo</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como ter acesso ao curso e suporte completo da Thaís Neves.</p></div>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div style="margin-top:22px;background:#F7F4FB;border-radius:12px;padding:16px 15px;border:1px solid #EDE6F8">
+      <p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:8px">🎯 Siga a Especialista</p>
+      <p style="font-size:13px;color:var(--txt-mid);line-height:1.65;margin-bottom:12px">Gostou dessa mentoria? Siga a especialista <strong style="color:var(--purple-dk)">Thaís Neves</strong> no Instagram para dicas práticas, reais e sem julgamentos sobre as fases do seu filho e rotinas de sono que funcionam de verdade.</p>
+      <a href="https://instagram.com/soumaeurso" target="_blank"
+        style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13px;font-weight:800;padding:10px 18px;border-radius:50px;text-decoration:none">
+        📸 @soumaeurso
+      </a>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+<div class="page" id="pg-ma4"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-ma5"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-ts1">
+  <div class="cb">
+
+    <!-- INTRO HERO -->
+    <div class="intro-c">
+      <h3>Técnicas Secretas Para o Desmame Noturno</h3>
+      <p>O Sonho de Uma Noite Inteira de Sono — e Como Torná-lo Realidade!</p>
+    </div>
+
+    <p class="txt">Se você está lendo este guia, tenho certeza de uma coisa: você está cansada. Exausta, talvez. Provavelmente, já abriu os olhos de madrugada, olhou para o relógio e pensou: <em>"Não acredito que ele está acordando de novo!"</em></p>
+
+    <p class="txt">Eu sei. Eu já estive aí. E, acredite, milhões de mães também. Você ama seu bebê mais do que tudo, mas acordar de hora em hora é um teste de resistência que ninguém avisou que viria no kit maternidade.</p>
+
+    <p class="txt">A boa notícia é que você está no lugar certo. O desmame noturno não precisa ser traumático e, com as estratégias certas, pode ser um processo mais tranquilo do que você imagina.</p>
+
+    <div class="promise">
+      <div class="promise-l">📖 O que você vai encontrar aqui</div>
+      <div class="p-item"><span>✅</span><p>Estratégias realistas para reduzir as mamadas noturnas <strong>sem choro excessivo</strong></p></div>
+      <div class="p-item"><span>✅</span><p>Técnicas para ajudar seu bebê a dormir melhor <strong>sem precisar do peito/mamadeira</strong> toda vez que acordar</p></div>
+      <div class="p-item"><span>✅</span><p>Plano de ação prático para conduzir o desmame noturno com <strong>calma e segurança</strong></p></div>
+      <div class="p-item"><span>✅</span><p>Como lidar com os desafios comuns: choro, resistência e culpa</p></div>
+    </div>
+
+    <div class="quote">
+      O desmame não significa falta de amor. Ele é apenas uma nova fase da jornada materna — e eu estou aqui para te guiar nesse caminho.
+      <span class="quote-by">— Myrnna Gurgel</span>
+    </div>
+
+    <!-- PARTE 1 -->
+    <div class="chap" style="margin:0 -18px 20px;padding:18px 18px">
+      <div class="chap-n">Parte 1</div>
+      <h2>Preparação Para o Desmame Noturno</h2>
+      <p>Antes de começar: o que você precisa saber para ter sucesso!</p>
+    </div>
+
+    <p class="txt">O desmame noturno não é apenas sobre tirar o peito ou a mamadeira — é sobre ajudar seu bebê a desenvolver uma nova relação com o sono. Para isso, precisamos organizar algumas coisas antes de dar o primeiro passo.</p>
+
+    <div class="sh">👶 O Bebê Está Pronto Para o Desmame Noturno?</div>
+    <p class="txt">Antes de tudo, a grande pergunta: será que meu bebê já pode passar a noite sem mamar?</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-n">✓</div><div><h4>Idade apropriada</h4><p>A maioria dos bebês já pode passar a noite sem mamar a partir dos <strong>6 meses</strong>. Se seu bebê já come bem durante o dia e está ganhando peso adequadamente, provavelmente está pronto.</p></div></div>
+      <div class="step"><div class="step-n">✓</div><div><h4>Se alimenta bem durante o dia</h4><p>Se ele está compensando de madrugada porque come pouco durante o dia, vamos ajustar isso antes de iniciar o desmame.</p></div></div>
+      <div class="step"><div class="step-n">✓</div><div><h4>Acorda por hábito, e não por fome</h4><p>Se ele só dá umas sugadinhas no peito/mamadeira e dorme logo depois, pode ser sinal de que não precisa mais dessa mamada para se nutrir.</p></div></div>
+      <div class="step"><div class="step-n">✓</div><div><h4>Já consegue adormecer sem mamar em algumas ocasiões</h4><p>Se às vezes ele dorme no colo do pai, com carinho ou balançando o corpinho, isso mostra que já está começando a desapegar da mamada.</p></div></div>
+    </div>
+
+    <div class="sh">🍽️ O Papel da Alimentação no Desmame Noturno</div>
+    <p class="txt">Um erro comum ao tentar desmamar é esquecer de compensar a alimentação durante o dia. Se o bebê estiver acostumado a ingerir uma grande parte das calorias durante a madrugada, ele pode sentir mais fome à noite.</p>
+
+    <div class="tip">💡 <strong>Dica prática:</strong> Antes de iniciar o desmame, aumente um pouco a quantidade de comida sólida no jantar e ofereça um lanchinho antes de dormir (como mingau, banana amassada ou iogurte natural). Isso pode ajudar seu bebê a sentir-se saciado por mais tempo. Oferecer água regularmente também ajuda.</div>
+
+    <div class="sh">🌙 Criando uma Rotina de Sono Que Facilite o Desmame</div>
+
+    <div class="ritual">
+      <div class="rit"><span class="rit-i">🛁</span><div><span class="rit-l">Ritual de sono previsível</span><span class="rit-s">Banho morno, massagem relaxante, musiquinha tranquila e leitura. Quanto mais previsível, mais o bebê entende que a noite chegou.</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit"><span class="rit-i">🧸</span><div><span class="rit-l">Introduza outra forma de conforto</span><span class="rit-s">Se ele só dorme mamando, inclua carinhos, cheirinho de um paninho ou embalo leve para criar novas associações ao sono.</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit"><span class="rit-i">😴</span><div><span class="rit-l">Reduza a dependência da mamada para dormir</span><span class="rit-s">Retire o peito/mamadeira quando ele estiver sonolento, mas ainda acordado, para que aprenda a adormecer sozinho.</span></div></div>
+      <div class="rit-arr">↓</div>
+      <div class="rit hl"><span class="rit-i">🌑</span><div><span class="rit-l">Evite estímulos antes de dormir</span><span class="rit-s">Nada de telas, brincadeiras agitadas ou luzes muito fortes perto do horário de dormir.</span></div></div>
+    </div>
+
+    <div class="tip">💡 <strong>Dica extra:</strong> Muitos bebês associam a presença da mãe ao leite. Se possível, peça para outra pessoa (como o pai ou avós) ajudar a colocá-lo para dormir em algumas noites antes do desmame. Isso pode fazer uma grande diferença!</div>
+
+    <div class="hc"><span class="hc-i">⚠️</span><div><h4>Quando NÃO Começar o Desmame Noturno?</h4><p>Se o bebê está doente, passando por salto de desenvolvimento, nascendo um dente, se vocês acabaram de mudar de casa ou se a mãe estiver emocionalmente sobrecarregada — espere um momento mais tranquilo.</p></div></div>
+
+    <!-- PARTE 2 -->
+    <div class="chap" style="margin:20px -18px 20px;padding:18px 18px">
+      <div class="chap-n">Parte 2</div>
+      <h2>Técnicas Comprovadas Para o Desmame Suave</h2>
+      <p>Como reduzir as mamadas noturnas sem choros excessivos</p>
+    </div>
+
+    <p class="txt">Com as estratégias certas, paciência e consistência, você e seu bebê vão superar essa fase com muito amor e segurança. Existem algumas abordagens para o desmame noturno, e você pode escolher a que fizer mais sentido para a sua família.</p>
+
+    <div class="sh">📉 Método da Redução Gradual</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div><h4>Escolha uma mamada para eliminar primeiro</h4><p>Se ele mama 3 vezes, comece reduzindo uma.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div><h4>Reduza a duração da mamada</h4><p>Se ele mama por 10 minutos, diminua para 8, depois para 6, e assim por diante.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div><h4>Ofereça outra forma de conforto</h4><p>Carinho, balanço, shhh-shhh, cantar baixinho — algo que o acalme sem precisar do peito ou mamadeira.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div><h4>Repita até a mamada desaparecer</h4><p>Com o tempo, seu bebê vai entender que aquela mamada não é mais necessária. Pode levar dias ou semanas — é super eficaz e gentil.</p></div></div>
+    </div>
+
+    <div class="sh">🔄 Método da Substituição</div>
+    <p class="txt">Esse método funciona bem para bebês que mamam mais por conforto do que por fome.</p>
+    <div class="compare">
+      <div class="cc neutral"><div class="cc-l">Em vez do peito ou mamadeira, ofereça:</div><ul><li>Paninho de apego</li><li>Embalo no colo</li><li>Carinho nas costas</li><li>Frase de acolhimento: <em>"Mamãe está aqui, é hora de dormir, você consegue."</em></li></ul></div>
+    </div>
+    <p class="txt">O segredo é substituir aos poucos a mamada por um novo hábito mais saudável para o sono.</p>
+
+    <div class="sh">⏰ Método do Reposicionamento</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div><h4>Quando o bebê acordar, não pegue imediatamente</h4><p>Veja se ele consegue voltar a dormir sozinho antes de intervir.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div><h4>Se precisar intervir, tente carinho primeiro</h4><p>Toque leve ou sussurros antes de oferecer o peito/mamadeira.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div><h4>Se ele insistir, dê a mamada reduzindo o tempo</h4><p>Isso ensina o bebê a não depender da mamada para dormir novamente.</p></div></div>
+    </div>
+
+    <div class="sh">🕐 Método das Intervaladas</div>
+    <p class="txt">Ótimo para bebês que acordam muitas vezes seguidas pedindo o peito ou a mamadeira.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div><h4>Aumente gradualmente o tempo entre as mamadas</h4><p>Se ele mama de hora em hora, tente estender para 1h30, depois 2h, até começar a dormir períodos mais longos.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div><h4>A cada despertar, tente outras formas de acalmar primeiro</h4><p>Paninho de apego ou balançar um pouquinho antes de oferecer a mamada.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div><h4>Se o bebê resistir, ofereça um tempo de adaptação</h4><p>Alguns bebês precisam de mais dias para se acostumar, e tudo bem!</p></div></div>
+    </div>
+
+    <div class="sh">😢 Como Lidar Com o Choro Sem Voltar Atrás?</div>
+    <div class="compare">
+      <div class="cc good"><div class="cc-l">✅ Faça isso</div><ul><li><strong>Seja firme e amorosa</strong> — demonstre que entende a frustração dele, mas mantenha a decisão</li><li><strong>Esteja presente</strong> — acolher não significa ceder! Segure a mão dele, faça carinho</li><li><strong>Fale com voz tranquila</strong> — "Mamãe está aqui, você está seguro"</li></ul></div>
+      <div class="cc bad"><div class="cc-l">❌ Evite</div><ul><li>Métodos que envolvam deixar o bebê chorando sozinho</li><li>Ceder à mamada após longo choro — isso só prolonga o processo</li></ul></div>
+    </div>
+
+    <!-- PARTE 3 -->
+    <div class="chap" style="margin:20px -18px 20px;padding:18px 18px">
+      <div class="chap-n">Parte 3</div>
+      <h2>Estratégias Para Um Sono Mais Longo e Restaurador</h2>
+      <p>Como ensinar o bebê a dormir melhor sem mamadas noturnas</p>
+    </div>
+
+    <div class="sh">🗓️ Criando Uma Rotina Noturna Eficiente</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">🕐</div><div><h4>Horários consistentes</h4><p>Fazer com que o bebê durma e acorde em horários semelhantes todos os dias ajuda o relógio biológico a funcionar melhor.</p></div></div>
+      <div class="step"><div class="step-n">📵</div><div><h4>Diminua estímulos antes de dormir</h4><p>Evite telas e brincadeiras agitadas pelo menos 1 hora antes do sono.</p></div></div>
+      <div class="step"><div class="step-n">🌙</div><div><h4>Crie um ritual de sono agradável</h4><p>Banho, massagem, historinha, luz baixa — tudo isso sinaliza para o bebê que a noite chegou.</p></div></div>
+    </div>
+
+    <div class="sh">🛏️ Ensine o Bebê a Voltar a Dormir Sozinho</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">🧸</div><div><h4>Objeto de apego</h4><p>Um paninho com o cheiro da mamãe pode ajudar na transição.</p></div></div>
+      <div class="step"><div class="step-n">⏳</div><div><h4>Espere antes de intervir</h4><p>Às vezes, o bebê acorda e volta a dormir sozinho se ninguém pegá-lo no colo imediatamente.</p></div></div>
+      <div class="step"><div class="step-n">🤲</div><div><h4>Conforto alternativo</h4><p>Em vez de pegar no colo, tente carinho nas costas ou cantar uma musiquinha suave.</p></div></div>
+    </div>
+
+    <div class="sh">🌑 Ajustes no Ambiente do Sono</div>
+    <div class="ages">
+      <div class="age"><strong>Quarto escuro</strong><span>O bebê dorme melhor sem claridade. Use blackout.</span></div>
+      <div class="age"><strong>Ruído branco</strong><span>Sons suaves ajudam a evitar despertares externos.</span></div>
+      <div class="age"><strong>Temperatura ideal</strong><span>21–24°C. Nem muito frio, nem muito quente.</span></div>
+      <div class="age"><strong>Ambiente aconchegante</strong><span>Berço seguro, sem travesseiros ou cobertores soltos.</span></div>
+    </div>
+
+    <!-- PARTE 4 -->
+    <div class="chap" style="margin:20px -18px 20px;padding:18px 18px">
+      <div class="chap-n">Parte 4</div>
+      <h2>Como Lidar Com Desafios Comuns</h2>
+      <p>O que fazer se o bebê resistir ao desmame noturno?</p>
+    </div>
+
+    <div class="errcard">
+      <div class="err-hd"><span class="err-n">Desafio 1</span><h3>E Se o Bebê Chorar Muito?</h3></div>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">O choro faz parte do processo — o bebê está se adaptando a uma nova forma de dormir.</p>
+      <div class="dolist">
+        <div class="doi"><span>💜</span><p><strong>O choro não significa sofrimento</strong> — ele pode estar demonstrando frustração com a mudança.</p></div>
+        <div class="doi"><span>🤝</span><p><strong>Acolha, mas mantenha a decisão</strong> — segure a mão dele, faça carinho e fale com voz calma.</p></div>
+        <div class="doi"><span>🔄</span><p><strong>Seja consistente</strong> — ceder a uma mamada no meio da noite após longo choro só vai confundir o bebê.</p></div>
+      </div>
+      <div class="tip">💡 Se o bebê estiver chorando por muito tempo e você estiver insegura, pause e tente outro método. O desmame não precisa ser traumático — vá no ritmo que for confortável para vocês.</div>
+    </div>
+
+    <div class="errcard">
+      <div class="err-hd"><span class="err-n">Desafio 2</span><h3>E Se o Bebê Acordar Mais Vezes do Que Antes?</h3></div>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">Alguns bebês passam por um período de adaptação em que acordam mais antes de dormir melhor. É normal.</p>
+      <div class="dolist">
+        <div class="doi"><span>🌡️</span><p>Verifique se o ambiente está confortável: luz, temperatura, barulho</p></div>
+        <div class="doi"><span>🤲</span><p>Ofereça outra forma de conforto: segure a mãozinha, cante baixinho, faça carinho</p></div>
+        <div class="doi"><span>💬</span><p>Demonstre presença: <em>"A mamãe está aqui, você está seguro."</em></p></div>
+      </div>
+      <div class="tip">💡 Se os despertares noturnos aumentarem muito e durarem mais de 1 semana, reavalie a rotina diurna para garantir que o bebê está descansado o suficiente.</div>
+    </div>
+
+    <div class="hc"><span class="hc-i">💜</span><div><h4>E Se Eu Me Sentir Culpada?</h4><p>O desmame noturno não significa falta de amor! Você está ajudando seu bebê a desenvolver hábitos de sono mais saudáveis. Ele vai continuar te amando e confiando em você — porque amor não é só peito ou mamadeira, é presença, aconchego e cuidado.</p></div></div>
+
+    <!-- PARTE 5 -->
+    <div class="chap" style="margin:20px -18px 20px;padding:18px 18px">
+      <div class="chap-n">Parte 5</div>
+      <h2>Plano de Ação Para o Desmame Noturno</h2>
+      <p>Seu passo a passo para conquistar noites de sono tranquilas</p>
+    </div>
+
+    <div class="paso"><div class="paso-n">Passo 1</div><h3>Avalie se o bebê está pronto</h3><p>O bebê já tem mais de 6 meses? Ele come bem durante o dia? Acorda por hábito e não por fome? Já consegue dormir sem mamar em alguns momentos? Se respondeu SIM para todas, siga!</p></div>
+
+    <div class="paso"><div class="paso-n">Passo 2</div><h3>Ajuste a Alimentação e a Rotina de Sono</h3><p>Aumente a oferta de comida sólida durante o dia, inclua um lanchinho antes de dormir, estabeleça um ritual de sono tranquilo e introduza formas alternativas de conforto.</p></div>
+    <div class="tip">💡 O sucesso do desmame noturno começa antes mesmo de tirar a mamada!</div>
+
+    <div class="paso"><div class="paso-n">Passo 3</div><h3>Escolha Sua Estratégia de Desmame</h3><p>Escolha a que mais faz sentido para você e aplique com paciência e consistência.</p></div>
+    <div class="compare">
+      <div class="cc neutral"><div class="cc-l">Estratégias disponíveis</div><ul><li><strong>Redução gradual</strong> — diminua o tempo da mamada aos poucos</li><li><strong>Substituição</strong> — troque a mamada por carinho ou embalo</li><li><strong>Reposicionamento</strong> — ensine o bebê a se acalmar sem o peito</li><li><strong>Intervaladas</strong> — aumente o tempo entre as mamadas</li></ul></div>
+    </div>
+
+    <div class="paso"><div class="paso-n">Passo 4</div><h3>Seja Firme e Amorosa</h3><p>Se o bebê chorar, esteja presente e acolha. Não volte atrás na decisão. Reforce a segurança com toques e palavras de carinho. <strong>Seu bebê percebe suas emoções — seja firme, mas amorosa.</strong></p></div>
+
+    <div class="paso"><div class="paso-n">Passo 5</div><h3>Ajuste Conforme Necessário</h3><p>Se algo não estiver funcionando, ajuste a abordagem. Respeite o ritmo do bebê, mas sem perder a consistência. Se houver resistência extrema, dê um passo atrás e tente de novo.</p></div>
+    <div class="tip">💡 O desmame noturno não é uma corrida — cada bebê tem seu tempo!</div>
+
+    <!-- CONCLUSÃO -->
+    <div class="chap" style="margin:20px -18px 20px;padding:18px 18px">
+      <div class="chap-n">Conclusão</div>
+      <h2>O Desmame Noturno é um Novo Começo</h2>
+      <p>Para você e seu bebê</p>
+    </div>
+
+    <p class="txt">Se você chegou até aqui, significa que percorreu toda a jornada do desmame noturno com informação, paciência e muito amor. E isso merece ser celebrado!</p>
+
+    <div class="conqs">
+      <div class="conq"><span class="conq-i">😴</span><h4>Bebê dorme melhor</h4><p>Mais horas seguidas, mais descansado e feliz</p></div>
+      <div class="conq"><span class="conq-i">🗓️</span><h4>Rotina previsível</h4><p>Mais tranquilidade para o dia a dia de toda a família</p></div>
+      <div class="conq"><span class="conq-i">💪</span><h4>Mais energia para você</h4><p>Mais tempo para descansar e aproveitar o dia com ele</p></div>
+      <div class="conq"><span class="conq-i">💜</span><h4>Vínculo mantido</h4><p>Desmame não é afastamento — é evolução</p></div>
+    </div>
+
+    <div class="quote">
+      O desmame noturno não é o fim de um ciclo, mas o começo de uma nova fase. E se teve uma coisa que esse processo ensinou, é que você é mais forte e mais capaz do que imagina.
+      <span class="quote-by">— Myrnna Gurgel</span>
+    </div>
+
+    <!-- CTA UPSELL SUTIL -->
+    <div style="background:var(--purple-pale);border:1px solid var(--purple-soft);border-radius:var(--r);padding:20px 18px;text-align:center;margin-top:8px">
+      <p style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:8px">✨ Quer ir mais longe?</p>
+      <p style="font-family:'Playfair Display',serif;font-size:17px;color:var(--plum);margin-bottom:8px;line-height:1.4">E se você tivesse um plano feito sob medida para o <em>seu</em> bebê?</p>
+      <p style="font-size:13px;color:var(--txt-mid);line-height:1.65;margin-bottom:16px">O <strong>Plano de Sono Personalizado</strong> adapta todas essas técnicas à realidade única do seu bebê — sua idade, temperamento e os desafios específicos da sua família. Sem tentativas frustradas.</p>
+      <a onclick="go('plano',null)" style="display:inline-block;background:linear-gradient(135deg,var(--purple),var(--purple-lt));color:#fff;font-size:13.5px;font-weight:800;padding:12px 26px;border-radius:50px;cursor:pointer;box-shadow:0 4px 16px rgba(124,92,191,.3)">Ver o Plano Personalizado →</a>
+      <p style="font-size:11px;color:var(--txt-soft);margin-top:10px">R$47 · pagamento único · resultado em até 3 dias</p>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+<div class="page" id="pg-ts2"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-ts3"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-ts4"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-b1"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-b2"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mt1">
+  <div class="cb">
+
+    <!-- TAG -->
+    <div style="margin-bottom:14px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#EDE6F8;color:var(--purple);font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:.04em">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Mentoria
+      </span>
+    </div>
+
+    <!-- TÍTULO -->
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--purple-dk);line-height:1.3;margin-bottom:8px">O Segredo para o Bebê Dormir a Noite Toda</h1>
+    <p style="font-size:13px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Sem choro desamparado e sem desespero com a especialista em sono e desenvolvimento infantil <strong style="color:var(--purple-dk)">Thaís Neves</strong>.</p>
+
+    <!-- VÍDEO -->
+    <div style="position:relative;padding-bottom:56.25%;height:0;background:#f0ebf9;border-radius:12px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 12px rgba(80,50,130,.10)">
+      <iframe
+        src="https://www.youtube.com/embed/HKV6cPtLTLU"
+        title="Sono do Bebê com Thaís Neves"
+        frameborder="0"
+        allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+        allowfullscreen
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none">
+      </iframe>
+    </div>
+
+    <!-- DESCRIÇÃO DO VÍDEO -->
+    <div style="background:#FAFAFA;border-radius:12px;padding:14px 15px;margin-bottom:20px;border:1px solid #EDE6F8">
+      <p style="font-size:13px;font-weight:700;color:var(--purple-dk);margin-bottom:6px">🔥 O Segredo para o Bebê Dormir a Noite Toda</p>
+      <p style="font-size:12.5px;color:var(--txt-mid);line-height:1.65">Myrnna recebe a especialista Thaís Neves para destrinchar o que realmente funciona na hora de fazer o bebê dormir. Rotina previsível, papel do pai, quebras de rotina e os 3 maiores erros que deixam bebês exaustos e mães sem dormir.</p>
+    </div>
+
+    <!-- SOBRE -->
+    <div style="margin-bottom:20px">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:7px">📝 Sobre essa Mentoria</p>
+      <p style="font-size:13px;color:var(--txt-mid);line-height:1.7">Nesta mentoria profunda e reveladora, a especialista em sono e desenvolvimento infantil <strong>Thaís Neves</strong> destrincha o que realmente funciona na hora de fazer o bebê dormir. Descubra como criar uma rotina previsível, qual é o verdadeiro papel do pai nesse processo de autonomia, como lidar com quebras de rotina e os 3 maiores erros que deixam os bebês exaustos e as mães sem dormir. Um material essencial para quem quer noites mais tranquilas e saúde para toda a família, ajustando associações fortes (como o peito e o ninar) de forma respeitosa.</p>
+    </div>
+
+    <!-- TÓPICOS -->
+    <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:12px">⏱️ Principais Tópicos</p>
+
+    <div style="display:flex;flex-direction:column;gap:0;border-radius:12px;overflow:hidden;border:1px solid #EDE6F8">
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">00:14</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Introdução: O caso real da Mirna</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como ela passou a dormir a noite toda no próprio quarto em apenas 3 dias.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">05:03</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Conheça a Thaís Neves</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como a privação de sono afeta a vida da mãe e da família inteira.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">07:36</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Existe uma rotina ideal?</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">A partir de qual idade é seguro aplicar o sono noturno contínuo? A mágica do 4º mês.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">11:21</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">O poder da previsibilidade</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como criar um ritual noturno que funciona como um gatilho e "aperta o botão do sono" no cérebro do bebê.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">18:30</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">O papel fundamental do PAI</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">A figura de autonomia e a regra de ouro dos 15 minutos de atenção plena por dia.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">26:38</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Sono durante viagens e festas</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como manter o sono ajustado quando a rotina quebra ou o pai trabalha viajando.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">31:21</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #1: Sinais de sono ignorados</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Não identificar os sinais de sono e deixar o bebê passar do ponto — o perigo do pico de cortisol.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">35:21</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #2: Associações insustentáveis</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Fazer de tudo no desespero e criar associações de ninar e cama compartilhada não planejada.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">41:29</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Educar o sono sem choro</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">É possível treinar o sono do bebê sem deixá-lo chorando sozinho no berço?</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">43:51</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #3: Falta de consistência</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Tentar aplicar várias dicas soltas da internet ao mesmo tempo sem um método claro.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">45:00</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">💬 Sessão de Q&A</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como tirar a associação do ninar, ajustar sonecas do dia, desmame noturno, ciúmes do irmão recém-nascido e despertares na madrugada.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA">
+        <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">1:14:09</span>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Plano de sono passo a passo</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como ter acesso ao curso e suporte completo da Thaís Neves.</p></div>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div style="margin-top:22px;background:#F7F4FB;border-radius:12px;padding:16px 15px;border:1px solid #EDE6F8">
+      <p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:8px">🎯 Siga a Especialista</p>
+      <p style="font-size:13px;color:var(--txt-mid);line-height:1.65;margin-bottom:12px">Gostou dessa mentoria? Siga a especialista <strong style="color:var(--purple-dk)">Thaís Neves</strong> no Instagram para dicas práticas, reais e sem julgamentos sobre as fases do seu filho e rotinas de sono que funcionam de verdade.</p>
+      <a href="https://instagram.com/soumaeurso" target="_blank"
+        style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13px;font-weight:800;padding:10px 18px;border-radius:50px;text-decoration:none">
+        📸 @soumaeurso
+      </a>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+<div class="page" id="pg-mt2"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mt3"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mt4"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mt5"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mt6"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mt7"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mt8"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mt9"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mc1"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+<div class="page" id="pg-mc2"><div class="cb"><div class="await">
+  <span class="await-i">🔒</span>
+  <h3>Aguarde!</h3>
+  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
+</div></div></div>
+
+<!-- PLANO UPSELL -->
+<div class="page" id="pg-plano">
+  <div class="up-hero">
+    <span class="up-badge">⭐ Oferta Especial</span>
+    <h1>Plano de Sono Personalizado</h1>
+    <p>Um plano criado especialmente para o seu bebê, com base nas características únicas dele. Não genérico. Feito para a sua família.</p>
+    <div class="up-price-tag"><div class="up-from">de R$97,00</div><div class="up-price"><sup>R$</sup>47,90</div><div class="up-sub">pagamento único · acesso imediato</div></div>
+    <br>
+    <a class="btn-main" href="https://www.myrnnagurgel.com.br/app-sono-red" target="_blank">Quero meu Plano Personalizado →</a>
+    <p class="up-guar">🔒 Garantia de 7 dias — satisfação ou reembolso total</p>
+  </div>
+  <div class="cb">
+    <div class="sh">🎯 O que está incluído</div>
+    <div class="feat"><span class="feat-i">📋</span><div><h4>Diagnóstico Completo</h4><p>Avaliação do perfil de sono do seu bebê com base nas respostas do seu formulário personalizado.</p></div></div>
+    <div class="feat"><span class="feat-i">🌙</span><div><h4>Rotina Individualizada</h4><p>Horários, rituais e estratégias desenhados especificamente para a idade e temperamento do seu bebê.</p></div></div>
+    <div class="feat"><span class="feat-i">📞</span><div><h4>Suporte Exclusivo</h4><p>Acesso ao suporte da equipe Myrnna Gurgel para tirar dúvidas sobre o seu plano.</p></div></div>
+    <div class="feat"><span class="feat-i">⚡</span><div><h4>Entrega Rápida</h4><p>Seu plano personalizado entregue em até 3 dias úteis após o preenchimento do formulário.</p></div></div>
+    <div class="quote" style="margin-top:16px">Cada bebê é único. E o seu merece um plano que respeite exatamente quem ele é — seu temperamento, sua fase, suas necessidades.<span class="quote-by">— Myrnna Gurgel</span></div>
+    <div style="text-align:center;padding:6px 0 18px">
+      <a class="btn-main" href="https://www.myrnnagurgel.com.br/app-sono-red" target="_blank">Solicitar meu Plano — R$47,90 →</a>
+      <p style="font-size:12px;color:var(--txt-mid);margin-top:10px">Após a compra, você receberá o formulário por e-mail para preencher as informações do seu bebê.</p>
+    </div>
+  </div>
+
+<div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+
+</main>
+</div>
+
+<script>
+const T={pt:{nav_home:"Sono Sem Choro",nav_inicio:"Início",nav_ma:"Master Aulas",nav_ma1:"Sono Dia 1 — Métodos e Soluções",nav_ma2:"Sono Dia 2 — Noites Tranquilas",nav_ma3:"Mentoria com Thaís Neves",nav_ma4:"Aula 1 — Manual do Sono",nav_ma5:"Aula 2 — Manual do Sono Prático",nav_ts:"Técnicas Secretas Desmame Noturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabela de Rotina Ideal",nav_ts3:"Checklist Organização do Sono",nav_ts4:"Frases de Acolhimento",nav_bonus:"Bônus Exclusivos",nav_b1:"Mapa de Crise do Sono",nav_b2:"Guia de Emergência",nav_mt:"Mentoria com Profissionais",nav_mt1:"Sono do Bebê — Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquiagem — Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementar",nav_mc1:"Cardápio — Alimentos Para Dormir",nav_mc2:"Manual — Rituais Que Funcionam",nav_plano:"Plano de Sono Personalizado",btn_wa:"Resgatar meu brinde e salvar o link do app!"},es:{nav_home:"Sueño Sin Llanto",nav_inicio:"Inicio",nav_ma:"Master Clases",nav_ma1:"Sueño Día 1 — Métodos y Soluciones",nav_ma2:"Sueño Día 2 — Noches Tranquilas",nav_ma3:"Mentoría con Thaís Neves",nav_ma4:"Clase 1 — Manual del Sueño",nav_ma5:"Clase 2 — Manual del Sueño Práctico",nav_ts:"Técnicas Secretas Destete Nocturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabla de Rutina Ideal",nav_ts3:"Checklist Organización del Sueño",nav_ts4:"Frases de Acogida",nav_bonus:"Bonos Exclusivos",nav_b1:"Mapa de Crisis del Sueño",nav_b2:"Guía de Emergencia",nav_mt:"Mentoría con Profesionales",nav_mt1:"Sueño del Bebé — Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquillaje — Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementario",nav_mc1:"Menú — Alimentos Para Dormir",nav_mc2:"Manual — Rituales Que Funcionan",nav_plano:"Plan de Sueño Personalizado",btn_wa:"¡Canjear mi regalo y guardar el link!"}};
+
+let lang=localStorage.getItem('snc_lang')||'pt';
+function setLang(l){lang=l;localStorage.setItem('snc_lang',l);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',b.textContent.trim().toLowerCase()===l));document.querySelectorAll('[data-key]').forEach(el=>{const k=el.dataset.key;if(T[l]&&T[l][k])el.textContent=T[l][k]});document.documentElement.lang=l==='pt'?'pt-BR':'es'}
+setLang(lang);
+
+function goHome(el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pg-home').classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));
+  document.querySelectorAll('.grp-hd').forEach(h=>h.classList.remove('active-group'));
+  el.classList.add('active-group');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=768)closeSB();
+}
+function go(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const pg=document.getElementById('pg-'+id);
+  if(pg)pg.classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));
+  if(el&&el.classList.contains('sb-item'))el.classList.add('on');
+  // update active group header
+  document.querySelectorAll('.grp-hd').forEach(h=>h.classList.remove('active-group'));
+  if(el){const grpHd=el.closest('.grp')?.querySelector('.grp-hd');if(grpHd)grpHd.classList.add('active-group')}
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=768)closeSB();
+}
+
+function toggleGrp(hd){hd.parentElement.classList.toggle('open');hd.classList.toggle('active-group',hd.parentElement.classList.contains('open'))}
+
+const burger=document.getElementById('burgerBtn');
+const sidebar=document.getElementById('sidebar');
+const overlay=document.getElementById('overlay');
+burger.addEventListener('click',()=>{sidebar.classList.add('open');overlay.classList.add('show');document.body.style.overflow='hidden'});
+function closeSB(){sidebar.classList.remove('open');overlay.classList.remove('show');document.body.style.overflow=''}
+overlay.addEventListener('click',closeSB);
+
+function scrl(id,btn){const el=document.getElementById(id);if(!el)return;const top=el.getBoundingClientRect().top+window.scrollY-60;window.scrollTo({top,behavior:'smooth'});document.querySelectorAll('.pills .pill').forEach(p=>p.classList.remove('on'));if(btn)btn.classList.add('on')}
+</script>
+</body>
+</html>
