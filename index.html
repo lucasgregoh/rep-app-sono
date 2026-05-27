@@ -5,6 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Sono Sem Choro — Myrnna Gurgel</title>
 <link rel="icon" type="image/jpeg" href="https://i.imgur.com/n4jXPMo.jpeg">
+<!-- Android home screen icon -->
+<link rel="manifest" href="data:application/manifest+json,{
+  &quot;name&quot;: &quot;Sono Sem Choro&quot;,
+  &quot;short_name&quot;: &quot;Sono Sem Choro&quot;,
+  &quot;description&quot;: &quot;Método Sono Sem Choro por Myrnna Gurgel&quot;,
+  &quot;start_url&quot;: &quot;.&quot;,
+  &quot;display&quot;: &quot;standalone&quot;,
+  &quot;background_color&quot;: &quot;#3D2260&quot;,
+  &quot;theme_color&quot;: &quot;#3D2260&quot;,
+  &quot;icons&quot;: [{
+    &quot;src&quot;: &quot;https://i.imgur.com/n4jXPMo.jpeg&quot;,
+    &quot;sizes&quot;: &quot;192x192&quot;,
+    &quot;type&quot;: &quot;image/jpeg&quot;
+  },{
+    &quot;src&quot;: &quot;https://i.imgur.com/n4jXPMo.jpeg&quot;,
+    &quot;sizes&quot;: &quot;512x512&quot;,
+    &quot;type&quot;: &quot;image/jpeg&quot;
+  }]
+}">
+<meta name="theme-color" content="#3D2260">
+<!-- iOS home screen icon -->
+<link rel="apple-touch-icon" href="https://i.imgur.com/n4jXPMo.jpeg">
+<!-- iOS: remove browser chrome quando adicionado à tela inicial -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sono Sem Choro">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ══════════ LIQUID MINIMAL — SONO SEM CHORO ══════════ */
@@ -741,6 +767,49 @@ fbq('trackCustom', 'aluna-sono-bb');
 src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
+<!-- OneSignal Push Notifications -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "8ff334db-ba64-407c-a319-d186f113cb80",
+      welcomeNotification: {
+        title: "Sono Sem Choro 🌙",
+        message: "Bem-vinda! Você vai receber novidades e conteúdos exclusivos aqui.",
+      },
+      promptOptions: {
+        slidedown: {
+          prompts: [{
+            type: "push",
+            autoPrompt: true,
+            text: {
+              actionMessage: "Quer receber notificações quando novos conteúdos forem liberados?",
+              acceptButton: "Sim, quero!",
+              cancelButton: "Agora não",
+            },
+            delay: {
+              pageViews: 1,
+              timeDelay: 5,
+            },
+          }],
+        },
+      },
+    });
+    // Tag para segmentar alunas do Sono Sem Choro
+    OneSignal.User.addTag("produto", "sono-sem-choro");
+  });
+</script>
+<!-- End OneSignal -->
+<!-- Google Analytics GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ME4XT7WHTM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ME4XT7WHTM');
+</script>
+<!-- End Google Analytics -->
 </head>
 <body>
 
@@ -863,10 +932,10 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
   </nav>
 
   <div class="sb-foot">
-    <a class="btn-wa" href="https://www.myrnnagurgel.com.br/app-sono-red" target="_blank">
+    <a class="btn-wa" href="https://www.myrnnagurgel.com.br/app-sono-red" onclick="gtag('event','click',{event_category:'botao',event_label:'whatsapp_suporte'})" target="_blank">
       💬 <span data-key="btn_wa">Resgatar meu brinde e salvar o link do app!</span>
     </a>
-    <a class="btn-ig" href="https://instagram.com/myrnnagurgel" target="_blank">
+    <a class="btn-ig" href="https://instagram.com/myrnnagurgel" onclick="gtag('event','click',{event_category:'botao',event_label:'instagram_myrnna'})" target="_blank">
       📸 <span data-key="btn_ig">Seguir no Instagram!</span>
     </a>
   </div>
@@ -1414,7 +1483,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <h3>Plano de Sono Personalizado</h3>
       <p>Um plano 100% personalizado para a sua realidade — sem achismos, sem tentativas frustradas. Resultados ainda mais rápidos, porque cada detalhe será ajustado para funcionar na sua casa.</p>
       <div class="ui-price">Apenas <strong>R$47</strong></div>
-      <a class="btn-main" style="cursor:pointer" onclick="go('plano',null)">Garantir meu Plano Personalizado →</a>
+      <a class="btn-main" style="cursor:pointer" onclick="go('plano',null);gtag('event','click',{event_category:'upsell',event_label:'plano_personalizado_home'})">Garantir meu Plano Personalizado →</a>
       <p class="ui-guar">🔒 Vagas limitadas! Como cada plano é feito sob medida, consigo atender apenas um número reduzido de mães por semana.</p>
     </div>
 
@@ -1515,7 +1584,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div style="margin-top:22px;background:var(--purple-pale);border-radius:var(--r);padding:18px;border:1px solid var(--purple-soft)">
       <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
       <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:14px">Quer acompanhar os bastidores dessa evolução e aprender a estruturar a rotina do seu filho de forma leve e profissional? Siga <strong style="color:var(--plum)">Thaís Neves</strong> no Instagram para as ferramentas ideais para desatar os nós do sono infantil e devolver o descanso que a sua família tanto precisa.</p>
-      <a href="https://instagram.com/soumaeurso" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+      <a href="https://instagram.com/soumaeurso" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_thais_neves'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
         📸 @soumaeurso
       </a>
     </div>
@@ -1619,7 +1688,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div style="margin-top:22px;background:var(--purple-pale);border-radius:var(--r);padding:18px;border:1px solid var(--purple-soft)">
       <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
       <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:14px">Quer descobrir como montar o plano de sono ideal para a idade do seu filho e acabar de vez com a exaustão materna? Siga <strong style="color:var(--plum)">Thaís Neves</strong> no Instagram para ferramentas práticas sobre rotina infantil, desassociação do mamar e como devolver a paz e o descanso para o seu lar.</p>
-      <a href="https://instagram.com/soumaeurso" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+      <a href="https://instagram.com/soumaeurso" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_thais_neves'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
         📸 @soumaeurso
       </a>
     </div>
@@ -1977,7 +2046,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <p style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:8px">✨ Quer ir mais longe?</p>
       <p style="font-family:'Playfair Display',serif;font-size:17px;color:var(--plum);margin-bottom:8px;line-height:1.4">E se você tivesse um plano feito sob medida para o <em>seu</em> bebê?</p>
       <p style="font-size:13px;color:var(--txt-mid);line-height:1.65;margin-bottom:16px">O <strong>Plano de Sono Personalizado</strong> adapta todas essas técnicas à realidade única do seu bebê — sua idade, temperamento e os desafios específicos da sua família. Sem tentativas frustradas.</p>
-      <a onclick="go('plano',null)" style="display:inline-block;background:linear-gradient(135deg,var(--purple),var(--purple-lt));color:#fff;font-size:13.5px;font-weight:800;padding:12px 26px;border-radius:50px;cursor:pointer;box-shadow:0 4px 16px rgba(124,92,191,.3)">Ver o Plano Personalizado →</a>
+      <a onclick="go('plano',null);gtag('event','click',{event_category:'upsell',event_label:'plano_personalizado_tecnicas'})" style="display:inline-block;background:linear-gradient(135deg,var(--purple),var(--purple-lt));color:#fff;font-size:13.5px;font-weight:800;padding:12px 26px;border-radius:50px;cursor:pointer;box-shadow:0 4px 16px rgba(124,92,191,.3)">Ver o Plano Personalizado →</a>
       <p style="font-size:11px;color:var(--txt-soft);margin-top:10px">R$47 · pagamento único · resultado em até 3 dias</p>
     </div>
 
@@ -2235,7 +2304,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
       <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:6px">Para ter uma maternidade mais leve, com orientações seguras e atualizadas sobre o desenvolvimento e a saúde do seu bebê, siga a pediatra <strong style="color:var(--plum)">Dra. Camila Bastos</strong> no Instagram!</p>
       <p style="font-size:13.5px;color:var(--txt-mid);line-height:1.65;margin-bottom:14px">💰 Se você disser que veio por essa mentoria, garante <strong style="color:var(--plum)">15% de desconto</strong> na consulta online com ela.</p>
-      <a href="https://instagram.com/dracamilabastosped" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+      <a href="https://instagram.com/dracamilabastosped" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_camila_bastos'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
         📸 @dracamilabastosped
       </a>
     </div>
@@ -2297,7 +2366,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <p>Um plano criado especialmente para o seu bebê, com base nas características únicas dele. Não genérico. Feito para a sua família.</p>
     <div class="up-price-tag"><div class="up-from">de R$97,00</div><div class="up-price"><sup>R$</sup>47,90</div><div class="up-sub">pagamento único · acesso imediato</div></div>
     <br>
-    <a class="btn-main" href="https://www.myrnnagurgel.com.br/wpp-pix-plano-sono" target="_blank">Quero meu Plano Personalizado →</a>
+    <a class="btn-main" href="https://www.myrnnagurgel.com.br/wpp-pix-plano-sono" target="_blank" onclick="gtag('event','click',{event_category:'upsell',event_label:'plano_personalizado_hero'})">Quero meu Plano Personalizado →</a>
     <p class="up-guar">🔒 Garantia de 7 dias — satisfação ou reembolso total</p>
   </div>
   <div class="cb">
@@ -2308,7 +2377,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div class="feat"><span class="feat-i">⚡</span><div><h4>Entrega Rápida</h4><p>Seu plano personalizado entregue em até 3 dias úteis após o preenchimento do formulário.</p></div></div>
     <div class="quote" style="margin-top:16px">Cada bebê é único. E o seu merece um plano que respeite exatamente quem ele é — seu temperamento, sua fase, suas necessidades.<span class="quote-by">— Myrnna Gurgel</span></div>
     <div style="text-align:center;padding:6px 0 18px">
-      <a class="btn-main" href="https://www.myrnnagurgel.com.br/wpp-pix-plano-sono" target="_blank">Solicitar meu Plano — R$47,90 →</a>
+      <a class="btn-main" href="https://www.myrnnagurgel.com.br/wpp-pix-plano-sono" target="_blank" onclick="gtag('event','click',{event_category:'upsell',event_label:'plano_personalizado_rodape'})">Solicitar meu Plano — R$47,90 →</a>
       <p style="font-size:12px;color:var(--txt-mid);margin-top:10px">Após a compra, você receberá o form por whatsapp para preencher as informações do seu bebê. <em>(Se você já comprou o Plano Personalizado clique no botão acima e avise que já comprou enviando o seu e-mail para verificar.)</em></p>
     </div>
   </div>
@@ -2346,6 +2415,15 @@ function go(id,el){
   if(el){const grpHd=el.closest('.grp')?.querySelector('.grp-hd');if(grpHd)grpHd.classList.add('active-group')}
   window.scrollTo({top:0,behavior:'smooth'});
   if(window.innerWidth<=768)closeSB();
+  if(typeof gtag!=='undefined'){gtag('event','page_view',{page_title:id,page_path:'/#'+id});}
+  // GA4 — rastreia troca de seção como page_view
+  if(typeof gtag!=='undefined'){
+    gtag('event','page_view',{
+      page_title: id,
+      page_location: window.location.href + '#' + id,
+      page_path: '/#' + id
+    });
+  }
 }
 
 function toggleGrp(hd){hd.parentElement.classList.toggle('open');hd.classList.toggle('active-group',hd.parentElement.classList.contains('open'))}
