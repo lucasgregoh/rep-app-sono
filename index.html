@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Sono Sem Choro — Myrnna Gurgel</title>
+<title>Sono Sem Choro Myrnna Gurgel</title>
 <link rel="icon" type="image/jpeg" href="https://i.imgur.com/n4jXPMo.jpeg">
 <!-- Android home screen icon -->
 <link rel="manifest" href="data:application/manifest+json,{
@@ -33,7 +33,7 @@
 <meta name="apple-mobile-web-app-title" content="Sono Sem Choro">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ══════════ LIQUID MINIMAL — SONO SEM CHORO ══════════ */
+/* ══════════ LIQUID MINIMAL SONO SEM CHORO ══════════ */
 :root {
   /* Brand */
   --plum:        #3D2260;   /* topbar only */
@@ -110,7 +110,7 @@ button{font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:non
 /* ══ LAYOUT ══ */
 .wrap{display:flex;padding-top:var(--top-h);min-height:100vh}
 
-/* ══ SIDEBAR — clean white, liquid feel ══ */
+/* ══ SIDEBAR clean white, liquid feel ══ */
 .sidebar{
   width:var(--sb-w);
   position:fixed;top:var(--top-h);bottom:0;left:0;
@@ -222,7 +222,7 @@ button{font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:non
 .txt{font-size:15px;color:var(--txt);line-height:1.85;margin-bottom:16px}
 .txt strong{color:var(--plum)}
 
-/* ══ MAIN HERO — liquid blob background ══ */
+/* ══ MAIN HERO liquid blob background ══ */
 .main-hero{
   background:var(--plum);
   padding:32px 20px 28px;
@@ -316,7 +316,7 @@ button{font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:non
 /* ══ TIP ══ */
 .tip{background:linear-gradient(135deg,rgba(200,169,110,.1),rgba(200,169,110,.06));border-radius:var(--r-sm);border-left:3px solid var(--gold);padding:14px 16px;font-size:14px;color:var(--txt);line-height:1.6;margin-bottom:16px}
 
-/* ══ QUOTE — liquid style ══ */
+/* ══ QUOTE liquid style ══ */
 .quote{background:var(--purple-pale);border-radius:var(--r);padding:22px 20px 18px;font-family:'Playfair Display',serif;font-style:italic;font-size:15.5px;color:var(--plum);line-height:1.75;position:relative;margin-bottom:18px;border:1px solid var(--purple-soft)}
 .quote::before{
   content:'C';font-size:60px;
@@ -613,7 +613,7 @@ button{font-family:'Nunito',sans-serif;cursor:pointer;border:none;background:non
 .act strong{font-size:14px;color:var(--plum);display:block;margin-bottom:3px}
 .act p{font-size:13.5px;color:var(--txt-mid);line-height:1.6}
 
-/* ══ INLINE UPSELL — liquid gradient ══ */
+/* ══ INLINE UPSELL liquid gradient ══ */
 .upsell-inline{
   background:linear-gradient(150deg,var(--plum) 0%,#5C3A9A 100%);
   border-radius:var(--r);padding:24px 18px;
@@ -762,6 +762,83 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', '449193154116638');
 fbq('track', 'PageView');
 fbq('trackCustom', 'aluna-sono-bb');
+
+// ── PDF DOWNLOAD ──
+async function downloadPDF(pageId, title) {
+  const btn = document.getElementById('pdf-btn-' + pageId);
+  if (btn) { btn.textContent = '⏳ Gerando PDF...'; btn.disabled = true; }
+
+  const { jsPDF } = window.jspdf;
+  const el = document.getElementById('pdf-content-' + pageId);
+  if (!el) return;
+
+  // Temporarily expand for capture
+  const prevOverflow = el.style.overflow;
+  el.style.overflow = 'visible';
+
+  const canvas = await html2canvas(el, {
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: '#ffffff',
+    logging: false,
+  });
+
+  el.style.overflow = prevOverflow;
+
+  const imgData = canvas.toDataURL('image/jpeg', 0.92);
+  const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
+  const imgW = pageW - 20;
+  const imgH = (canvas.height * imgW) / canvas.width;
+  const pages = Math.ceil(imgH / (pageH - 20));
+
+  for (let i = 0; i < pages; i++) {
+    if (i > 0) pdf.addPage();
+
+    // Watermark
+    pdf.setFontSize(36);
+    pdf.setTextColor(210, 210, 220);
+    pdf.setFont('helvetica', 'bold');
+    const wm = '@myrnnagurgel';
+    for (let r = 0; r < 5; r++) {
+      for (let c = 0; c < 3; c++) {
+        pdf.saveGraphicsState();
+        pdf.setGState(new pdf.GState({ opacity: 0.08 }));
+        pdf.text(wm, 10 + c * 80, 40 + r * 55, { angle: 35 });
+        pdf.restoreGraphicsState();
+      }
+    }
+
+    // Content slice
+    const srcY = i * (pageH - 20) * (canvas.width / imgW);
+    const srcH = Math.min((pageH - 20) * (canvas.width / imgW), canvas.height - srcY);
+
+    const slice = document.createElement('canvas');
+    slice.width = canvas.width;
+    slice.height = srcH;
+    const ctx = slice.getContext('2d');
+    ctx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
+
+    const sliceData = slice.toDataURL('image/jpeg', 0.92);
+    const sliceH = (srcH * imgW) / canvas.width;
+    pdf.addImage(sliceData, 'JPEG', 10, 10, imgW, sliceH);
+
+    // Footer
+    pdf.setFontSize(8);
+    pdf.setTextColor(160, 140, 190);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text('@myrnnagurgel', pageW / 2, pageH - 5, { align: 'center' });
+  }
+
+  const filename = title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.pdf';
+  pdf.save(filename);
+
+  if (btn) { btn.textContent = '⬇️ Baixar PDF'; btn.disabled = false; }
+}
+
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
@@ -810,6 +887,9 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
   gtag('config', 'G-ME4XT7WHTM');
 </script>
 <!-- End Google Analytics -->
+<!-- jsPDF + html2canvas para download de PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -852,11 +932,11 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         <span class="grp-arr">›</span>
       </div>
       <div class="grp-items">
-        <div class="sb-item" onclick="go('ma1',this)" data-key="nav_ma1">Sono Dia 1 — Métodos e Soluções</div>
-        <div class="sb-item" onclick="go('ma2',this)" data-key="nav_ma2">Sono Dia 2 — Noites Tranquilas</div>
+        <div class="sb-item" onclick="go('ma1',this)" data-key="nav_ma1">Sono Dia 1 Métodos e Soluções</div>
+        <div class="sb-item" onclick="go('ma2',this)" data-key="nav_ma2">Sono Dia 2 Noites Tranquilas</div>
         <div class="sb-item" onclick="go('ma3',this)" data-key="nav_ma3">Mentoria com Thaís Neves</div>
-        <div class="sb-item" onclick="go('ma4',this)" data-key="nav_ma4">Aula 1 — Manual do Sono</div>
-        <div class="sb-item" onclick="go('ma5',this)" data-key="nav_ma5">Aula 2 — Manual do Sono Prático</div>
+        <div class="sb-item" onclick="go('ma4',this)" data-key="nav_ma4">Aula 1 Manual do Sono</div>
+        <div class="sb-item" onclick="go('ma5',this)" data-key="nav_ma5">Aula 2 Manual do Sono Prático</div>
       </div>
     </div>
 
@@ -896,14 +976,14 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         <span class="grp-arr">›</span>
       </div>
       <div class="grp-items">
-        <div class="sb-item" onclick="go('mt1',this)" data-key="nav_mt1">Sono do Bebê — Thaís Neves</div>
+        <div class="sb-item" onclick="go('mt1',this)" data-key="nav_mt1">Sono do Bebê Thaís Neves</div>
         <div class="sb-item" onclick="go('mt2',this)" data-key="nav_mt2">Pediatra Camila Bastos</div>
         <div class="sb-item" onclick="go('mt3',this)" data-key="nav_mt3">Psicóloga Rayanny Cavalcanti</div>
-        <div class="sb-item" onclick="go('mt4',this)" data-key="nav_mt4">Maquiagem — Júlia Pavanelli</div>
+        <div class="sb-item" onclick="go('mt4',this)" data-key="nav_mt4">Maquiagem Júlia Pavanelli</div>
         <div class="sb-item" onclick="go('mt5',this)" data-key="nav_mt5">Psicóloga Beatriz Rodrigues</div>
         <div class="sb-item" onclick="go('mt6',this)" data-key="nav_mt6">Personal Carol Cavalcanti pt.1</div>
         <div class="sb-item" onclick="go('mt7',this)" data-key="nav_mt7">Personal Carol Cavalcanti pt.2</div>
-        <div class="sb-item" onclick="go('mt8',this)" data-key="nav_mt8">Nutri. Renata Magalhães</div>
+        <div class="sb-item" onclick="go('mt8',this)" data-key="nav_mt8">Nutri. APLV Renata Magalhães</div>
         <div class="sb-item" onclick="go('mt9',this)" data-key="nav_mt9">Nutricionista Myrthe Emilyana</div>
       </div>
     </div>
@@ -916,8 +996,8 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         <span class="grp-arr">›</span>
       </div>
       <div class="grp-items">
-        <div class="sb-item" onclick="go('mc1',this)" data-key="nav_mc1">Cardápio — Alimentos Para Dormir</div>
-        <div class="sb-item" onclick="go('mc2',this)" data-key="nav_mc2">Manual — Rituais Que Funcionam</div>
+        <div class="sb-item" onclick="go('mc1',this)" data-key="nav_mc1">Cardápio Alimentos Para Dormir</div>
+        <div class="sb-item" onclick="go('mc2',this)" data-key="nav_mc2">Manual Rituais Que Funcionam</div>
       </div>
     </div>
 
@@ -946,6 +1026,17 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
 <!-- ═══ HOME ═══ -->
 <div class="page on" id="pg-home">
+    <!-- PDF Download Button -->
+    <div style="display:flex;justify-content:flex-end;padding:10px 20px 0;background:#fff;border-bottom:1px solid var(--border)">
+      <button id="pdf-btn-home" onclick="downloadPDF('home','Sono Sem Choro - Guia Completo')"
+        style="display:inline-flex;align-items:center;gap:6px;background:transparent;border:1.5px solid var(--purple-soft);color:var(--txt-mid);font-size:12px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;transition:.2s;font-family:'Nunito',sans-serif"
+        onmouseover="this.style.background='var(--purple-pale)';this.style.color='var(--purple)'"
+        onmouseout="this.style.background='transparent';this.style.color='var(--txt-mid)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Baixar PDF
+      </button>
+    </div>
+    <div id="pdf-content-home">
 
   <!-- PILLS -->
   <div class="pills">
@@ -974,7 +1065,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="intro-c">
       <h3>Se acalma, porque você encontrou a solução! 🤍</h3>
-      <p>O Sono Sem Choro não é mais um daqueles métodos rígidos que fazem você se sentir culpada ou que envolvem deixar seu bebê chorando sozinho no berço. Esse método já ajudou mais de <strong>4.000 mães</strong> a ensinar seus bebês a dormirem a noite inteira, sem precisar de colo, peito ou sofrimento.</p>
+      <p>O Sono Sem Choro não é mais um daqueles métodos rígidos que fazem você se sentir culpada ou que envolvem deixar seu bebê chorando sozinho no berço. Esse método já ajudou mais de <strong>47 mil mães</strong> a ensinar seus bebês a dormirem a noite inteira, sem precisar de colo, peito ou sofrimento.</p>
       <p>E o melhor? <strong>Funciona em apenas 3 dias!</strong></p>
     </div>
 
@@ -994,7 +1085,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="quote">
       Se você já tentou de tudo e ainda sente que seu bebê só dorme se estiver grudado em você, fica tranquila. Esse método foi feito para você!
-      <span class="quote-by">— Myrnna Gurgel</span>
+      <span class="quote-by"> Myrnna Gurgel</span>
     </div>
 
   </div>
@@ -1048,7 +1139,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div class="cycle" style="background:rgba(107,79,160,0.07);border:1.5px solid rgba(107,79,160,0.15)">
       <div class="cycle-l" style="color:var(--purple-dk)">🔄 Ciclo do Sono do Bebê</div>
       <div class="cycle-f">
-        <div class="cn"><span style="color:var(--purple-dk)">40–50min</span><p style="color:var(--txt-mid)">Por ciclo</p></div>
+        <div class="cn"><span style="color:var(--purple-dk)">40-50min</span><p style="color:var(--txt-mid)">Por ciclo</p></div>
         <span class="c-sep" style="color:rgba(107,79,160,.4)">→</span>
         <div class="cn"><span style="color:var(--purple-dk)">😴</span><p style="color:var(--txt-mid)">Despertar natural</p></div>
         <span class="c-sep" style="color:rgba(107,79,160,.4)">→</span>
@@ -1089,7 +1180,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div class="paso"><div class="paso-n">Elemento 1</div><h3>Horários Fixos para Dormir e Acordar</h3><p>Seu bebê precisa ter um horário regular para dormir e acordar, pois o corpo funciona como um relógio biológico. Se todo dia ele dorme em um horário diferente, fica mais difícil para ele entender quando é hora de descansar.</p></div>
     <div class="tip">💡 Dica prática: Escolha um horário fixo para o sono da noite e para as sonecas do dia. O ideal é que o bebê durma entre <strong>19h e 21h</strong>, dependendo da rotina da família.</div>
 
-    <div class="paso"><div class="paso-n">Elemento 2</div><h3>O Ritual de Sono — Passo a Passo para o Bebê Relaxar</h3><p>O ritual de sono é uma sequência de ações simples e repetitivas que preparam o bebê para dormir. Repita todas as noites, sempre na mesma ordem.</p></div>
+    <div class="paso"><div class="paso-n">Elemento 2</div><h3>O Ritual de Sono Passo a Passo para o Bebê Relaxar</h3><p>O ritual de sono é uma sequência de ações simples e repetitivas que preparam o bebê para dormir. Repita todas as noites, sempre na mesma ordem.</p></div>
 
     <div class="ritual">
       <div class="rit"><span class="rit-i">🛁</span><div><span class="rit-l">Banho Relaxante</span><span class="rit-s">Ajuda a relaxar os músculos do bebê e sinaliza que é hora de se acalmar</span></div></div>
@@ -1098,9 +1189,9 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <div class="rit-arr">↓</div>
       <div class="rit"><span class="rit-i">📖</span><div><span class="rit-l">Momento de Carinho</span><span class="rit-s">Leitura ou música tranquila cria conexão emocional e ajuda o bebê a relaxar mentalmente</span></div></div>
       <div class="rit-arr">↓</div>
-      <div class="rit"><span class="rit-i">🤱</span><div><span class="rit-l">Amamentação (se ainda houver mamada noturna)</span><span class="rit-s">Entra aqui no ritual — mas não como último passo antes de dormir</span></div></div>
+      <div class="rit"><span class="rit-i">🤱</span><div><span class="rit-l">Amamentação (se ainda houver mamada noturna)</span><span class="rit-s">Entra aqui no ritual mas não como último passo antes de dormir</span></div></div>
       <div class="rit-arr">↓</div>
-      <div class="rit hl"><span class="rit-i">🛏️</span><div><span class="rit-l">Berço — Sonolento, mas Acordado</span><span class="rit-s">Ensina o bebê a adormecer sozinho — o passo mais importante de todos!</span></div></div>
+      <div class="rit hl"><span class="rit-i">🛏️</span><div><span class="rit-l">Berço Sonolento, mas Acordado</span><span class="rit-s">Ensina o bebê a adormecer sozinho o passo mais importante de todos!</span></div></div>
     </div>
 
     <div class="tip">💡 Dica prática: Repita esse ritual todas as noites, sempre na mesma ordem. Isso cria um padrão que faz o bebê entender que está na hora de dormir.</div>
@@ -1128,7 +1219,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="quote">
       Sua rotina começa hoje! Agora você já sabe como criar uma rotina de sono previsível e eficiente, que fará seu bebê dormir melhor sem precisar de peito, colo ou sofrimento.
-      <span class="quote-by">— Myrnna Gurgel</span>
+      <span class="quote-by"> Myrnna Gurgel</span>
     </div>
   </div>
 
@@ -1160,32 +1251,32 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="steps">
       <div class="step"><div class="step-n">1</div><div><h4>Identificar as Dependências</h4><p>Observe o que seu bebê precisa para dormir: peito, colo, balanço ou outros hábitos que criam associações negativas.</p></div></div>
-      <div class="step"><div class="step-n">2</div><div><h4>Reduzir Gradualmente</h4><p>Diminua aos poucos a intensidade da ajuda — menos tempo no peito, balanço mais suave, menos tempo no colo.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div><h4>Reduzir Gradualmente</h4><p>Diminua aos poucos a intensidade da ajuda menos tempo no peito, balanço mais suave, menos tempo no colo.</p></div></div>
       <div class="step"><div class="step-n">3</div><div><h4>Introduzir Alternativas</h4><p>Substitua as associações antigas por novos sinais de conforto como naninha, música suave ou um toque gentil.</p></div></div>
       <div class="step"><div class="step-n">4</div><div><h4>Berço Sonolento</h4><p>Coloque o bebê no berço ainda acordado mas sonolento, permitindo que ele complete o processo de adormecer sozinho.</p></div></div>
     </div>
 
     <div class="tip">💡 Dica prática: Troque a mamada por outro sinal de conforto, como um paninho macio, um brinquedo de apego ou um toque suave.</div>
 
-    <div class="paso"><div class="paso-n">Passo 2</div><h3>Criando um "Sinal de Sono"</h3><p>O bebê precisa entender que chegou a hora de dormir. Para isso, escolha um sinal de sono — algo que será repetido todas as noites para ajudá-lo a relaxar.</p></div>
+    <div class="paso"><div class="paso-n">Passo 2</div><h3>Criando um "Sinal de Sono"</h3><p>O bebê precisa entender que chegou a hora de dormir. Para isso, escolha um sinal de sono algo que será repetido todas as noites para ajudá-lo a relaxar.</p></div>
 
     <div class="signals">
       <div class="sig"><span>🎵</span><p>Uma música calma ou som de ruído branco</p></div>
       <div class="sig"><span>💬</span><p>"Boa noite, agora é hora de dormir."</p></div>
       <div class="sig"><span>🤲</span><p>Um carinho suave na cabeça ou nas costas</p></div>
-      <div class="sig"><span>🧸</span><p>Objeto de apego — naninha ou bichinho</p></div>
+      <div class="sig"><span>🧸</span><p>Objeto de apego naninha ou bichinho</p></div>
     </div>
 
     <div class="tip">💡 Dica prática: Esse sinal deve ser usado <strong>sempre</strong> na hora de dormir, para que o bebê associe com o momento de descanso.</div>
 
-    <div class="paso"><div class="paso-n">Passo 3</div><h3>Saindo de Perto Aos Poucos — Técnica da Presença Progressiva</h3><p>Muitos pais acham que, para o bebê dormir sozinho, é preciso simplesmente colocá-lo no berço e sair do quarto. <strong>Isso não funciona!</strong> O método correto é a presença progressiva.</p></div>
+    <div class="paso"><div class="paso-n">Passo 3</div><h3>Saindo de Perto Aos Poucos Técnica da Presença Progressiva</h3><p>Muitos pais acham que, para o bebê dormir sozinho, é preciso simplesmente colocá-lo no berço e sair do quarto. <strong>Isso não funciona!</strong> O método correto é a presença progressiva.</p></div>
 
     <div class="prog">
-      <div class="ps"><div class="ps-d">Fase 1 — Contato Próximo</div><div class="ps-t">Fique ao lado do berço, tocando o bebê e falando com ele suavemente até ele dormir.</div></div>
+      <div class="ps"><div class="ps-d">Fase 1 Contato Próximo</div><div class="ps-t">Fique ao lado do berço, tocando o bebê e falando com ele suavemente até ele dormir.</div></div>
       <div class="ps-arr">↓</div>
-      <div class="ps"><div class="ps-d">Fase 2 — Distância Parcial</div><div class="ps-t">Afaste-se um pouco, sentando em uma cadeira próxima, mantendo contato visual e verbal.</div></div>
+      <div class="ps"><div class="ps-d">Fase 2 Distância Parcial</div><div class="ps-t">Afaste-se um pouco, sentando em uma cadeira próxima, mantendo contato visual e verbal.</div></div>
       <div class="ps-arr">↓</div>
-      <div class="ps hl"><div class="ps-d">Fase 3 — Saída Gradual</div><div class="ps-t">Saia do quarto antes que o bebê durma completamente, permitindo que ele termine o processo sozinho. 🎉</div></div>
+      <div class="ps hl"><div class="ps-d">Fase 3 Saída Gradual</div><div class="ps-t">Saia do quarto antes que o bebê durma completamente, permitindo que ele termine o processo sozinho. 🎉</div></div>
     </div>
 
     <div class="tip">💡 Dica prática: Se o bebê chorar, volte um passo, acalme-o e tente de novo. O segredo é persistência e paciência!</div>
@@ -1203,12 +1294,12 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="steps">
       <div class="step"><div class="step-n">3</div><div><h4>Dias em Média</h4><p>A maioria dos bebês mostra melhoras significativas após três dias de implementação consistente do método.</p></div></div>
-      <div class="step"><div class="step-n">7–14</div><div><h4>Dias para Adaptação</h4><p>Alguns bebês podem precisar de uma a duas semanas para se adaptarem completamente à nova rotina de sono.</p></div></div>
+      <div class="step"><div class="step-n">7-14</div><div><h4>Dias para Adaptação</h4><p>Alguns bebês podem precisar de uma a duas semanas para se adaptarem completamente à nova rotina de sono.</p></div></div>
       <div class="step"><div class="step-n">✓</div><div><h4>100% de Eficácia</h4><p>Com persistência e consistência, todos os bebês podem aprender a dormir melhor.</p></div></div>
     </div>
 
     <p class="txt">O mais importante é manter a rotina e seguir o plano.</p>
-    <div class="quote">Você está a um passo de noites tranquilas! Continue — sua vida está prestes a mudar!<span class="quote-by">— Myrnna Gurgel</span></div>
+    <div class="quote">Você está a um passo de noites tranquilas! Continue sua vida está prestes a mudar!<span class="quote-by"> Myrnna Gurgel</span></div>
   </div>
 
   <!-- CAP 4 -->
@@ -1228,8 +1319,8 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         <div class="dolist">
           <div class="doi"><span>✅</span><p>Leve o berço portátil ou tente manter o mesmo tipo de cama que ele está acostumado</p></div>
           <div class="doi"><span>✅</span><p>Leve itens familiares (naninha, paninho, travesseiro) para o bebê sentir um ambiente conhecido</p></div>
-          <div class="doi"><span>✅</span><p>Mantenha o ritual do sono (banho, música, frase de segurança) — mesmo que a hora mude um pouco</p></div>
-          <div class="doi"><span>❌</span><p>Evite colocar o bebê para dormir na cama com você — pode criar um novo hábito difícil de reverter depois</p></div>
+          <div class="doi"><span>✅</span><p>Mantenha o ritual do sono (banho, música, frase de segurança) mesmo que a hora mude um pouco</p></div>
+          <div class="doi"><span>❌</span><p>Evite colocar o bebê para dormir na cama com você pode criar um novo hábito difícil de reverter depois</p></div>
         </div>
         <div class="tip">💡 Dica prática: No primeiro dia de viagem, tente não deixar o bebê exausto. O ideal é garantir uma boa soneca antes do momento de dormir à noite.</div>
       </div>
@@ -1240,8 +1331,8 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <div class="situ-bd">
         <p class="txt" style="margin-bottom:10px">Durante certos períodos, o bebê pode ter mais despertares, ficar mais inquieto ou resistir ao sono. Mas atenção: <strong>isso não significa que seu bebê esqueceu como dormir sozinho!</strong></p>
         <div class="compare">
-          <div class="cc neutral"><div class="cc-l">📈 Picos de Crescimento</div><ul><li>Mamando mais do que o normal</li><li>Mais irritado e choroso</li><li>Quer mais contato físico e colo</li><li>Geralmente dura 2–3 dias</li></ul></div>
-          <div class="cc neutral"><div class="cc-l">🧠 Saltos de Desenvolvimento</div><ul><li>Aprendendo algo novo (rolar, engatinhar, falar balbucios)</li><li>Fica mais agitado antes de dormir</li><li>Parece não querer dormir, mesmo com sono</li><li>Pode durar 1–2 semanas</li></ul></div>
+          <div class="cc neutral"><div class="cc-l">📈 Picos de Crescimento</div><ul><li>Mamando mais do que o normal</li><li>Mais irritado e choroso</li><li>Quer mais contato físico e colo</li><li>Geralmente dura 2-3 dias</li></ul></div>
+          <div class="cc neutral"><div class="cc-l">🧠 Saltos de Desenvolvimento</div><ul><li>Aprendendo algo novo (rolar, engatinhar, falar balbucios)</li><li>Fica mais agitado antes de dormir</li><li>Parece não querer dormir, mesmo com sono</li><li>Pode durar 1-2 semanas</li></ul></div>
         </div>
         <div class="hc"><span class="hc-i">🎯</span><div><h4>O que fazer</h4><p>Mantenha a rotina o mais próxima possível do normal. Evite criar novos hábitos (como voltar a dar peito para dormir). Tenha paciência! Isso dura apenas alguns dias e o bebê volta ao padrão normal se você não mudar tudo.</p></div></div>
         <div class="tip">💡 Dica prática: Se o bebê estiver muito agitado antes de dormir, um banho morno mais demorado e uma massagem podem ajudar a relaxar.</div>
@@ -1266,7 +1357,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <div class="situ-bd">
         <p class="txt" style="margin-bottom:10px">Resfriados, gripes e febres podem deixar o bebê mais sensível e afetar o sono. E, claro, como mãe, sua prioridade é o bem-estar do bebê!</p>
         <div class="dolist">
-          <div class="doi"><span>✅</span><p>Mantenha-o confortável — ele pode precisar de mais colo nesses dias</p></div>
+          <div class="doi"><span>✅</span><p>Mantenha-o confortável ele pode precisar de mais colo nesses dias</p></div>
           <div class="doi"><span>✅</span><p>Ajuste o ambiente: ar mais úmido, roupas leves e quarto arejado ajudam a melhorar o sono</p></div>
           <div class="doi"><span>✅</span><p>Assim que ele melhorar, retome a rotina normal <strong>imediatamente</strong>, para evitar que ele se acostume com novos padrões</p></div>
         </div>
@@ -1287,7 +1378,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       </div>
     </div>
 
-    <div class="quote">Você está preparada para qualquer situação! Mudanças acontecem, mas com as estratégias certas, você evita que tudo que conquistou seja perdido!<span class="quote-by">— Myrnna Gurgel</span></div>
+    <div class="quote">Você está preparada para qualquer situação! Mudanças acontecem, mas com as estratégias certas, você evita que tudo que conquistou seja perdido!<span class="quote-by"> Myrnna Gurgel</span></div>
   </div>
 
   <!-- CAP 5 -->
@@ -1312,7 +1403,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="errcard">
       <div class="err-hd"><span class="err-n">Erro 2</span><h3>Não Criar uma Rotina de Sono Clara</h3></div>
-      <p class="txt" style="font-size:13px;margin-bottom:10px">O bebê precisa de pistas claras para saber que chegou a hora de dormir. Se cada noite for diferente — um dia dorme no sofá, outro dia na cama dos pais, outro dia com barulho de TV — ele não vai entender que tem um padrão de sono.</p>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">O bebê precisa de pistas claras para saber que chegou a hora de dormir. Se cada noite for diferente um dia dorme no sofá, outro dia na cama dos pais, outro dia com barulho de TV ele não vai entender que tem um padrão de sono.</p>
       <div class="steps">
         <div class="step"><div class="step-n">1</div><div><h4>Banho Relaxante</h4><p>Sempre no mesmo horário, com temperatura agradável e produtos suaves.</p></div></div>
         <div class="step"><div class="step-n">2</div><div><h4>Troca e Pijama</h4><p>Momento tranquilo de preparação física para o sono.</p></div></div>
@@ -1331,10 +1422,10 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       </div>
       <div class="sh" style="margin-top:14px">⏰ Janelas de Sono Ideais</div>
       <div class="ages">
-        <div class="age"><strong>0–3 meses</strong><span>45–60 minutos</span></div>
-        <div class="age"><strong>3–6 meses</strong><span>1,5–2,5 horas</span></div>
-        <div class="age"><strong>6–12 meses</strong><span>2–3 horas</span></div>
-        <div class="age"><strong>12+ meses</strong><span>3–4 horas</span></div>
+        <div class="age"><strong>0-3 meses</strong><span>45-60 minutos</span></div>
+        <div class="age"><strong>3-6 meses</strong><span>1,5-2,5 horas</span></div>
+        <div class="age"><strong>6-12 meses</strong><span>2-3 horas</span></div>
+        <div class="age"><strong>12+ meses</strong><span>3-4 horas</span></div>
       </div>
       <div class="tip" style="margin-top:10px">💡 Dica prática: Se o bebê já está muito irritado, um banho morno e uma luz mais baixa ajudam a acalmá-lo antes do sono.</div>
     </div>
@@ -1372,7 +1463,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <div class="tip">💡 Dica prática: Se o bebê acorda muito cedo por causa da luz da manhã, experimente escurecer melhor o quarto.</div>
     </div>
 
-    <div class="quote">Pequenos Ajustes = Noites Tranquilas! A maior parte dos problemas de sono do bebê pode ser resolvida com pequenos ajustes na rotina e no ambiente.<span class="quote-by">— Myrnna Gurgel</span></div>
+    <div class="quote">Pequenos Ajustes = Noites Tranquilas! A maior parte dos problemas de sono do bebê pode ser resolvida com pequenos ajustes na rotina e no ambiente.<span class="quote-by"> Myrnna Gurgel</span></div>
   </div>
 
   <!-- CAP 6 -->
@@ -1407,7 +1498,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     </div>
     <div class="tip">💡 Dica prática: Se o bebê dormia na cama dos pais, faça a transição aos poucos, primeiro colocando o colchão no chão antes de levá-lo ao berço.</div>
 
-    <div class="paso"><div class="paso-n">Passo 3</div><h3>Ensine o Bebê a Adormecer Sem Ajuda</h3><p>O maior erro que impede o bebê de dormir bem é depender de algo para pegar no sono — peito, colo, balanço. Se ele precisar disso para dormir no começo da noite, vai precisar de novo toda vez que acordar!</p></div>
+    <div class="paso"><div class="paso-n">Passo 3</div><h3>Ensine o Bebê a Adormecer Sem Ajuda</h3><p>O maior erro que impede o bebê de dormir bem é depender de algo para pegar no sono peito, colo, balanço. Se ele precisar disso para dormir no começo da noite, vai precisar de novo toda vez que acordar!</p></div>
     <div class="steps">
       <div class="step"><div class="step-n">1</div><div><h4>Identificar o Momento Certo</h4><p>Observe os sinais de sono e coloque o bebê no berço quando ele estiver sonolento, mas ainda acordado.</p></div></div>
       <div class="step"><div class="step-n">2</div><div><h4>Introduzir Objeto de Apego</h4><p>Ofereça uma naninha ou bichinho de pelúcia (para bebês maiores) que possa substituir sua presença.</p></div></div>
@@ -1418,32 +1509,32 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="paso"><div class="paso-n">Passo 4</div><h3>Use o Método de Retirada Gradual</h3><p>Seu bebê precisa aprender a se acalmar sozinho, mas isso não significa que ele deve ficar sozinho e chorando. A ideia é reduzir o contato físico gradativamente.</p></div>
     <div class="prog">
-      <div class="ps"><div class="ps-d">Dia 1 — Presença Total</div><div class="ps-t">Fique ao lado do berço, com contato físico suave (mão no peito ou barriga) até que o bebê adormeça completamente.</div></div>
+      <div class="ps"><div class="ps-d">Dia 1 Presença Total</div><div class="ps-t">Fique ao lado do berço, com contato físico suave (mão no peito ou barriga) até que o bebê adormeça completamente.</div></div>
       <div class="ps-arr">↓</div>
-      <div class="ps"><div class="ps-d">Dia 2 — Presença Parcial</div><div class="ps-t">Afaste-se um pouco do berço, sentando em uma cadeira próxima, mantendo contato visual e verbal, mas reduzindo o contato físico.</div></div>
+      <div class="ps"><div class="ps-d">Dia 2 Presença Parcial</div><div class="ps-t">Afaste-se um pouco do berço, sentando em uma cadeira próxima, mantendo contato visual e verbal, mas reduzindo o contato físico.</div></div>
       <div class="ps-arr">↓</div>
-      <div class="ps"><div class="ps-d">Dia 3 — Presença Intermitente</div><div class="ps-t">Coloque o bebê no berço, diga sua frase de segurança e saia do quarto, retornando em intervalos para acalmar se necessário.</div></div>
+      <div class="ps"><div class="ps-d">Dia 3 Presença Intermitente</div><div class="ps-t">Coloque o bebê no berço, diga sua frase de segurança e saia do quarto, retornando em intervalos para acalmar se necessário.</div></div>
       <div class="ps-arr">↓</div>
-      <div class="ps hl"><div class="ps-d">Dia 4 em diante — Autonomia</div><div class="ps-t">O bebê já consegue adormecer com mínima intervenção, precisando apenas da rotina e sinais de sono estabelecidos. 🎉</div></div>
+      <div class="ps hl"><div class="ps-d">Dia 4 em diante Autonomia</div><div class="ps-t">O bebê já consegue adormecer com mínima intervenção, precisando apenas da rotina e sinais de sono estabelecidos. 🎉</div></div>
     </div>
 
     <div class="paso"><div class="paso-n">Passo 5</div><h3>Resista à Tentação de Ceder!</h3><p>O primeiro dia pode ser um desafio. O segundo também. Mas no terceiro dia, a maioria dos bebês já mostra uma grande melhora!</p></div>
     <div class="compare">
-      <div class="cc bad"><div class="cc-l">❌ O que NÃO fazer</div><ul><li>Não pegue o bebê no colo imediatamente ao primeiro chorinho</li><li>Não volte atrás e deixe ele dormir no peito "só essa vez"</li><li>Não mude o método no meio do processo — a consistência é o que traz resultado!</li></ul></div>
+      <div class="cc bad"><div class="cc-l">❌ O que NÃO fazer</div><ul><li>Não pegue o bebê no colo imediatamente ao primeiro chorinho</li><li>Não volte atrás e deixe ele dormir no peito "só essa vez"</li><li>Não mude o método no meio do processo a consistência é o que traz resultado!</li></ul></div>
       <div class="cc good"><div class="cc-l">✅ O que fazer</div><ul><li>Mantenha a Consistência: siga o mesmo método todos os dias, sem exceções</li><li>Seja Firme com Amor: cuide do bebê enquanto mantém os limites necessários</li><li>Celebre os Progressos: reconheça e comemore cada pequeno avanço</li></ul></div>
     </div>
     <div class="tip">💡 Dica prática: O bebê pode reclamar nos primeiros dias, mas se você for firme e amorosa, ele aprenderá rapidinho!</div>
 
     <div class="paso"><div class="paso-n">Passo 6</div><h3>O Que Fazer Se o Bebê Acordar à Noite?</h3><p>Se o bebê acordar no meio da noite, não corra para pegá-lo imediatamente.</p></div>
     <div class="steps">
-      <div class="step"><div class="step-n">1</div><div><h4>Pausa Observadora</h4><p>Espere alguns instantes antes de intervir — ele pode voltar a dormir sozinho.</p></div></div>
+      <div class="step"><div class="step-n">1</div><div><h4>Pausa Observadora</h4><p>Espere alguns instantes antes de intervir ele pode voltar a dormir sozinho.</p></div></div>
       <div class="step"><div class="step-n">2</div><div><h4>Intervenção Mínima</h4><p>Se continuar acordado, use a frase de segurança. Se necessário, faça carinho ou segure a mão dele.</p></div></div>
       <div class="step"><div class="step-n">3</div><div><h4>Toque Reconfortante</h4><p>Ofereça um toque suave ou segure a mão do bebê, sem retirá-lo do berço.</p></div></div>
       <div class="step"><div class="step-n">4</div><div><h4>Manter o Ambiente</h4><p>Evite pegar no colo, ligar luzes ou estimular demais.</p></div></div>
     </div>
     <div class="tip">💡 Dica prática: No começo, o bebê pode acordar algumas vezes, mas logo aprenderá que consegue dormir sozinho!</div>
 
-    <div class="quote">Se você aplicar esse método exatamente como foi ensinado, em poucos dias seu bebê vai dormir sozinho no berço, dormir mais horas seguidas e acordar mais descansado e feliz — e você também!<span class="quote-by">— Myrnna Gurgel</span></div>
+    <div class="quote">Se você aplicar esse método exatamente como foi ensinado, em poucos dias seu bebê vai dormir sozinho no berço, dormir mais horas seguidas e acordar mais descansado e feliz e você também!<span class="quote-by"> Myrnna Gurgel</span></div>
   </div>
 
   <!-- CONCLUSÃO -->
@@ -1472,16 +1563,16 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <div class="act"><div class="act-n">3</div><div><strong style="color:var(--txt)">Celebre cada pequena vitória!</strong><p>Na primeira noite em que ele dormir mais horas seguidas, comemore! Quando ele pegar no sono sozinho pela primeira vez, vibre!</p></div></div>
     </div>
 
-    <div class="quote">Agora é a sua vez! Parece um sonho? Pois agora é a sua nova realidade!<span class="quote-by">— Myrnna Gurgel</span></div>
+    <div class="quote">Agora é a sua vez! Parece um sonho? Pois agora é a sua nova realidade!<span class="quote-by"> Myrnna Gurgel</span></div>
 
     <!-- UPSELL PLANO PERSONALIZADO -->
     <div class="sh">⭐ Quer um Plano de Sono Personalizado Para Resultados Ainda Mais Rápidos?</div>
     <p class="txt">Agora que você tem o método completo para ensinar seu bebê a dormir sozinho, imagine o quão mais fácil seria se você tivesse um plano feito sob medida para a sua rotina e as necessidades do seu bebê!</p>
 
     <div class="upsell-inline">
-      <div class="ui-badge">⭐ Oferta Especial — Apenas R$47</div>
+      <div class="ui-badge">⭐ Oferta Especial Apenas R$47</div>
       <h3>Plano de Sono Personalizado</h3>
-      <p>Um plano 100% personalizado para a sua realidade — sem achismos, sem tentativas frustradas. Resultados ainda mais rápidos, porque cada detalhe será ajustado para funcionar na sua casa.</p>
+      <p>Um plano 100% personalizado para a sua realidade sem achismos, sem tentativas frustradas. Resultados ainda mais rápidos, porque cada detalhe será ajustado para funcionar na sua casa.</p>
       <div class="ui-price">Apenas <strong>R$47</strong></div>
       <a class="btn-main" style="cursor:pointer" onclick="go('plano',null);gtag('event','click',{event_category:'upsell',event_label:'plano_personalizado_home'})">Garantir meu Plano Personalizado →</a>
       <p class="ui-guar">🔒 Vagas limitadas! Como cada plano é feito sob medida, consigo atender apenas um número reduzido de mães por semana.</p>
@@ -1490,6 +1581,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
   </div>
 
 <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+    </div><!-- /pdf-content-home -->
 </div><!-- /pg-home -->
 
 <!-- ═══ OUTRAS PÁGINAS (awaiting) ═══ -->
@@ -1504,14 +1596,14 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     </div>
 
     <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--plum);line-height:1.3;margin-bottom:8px">Consultoria de Sono na Prática: O Plano de Ação para Noah Dormir no Próprio Quarto</h1>
-    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Dia 1 — Métodos e Soluções com a especialista <strong style="color:var(--plum)">Thaís Neves</strong>.</p>
+    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Dia 1 Métodos e Soluções com a especialista <strong style="color:var(--plum)">Thaís Neves</strong>.</p>
 
     <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
-      <iframe src="https://www.youtube.com/embed/zGjHb4msmFU" title="Sono Dia 1 — Métodos e Soluções" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+      <iframe src="https://www.youtube.com/embed/zGjHb4msmFU" title="Sono Dia 1 Métodos e Soluções" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
     </div>
 
     <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
-      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 Consultoria de Sono na Prática — Dia 1</p>
+      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 Consultoria de Sono na Prática Dia 1</p>
       <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">Chega um momento na maternidade em que a cama compartilhada por puro cansaço deixa de ser uma solução e passa a ser um problema para toda a família. Nesta consultoria real e sem filtros, a especialista <strong>Thaís Neves</strong> faz o mapeamento completo da rotina de Myrnna e seu bebê Noah (1 ano e 1 mês).</p>
     </div>
 
@@ -1603,14 +1695,14 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     </div>
 
     <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--plum);line-height:1.3;margin-bottom:8px">O Plano de Sono Perfeito: O Passo a Passo para o Bebê Dormir sem Choro e no Quarto Próprio</h1>
-    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Dia 2 — Noites Tranquilas com a especialista <strong style="color:var(--plum)">Thaís Neves</strong>.</p>
+    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Dia 2 Noites Tranquilas com a especialista <strong style="color:var(--plum)">Thaís Neves</strong>.</p>
 
     <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
-      <iframe src="https://www.youtube.com/embed/6uzNqWcj08g" title="Sono Dia 2 — Noites Tranquilas" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+      <iframe src="https://www.youtube.com/embed/6uzNqWcj08g" title="Sono Dia 2 Noites Tranquilas" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
     </div>
 
     <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
-      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 O Plano de Sono Perfeito — Dia 2</p>
+      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 O Plano de Sono Perfeito Dia 2</p>
       <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">É possível ensinar o bebê a dormir a noite toda de forma tranquila, sem desespero e sem deixá-lo chorando? Nesta segunda sessão, <strong>Thaís Neves</strong> entrega o plano de ação personalizado para Myrnna e seu marido João Lucas mudarem o sono do pequeno Noah.</p>
     </div>
 
@@ -1640,7 +1732,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
         <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">04:42</span>
-        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Os 5 Ingredientes do Ritual Noturno</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A sequência exata antes de deitar — banho, troca de roupa e a importância da desaceleração da casa a partir das 18h.</p></div>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Os 5 Ingredientes do Ritual Noturno</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A sequência exata antes de deitar banho, troca de roupa e a importância da desaceleração da casa a partir das 18h.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
@@ -1660,7 +1752,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
         <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">11:43</span>
-        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Testes de Demanda à Noite</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que os bebês pedem água na madrugada — o desejo oculto de testar a segurança e a linguagem de amor do serviço.</p></div>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Testes de Demanda à Noite</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que os bebês pedem água na madrugada o desejo oculto de testar a segurança e a linguagem de amor do serviço.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
@@ -1742,7 +1834,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
         <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">00:14</span>
-        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Introdução: O caso real da Mirna</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como ela passou a dormir a noite toda no próprio quarto em apenas 3 dias.</p></div>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Introdução: O caso real da Myrnna</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como ela passou a dormir a noite toda no próprio quarto em apenas 3 dias.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
@@ -1772,7 +1864,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
         <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">31:21</span>
-        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #1: Sinais de sono ignorados</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Não identificar os sinais de sono e deixar o bebê passar do ponto — o perigo do pico de cortisol.</p></div>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #1: Sinais de sono ignorados</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Não identificar os sinais de sono e deixar o bebê passar do ponto o perigo do pico de cortisol.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
@@ -1826,12 +1918,23 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
   <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
 </div></div></div>
 <div class="page" id="pg-ts1">
+    <!-- PDF Download Button -->
+    <div style="display:flex;justify-content:flex-end;padding:10px 20px 0;background:#fff;border-bottom:1px solid var(--border)">
+      <button id="pdf-btn-ts1" onclick="downloadPDF('ts1','Tecnicas Secretas Desmame Noturno')"
+        style="display:inline-flex;align-items:center;gap:6px;background:transparent;border:1.5px solid var(--purple-soft);color:var(--txt-mid);font-size:12px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;transition:.2s;font-family:'Nunito',sans-serif"
+        onmouseover="this.style.background='var(--purple-pale)';this.style.color='var(--purple)'"
+        onmouseout="this.style.background='transparent';this.style.color='var(--txt-mid)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Baixar PDF
+      </button>
+    </div>
+    <div id="pdf-content-ts1">
   <div class="cb">
 
     <!-- INTRO HERO -->
     <div class="intro-c">
       <h3>Técnicas Secretas Para o Desmame Noturno</h3>
-      <p>O Sonho de Uma Noite Inteira de Sono — e Como Torná-lo Realidade!</p>
+      <p>O Sonho de Uma Noite Inteira de Sono e Como Torná-lo Realidade!</p>
     </div>
 
     <p class="txt">Se você está lendo este guia, tenho certeza de uma coisa: você está cansada. Exausta, talvez. Provavelmente, já abriu os olhos de madrugada, olhou para o relógio e pensou: <em>"Não acredito que ele está acordando de novo!"</em></p>
@@ -1849,8 +1952,8 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     </div>
 
     <div class="quote">
-      O desmame não significa falta de amor. Ele é apenas uma nova fase da jornada materna — e eu estou aqui para te guiar nesse caminho.
-      <span class="quote-by">— Myrnna Gurgel</span>
+      O desmame não significa falta de amor. Ele é apenas uma nova fase da jornada materna e eu estou aqui para te guiar nesse caminho.
+      <span class="quote-by"> Myrnna Gurgel</span>
     </div>
 
     <!-- PARTE 1 -->
@@ -1860,7 +1963,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <p>Antes de começar: o que você precisa saber para ter sucesso!</p>
     </div>
 
-    <p class="txt">O desmame noturno não é apenas sobre tirar o peito ou a mamadeira — é sobre ajudar seu bebê a desenvolver uma nova relação com o sono. Para isso, precisamos organizar algumas coisas antes de dar o primeiro passo.</p>
+    <p class="txt">O desmame noturno não é apenas sobre tirar o peito ou a mamadeira é sobre ajudar seu bebê a desenvolver uma nova relação com o sono. Para isso, precisamos organizar algumas coisas antes de dar o primeiro passo.</p>
 
     <div class="sh">👶 O Bebê Está Pronto Para o Desmame Noturno?</div>
     <p class="txt">Antes de tudo, a grande pergunta: será que meu bebê já pode passar a noite sem mamar?</p>
@@ -1891,7 +1994,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="tip">💡 <strong>Dica extra:</strong> Muitos bebês associam a presença da mãe ao leite. Se possível, peça para outra pessoa (como o pai ou avós) ajudar a colocá-lo para dormir em algumas noites antes do desmame. Isso pode fazer uma grande diferença!</div>
 
-    <div class="hc"><span class="hc-i">⚠️</span><div><h4>Quando NÃO Começar o Desmame Noturno?</h4><p>Se o bebê está doente, passando por salto de desenvolvimento, nascendo um dente, se vocês acabaram de mudar de casa ou se a mãe estiver emocionalmente sobrecarregada — espere um momento mais tranquilo.</p></div></div>
+    <div class="hc"><span class="hc-i">⚠️</span><div><h4>Quando NÃO Começar o Desmame Noturno?</h4><p>Se o bebê está doente, passando por salto de desenvolvimento, nascendo um dente, se vocês acabaram de mudar de casa ou se a mãe estiver emocionalmente sobrecarregada espere um momento mais tranquilo.</p></div></div>
 
     <!-- PARTE 2 -->
     <div class="chap" style="margin:20px -18px 20px;padding:18px 18px">
@@ -1906,8 +2009,8 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div class="steps">
       <div class="step"><div class="step-n">1</div><div><h4>Escolha uma mamada para eliminar primeiro</h4><p>Se ele mama 3 vezes, comece reduzindo uma.</p></div></div>
       <div class="step"><div class="step-n">2</div><div><h4>Reduza a duração da mamada</h4><p>Se ele mama por 10 minutos, diminua para 8, depois para 6, e assim por diante.</p></div></div>
-      <div class="step"><div class="step-n">3</div><div><h4>Ofereça outra forma de conforto</h4><p>Carinho, balanço, shhh-shhh, cantar baixinho — algo que o acalme sem precisar do peito ou mamadeira.</p></div></div>
-      <div class="step"><div class="step-n">4</div><div><h4>Repita até a mamada desaparecer</h4><p>Com o tempo, seu bebê vai entender que aquela mamada não é mais necessária. Pode levar dias ou semanas — é super eficaz e gentil.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div><h4>Ofereça outra forma de conforto</h4><p>Carinho, balanço, shhh-shhh, cantar baixinho algo que o acalme sem precisar do peito ou mamadeira.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div><h4>Repita até a mamada desaparecer</h4><p>Com o tempo, seu bebê vai entender que aquela mamada não é mais necessária. Pode levar dias ou semanas é super eficaz e gentil.</p></div></div>
     </div>
 
     <div class="sh">🔄 Método da Substituição</div>
@@ -1934,8 +2037,8 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="sh">😢 Como Lidar Com o Choro Sem Voltar Atrás?</div>
     <div class="compare">
-      <div class="cc good"><div class="cc-l">✅ Faça isso</div><ul><li><strong>Seja firme e amorosa</strong> — demonstre que entende a frustração dele, mas mantenha a decisão</li><li><strong>Esteja presente</strong> — acolher não significa ceder! Segure a mão dele, faça carinho</li><li><strong>Fale com voz tranquila</strong> — "Mamãe está aqui, você está seguro"</li></ul></div>
-      <div class="cc bad"><div class="cc-l">❌ Evite</div><ul><li>Métodos que envolvam deixar o bebê chorando sozinho</li><li>Ceder à mamada após longo choro — isso só prolonga o processo</li></ul></div>
+      <div class="cc good"><div class="cc-l">✅ Faça isso</div><ul><li><strong>Seja firme e amorosa</strong> demonstre que entende a frustração dele, mas mantenha a decisão</li><li><strong>Esteja presente</strong> acolher não significa ceder! Segure a mão dele, faça carinho</li><li><strong>Fale com voz tranquila</strong> "Mamãe está aqui, você está seguro"</li></ul></div>
+      <div class="cc bad"><div class="cc-l">❌ Evite</div><ul><li>Métodos que envolvam deixar o bebê chorando sozinho</li><li>Ceder à mamada após longo choro isso só prolonga o processo</li></ul></div>
     </div>
 
     <!-- PARTE 3 -->
@@ -1949,7 +2052,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div class="steps">
       <div class="step"><div class="step-n">🕐</div><div><h4>Horários consistentes</h4><p>Fazer com que o bebê durma e acorde em horários semelhantes todos os dias ajuda o relógio biológico a funcionar melhor.</p></div></div>
       <div class="step"><div class="step-n">📵</div><div><h4>Diminua estímulos antes de dormir</h4><p>Evite telas e brincadeiras agitadas pelo menos 1 hora antes do sono.</p></div></div>
-      <div class="step"><div class="step-n">🌙</div><div><h4>Crie um ritual de sono agradável</h4><p>Banho, massagem, historinha, luz baixa — tudo isso sinaliza para o bebê que a noite chegou.</p></div></div>
+      <div class="step"><div class="step-n">🌙</div><div><h4>Crie um ritual de sono agradável</h4><p>Banho, massagem, historinha, luz baixa tudo isso sinaliza para o bebê que a noite chegou.</p></div></div>
     </div>
 
     <div class="sh">🛏️ Ensine o Bebê a Voltar a Dormir Sozinho</div>
@@ -1963,7 +2066,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div class="ages">
       <div class="age"><strong>Quarto escuro</strong><span>O bebê dorme melhor sem claridade. Use blackout.</span></div>
       <div class="age"><strong>Ruído branco</strong><span>Sons suaves ajudam a evitar despertares externos.</span></div>
-      <div class="age"><strong>Temperatura ideal</strong><span>21–24°C. Nem muito frio, nem muito quente.</span></div>
+      <div class="age"><strong>Temperatura ideal</strong><span>21-24°C. Nem muito frio, nem muito quente.</span></div>
       <div class="age"><strong>Ambiente aconchegante</strong><span>Berço seguro, sem travesseiros ou cobertores soltos.</span></div>
     </div>
 
@@ -1976,13 +2079,13 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="errcard">
       <div class="err-hd"><span class="err-n">Desafio 1</span><h3>E Se o Bebê Chorar Muito?</h3></div>
-      <p class="txt" style="font-size:13px;margin-bottom:10px">O choro faz parte do processo — o bebê está se adaptando a uma nova forma de dormir.</p>
+      <p class="txt" style="font-size:13px;margin-bottom:10px">O choro faz parte do processo o bebê está se adaptando a uma nova forma de dormir.</p>
       <div class="dolist">
-        <div class="doi"><span>💜</span><p><strong>O choro não significa sofrimento</strong> — ele pode estar demonstrando frustração com a mudança.</p></div>
-        <div class="doi"><span>🤝</span><p><strong>Acolha, mas mantenha a decisão</strong> — segure a mão dele, faça carinho e fale com voz calma.</p></div>
-        <div class="doi"><span>🔄</span><p><strong>Seja consistente</strong> — ceder a uma mamada no meio da noite após longo choro só vai confundir o bebê.</p></div>
+        <div class="doi"><span>💜</span><p><strong>O choro não significa sofrimento</strong> ele pode estar demonstrando frustração com a mudança.</p></div>
+        <div class="doi"><span>🤝</span><p><strong>Acolha, mas mantenha a decisão</strong> segure a mão dele, faça carinho e fale com voz calma.</p></div>
+        <div class="doi"><span>🔄</span><p><strong>Seja consistente</strong> ceder a uma mamada no meio da noite após longo choro só vai confundir o bebê.</p></div>
       </div>
-      <div class="tip">💡 Se o bebê estiver chorando por muito tempo e você estiver insegura, pause e tente outro método. O desmame não precisa ser traumático — vá no ritmo que for confortável para vocês.</div>
+      <div class="tip">💡 Se o bebê estiver chorando por muito tempo e você estiver insegura, pause e tente outro método. O desmame não precisa ser traumático vá no ritmo que for confortável para vocês.</div>
     </div>
 
     <div class="errcard">
@@ -1996,7 +2099,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <div class="tip">💡 Se os despertares noturnos aumentarem muito e durarem mais de 1 semana, reavalie a rotina diurna para garantir que o bebê está descansado o suficiente.</div>
     </div>
 
-    <div class="hc"><span class="hc-i">💜</span><div><h4>E Se Eu Me Sentir Culpada?</h4><p>O desmame noturno não significa falta de amor! Você está ajudando seu bebê a desenvolver hábitos de sono mais saudáveis. Ele vai continuar te amando e confiando em você — porque amor não é só peito ou mamadeira, é presença, aconchego e cuidado.</p></div></div>
+    <div class="hc"><span class="hc-i">💜</span><div><h4>E Se Eu Me Sentir Culpada?</h4><p>O desmame noturno não significa falta de amor! Você está ajudando seu bebê a desenvolver hábitos de sono mais saudáveis. Ele vai continuar te amando e confiando em você porque amor não é só peito ou mamadeira, é presença, aconchego e cuidado.</p></div></div>
 
     <!-- PARTE 5 -->
     <div class="chap" style="margin:20px -18px 20px;padding:18px 18px">
@@ -2012,13 +2115,13 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
     <div class="paso"><div class="paso-n">Passo 3</div><h3>Escolha Sua Estratégia de Desmame</h3><p>Escolha a que mais faz sentido para você e aplique com paciência e consistência.</p></div>
     <div class="compare">
-      <div class="cc neutral"><div class="cc-l">Estratégias disponíveis</div><ul><li><strong>Redução gradual</strong> — diminua o tempo da mamada aos poucos</li><li><strong>Substituição</strong> — troque a mamada por carinho ou embalo</li><li><strong>Reposicionamento</strong> — ensine o bebê a se acalmar sem o peito</li><li><strong>Intervaladas</strong> — aumente o tempo entre as mamadas</li></ul></div>
+      <div class="cc neutral"><div class="cc-l">Estratégias disponíveis</div><ul><li><strong>Redução gradual</strong> diminua o tempo da mamada aos poucos</li><li><strong>Substituição</strong> troque a mamada por carinho ou embalo</li><li><strong>Reposicionamento</strong> ensine o bebê a se acalmar sem o peito</li><li><strong>Intervaladas</strong> aumente o tempo entre as mamadas</li></ul></div>
     </div>
 
-    <div class="paso"><div class="paso-n">Passo 4</div><h3>Seja Firme e Amorosa</h3><p>Se o bebê chorar, esteja presente e acolha. Não volte atrás na decisão. Reforce a segurança com toques e palavras de carinho. <strong>Seu bebê percebe suas emoções — seja firme, mas amorosa.</strong></p></div>
+    <div class="paso"><div class="paso-n">Passo 4</div><h3>Seja Firme e Amorosa</h3><p>Se o bebê chorar, esteja presente e acolha. Não volte atrás na decisão. Reforce a segurança com toques e palavras de carinho. <strong>Seu bebê percebe suas emoções seja firme, mas amorosa.</strong></p></div>
 
     <div class="paso"><div class="paso-n">Passo 5</div><h3>Ajuste Conforme Necessário</h3><p>Se algo não estiver funcionando, ajuste a abordagem. Respeite o ritmo do bebê, mas sem perder a consistência. Se houver resistência extrema, dê um passo atrás e tente de novo.</p></div>
-    <div class="tip">💡 O desmame noturno não é uma corrida — cada bebê tem seu tempo!</div>
+    <div class="tip">💡 O desmame noturno não é uma corrida cada bebê tem seu tempo!</div>
 
     <!-- CONCLUSÃO -->
     <div class="chap" style="margin:20px -18px 20px;padding:18px 18px">
@@ -2033,19 +2136,19 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <div class="conq"><span class="conq-i">😴</span><h4>Bebê dorme melhor</h4><p>Mais horas seguidas, mais descansado e feliz</p></div>
       <div class="conq"><span class="conq-i">🗓️</span><h4>Rotina previsível</h4><p>Mais tranquilidade para o dia a dia de toda a família</p></div>
       <div class="conq"><span class="conq-i">💪</span><h4>Mais energia para você</h4><p>Mais tempo para descansar e aproveitar o dia com ele</p></div>
-      <div class="conq"><span class="conq-i">💜</span><h4>Vínculo mantido</h4><p>Desmame não é afastamento — é evolução</p></div>
+      <div class="conq"><span class="conq-i">💜</span><h4>Vínculo mantido</h4><p>Desmame não é afastamento é evolução</p></div>
     </div>
 
     <div class="quote">
       O desmame noturno não é o fim de um ciclo, mas o começo de uma nova fase. E se teve uma coisa que esse processo ensinou, é que você é mais forte e mais capaz do que imagina.
-      <span class="quote-by">— Myrnna Gurgel</span>
+      <span class="quote-by"> Myrnna Gurgel</span>
     </div>
 
     <!-- CTA UPSELL SUTIL -->
     <div style="background:var(--purple-pale);border:1px solid var(--purple-soft);border-radius:var(--r);padding:20px 18px;text-align:center;margin-top:8px">
       <p style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:8px">✨ Quer ir mais longe?</p>
       <p style="font-family:'Playfair Display',serif;font-size:17px;color:var(--plum);margin-bottom:8px;line-height:1.4">E se você tivesse um plano feito sob medida para o <em>seu</em> bebê?</p>
-      <p style="font-size:13px;color:var(--txt-mid);line-height:1.65;margin-bottom:16px">O <strong>Plano de Sono Personalizado</strong> adapta todas essas técnicas à realidade única do seu bebê — sua idade, temperamento e os desafios específicos da sua família. Sem tentativas frustradas.</p>
+      <p style="font-size:13px;color:var(--txt-mid);line-height:1.65;margin-bottom:16px">O <strong>Plano de Sono Personalizado</strong> adapta todas essas técnicas à realidade única do seu bebê sua idade, temperamento e os desafios específicos da sua família. Sem tentativas frustradas.</p>
       <a onclick="go('plano',null);gtag('event','click',{event_category:'upsell',event_label:'plano_personalizado_tecnicas'})" style="display:inline-block;background:linear-gradient(135deg,var(--purple),var(--purple-lt));color:#fff;font-size:13.5px;font-weight:800;padding:12px 26px;border-radius:50px;cursor:pointer;box-shadow:0 4px 16px rgba(124,92,191,.3)">Ver o Plano Personalizado →</a>
       <p style="font-size:11px;color:var(--txt-soft);margin-top:10px">R$47 · pagamento único · resultado em até 3 dias</p>
     </div>
@@ -2053,6 +2156,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
   </div>
   <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
 </div>
+    </div><!-- /pdf-content-ts1 -->
 <div class="page" id="pg-ts2"><div class="cb"><div class="await">
   <span class="await-i">🔒</span>
   <h3>Aguarde!</h3>
@@ -2124,7 +2228,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
         <span style="flex-shrink:0;background:#6B4FA0;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">00:14</span>
-        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Introdução: O caso real da Mirna</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como ela passou a dormir a noite toda no próprio quarto em apenas 3 dias.</p></div>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">Introdução: O caso real da Myrnna</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Como ela passou a dormir a noite toda no próprio quarto em apenas 3 dias.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
@@ -2154,7 +2258,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#fff;border-bottom:1px solid #F3EFF9">
         <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:1px">31:21</span>
-        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #1: Sinais de sono ignorados</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Não identificar os sinais de sono e deixar o bebê passar do ponto — o perigo do pico de cortisol.</p></div>
+        <div><p style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">❌ Erro #1: Sinais de sono ignorados</p><p style="font-size:12px;color:var(--txt-mid);line-height:1.5">Não identificar os sinais de sono e deixar o bebê passar do ponto o perigo do pico de cortisol.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#FAFAFA;border-bottom:1px solid #F3EFF9">
@@ -2211,12 +2315,12 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Pediatra e neonatologista <strong style="color:var(--plum)">Dra. Camila Bastos</strong> quebra os maiores mitos da amamentação.</p>
 
     <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
-      <iframe src="https://www.youtube.com/embed/qmrhGTlM_HM" title="Pediatra Camila Bastos — Amamentação" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+      <iframe src="https://www.youtube.com/embed/qmrhGTlM_HM" title="Pediatra Camila Bastos Amamentação" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
     </div>
 
     <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
       <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 Guia Definitivo da Amamentação</p>
-      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">A pediatra e neonatologista <strong>Dra. Camila Bastos</strong> traz soluções práticas para as mães — a verdade sobre o "leite fraco", como aumentar a produção, as regras seguras para álcool na amamentação e o passo a passo para ordenhar e armazenar leite.</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">A pediatra e neonatologista <strong>Dra. Camila Bastos</strong> traz soluções práticas para as mães a verdade sobre o "leite fraco", como aumentar a produção, as regras seguras para álcool na amamentação e o passo a passo para ordenhar e armazenar leite.</p>
     </div>
 
     <div style="margin-bottom:22px">
@@ -2240,7 +2344,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
         <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">06:14</span>
-        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ O grande mito do "Leite Fraco"</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que você deve ignorar os palpites e confiar no seu corpo — fórmula não significa saúde.</p></div>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ O grande mito do "Leite Fraco"</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que você deve ignorar os palpites e confiar no seu corpo fórmula não significa saúde.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
@@ -2265,12 +2369,12 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
         <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">24:49</span>
-        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Como ordenhar e armazenar o leite</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Protocolo Brasileiro vs. Americano — tempos exatos de geladeira e congelador.</p></div>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Como ordenhar e armazenar o leite</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Protocolo Brasileiro vs. Americano tempos exatos de geladeira e congelador.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
         <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">28:33</span>
-        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Formas seguras de oferecer o leite ordenhado</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como evitar a confusão de bicos — copinho, colher dosadora e mamadeiras.</p></div>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Formas seguras de oferecer o leite ordenhado</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como evitar a confusão de bicos copinho, colher dosadora e mamadeiras.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
@@ -2285,7 +2389,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
         <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">38:24</span>
-        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Bebês maiores que recusam comida</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Bebês de 1 ano+ que só querem peito — como ajustar a livre demanda e estimular a alimentação.</p></div>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Bebês maiores que recusam comida</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Bebês de 1 ano+ que só querem peito como ajustar a livre demanda e estimular a alimentação.</p></div>
       </div>
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
@@ -2295,7 +2399,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
       <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA">
         <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">52:21</span>
-        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Acompanhamento com a Dra. Camila</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como ter um acompanhamento individualizado — com direito a desconto especial na consulta online!</p></div>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Acompanhamento com a Dra. Camila</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como ter um acompanhamento individualizado com direito a desconto especial na consulta online!</p></div>
       </div>
 
     </div>
@@ -2312,41 +2416,714 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
   </div>
   <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
 </div>
-<div class="page" id="pg-mt3"><div class="cb"><div class="await">
-  <span class="await-i">🔒</span>
-  <h3>Aguarde!</h3>
-  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
-</div></div></div>
-<div class="page" id="pg-mt4"><div class="cb"><div class="await">
-  <span class="await-i">🔒</span>
-  <h3>Aguarde!</h3>
-  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
-</div></div></div>
-<div class="page" id="pg-mt5"><div class="cb"><div class="await">
-  <span class="await-i">🔒</span>
-  <h3>Aguarde!</h3>
-  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
-</div></div></div>
-<div class="page" id="pg-mt6"><div class="cb"><div class="await">
-  <span class="await-i">🔒</span>
-  <h3>Aguarde!</h3>
-  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
-</div></div></div>
-<div class="page" id="pg-mt7"><div class="cb"><div class="await">
-  <span class="await-i">🔒</span>
-  <h3>Aguarde!</h3>
-  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
-</div></div></div>
-<div class="page" id="pg-mt8"><div class="cb"><div class="await">
-  <span class="await-i">🔒</span>
-  <h3>Aguarde!</h3>
-  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
-</div></div></div>
-<div class="page" id="pg-mt9"><div class="cb"><div class="await">
-  <span class="await-i">🔒</span>
-  <h3>Aguarde!</h3>
-  <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
-</div></div></div>
+<div class="page" id="pg-mt3">
+  <div class="cb">
+
+    <div style="margin-bottom:14px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#EDE6F8;color:var(--purple);font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:.04em">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Mentoria
+      </span>
+    </div>
+
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--plum);line-height:1.3;margin-bottom:8px">Maternidade Real: Como Salvar Sua Saúde Mental e Destravar o Desenvolvimento do Seu Bebê</h1>
+    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Com a psicóloga infantojuvenil <strong style="color:var(--plum)">Rayanny Cavalcanti</strong>.</p>
+
+    <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
+      <iframe src="https://www.youtube.com/embed/RPyAUZN0ekI" title="Psicóloga Rayanny Cavalcanti" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+    </div>
+
+    <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 Maternidade Real</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">O pós-parto não precisa ser sinônimo de exaustão extrema e culpa. <strong>Rayanny Cavalcanti</strong> fala sobre autocuidado e desenvolvimento do bebê como lidar com a privação de sono, aceitar ajuda de verdade e aplicar estímulos diários simples que evitam atrasos motores e cognitivos.</p>
+    </div>
+
+    <div style="margin-bottom:22px">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">📝 Sobre essa Mentoria</p>
+      <p style="font-size:15px;color:var(--txt-mid);line-height:1.75">Uma mentoria profunda e acolhedora sobre os dois pilares mais importantes da maternidade: o seu autocuidado e o desenvolvimento da sua criança. Descubra como seu cérebro busca dopamina com privação de sono, o poder das pausas curtas e como estimular seu bebê em cada fase.</p>
+    </div>
+
+    <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:12px">⏱️ Principais Tópicos</p>
+
+    <div style="display:flex;flex-direction:column;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)">
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">00:02</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Introdução</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O desafio do emagrecimento e cansaço no pós-parto relatado por Myrnna.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">03:08</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Conheça Rayanny Cavalcanti</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A importância de olhar para a saúde mental materna.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">08:49</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Emoções, culpa e pressão estética</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como lidar com a montanha-russa de emoções e a pressão social da maternidade.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">11:48</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ Privação de sono × Doces</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como o seu cérebro busca dopamina e por que você acaba descontando nos doces.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">14:30</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 O poder das pausas curtas</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que delegar o bebê por 10 minutos (até para tomar um banho em paz) muda o seu dia.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">22:30</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 A culpa de descansar</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que ficar "sem fazer nada" (ou mexendo no celular) também é útil e necessário.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">26:25</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Movimento leve com o bebê</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como começar atividades físicas respeitando o seu corpo e incluindo o bebê.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">32:09</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Comparações nas redes sociais</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O perigo das comparações e quando é a hora de buscar ajuda profissional.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">40:18</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">O caso do Noah</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como o excesso de colo causou um leve atraso motor e como foi resolvido rapidamente.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">42:30</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Estímulos de 0 a 3 meses</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Reflexos primitivos, cores contrastantes (preto e branco) e "tummy time" para o controle do pescoço.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">48:56</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Bilinguismo em casa</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Pais que falam idiomas diferentes podem ensinar dois idiomas ao bebê? Dicas de como aplicar.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">52:45</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Como estimular andar e falar</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O uso do reforço positivo, paciência e a comunicação clara com o bebê.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">56:04</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Segurança emocional</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que você nunca deve sair escondida do seu filho a importância de conversar e explicar que vai voltar.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">1:04:36</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">E-book de Marcos de Desenvolvimento</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como ter acesso ao e-book prático com todos os marcos de desenvolvimento e técnicas de estímulos.</p></div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:22px;background:var(--purple-pale);border-radius:var(--r);padding:18px;border:1px solid var(--purple-soft)">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:14px">Quer aprender a estimular o seu bebê da maneira certa em cada fase do crescimento? Siga <strong style="color:var(--plum)">Rayanny Cavalcanti</strong> para dicas de neurodesenvolvimento, comportamento infantil e saúde mental materna.</p>
+      <a href="https://instagram.com/psirayannycavalcanti" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_rayanny'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+        📸 @psirayannycavalcanti
+      </a>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+<div class="page" id="pg-mt4">
+  <div class="cb">
+    
+    <div style="margin-bottom:14px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#EDE6F8;color:var(--purple);font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:.04em">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Mentoria
+      </span>
+    </div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--plum);line-height:1.3;margin-bottom:8px">Automaquiagem Prática: Como Resgatar Sua Autoestima em 10 Minutos (Sem Base!)</h1>
+    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Com a especialista em beleza <strong style="color:var(--plum)">Julia Pavanelli</strong>.</p>
+
+        <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
+      <iframe src="https://www.youtube.com/embed/_JIqvdpLjm8" title="Maquiagem e Autoestima Julia Pavanelli" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+    </div>
+
+    <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 Automaquiagem Prática</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">Você não precisa de horas nem de dezenas de produtos para se sentir linda. <strong>Julia Pavanelli</strong> ensina a identificar seu tipo de pele, desvenda os mitos da hidratação para peles oleosas e domina o passo a passo de uma maquiagem rápida e à prova de suor usando apenas corretivo.</p>
+    </div>
+
+    <div style="margin-bottom:22px">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">📝 Sobre essa Mentoria</p>
+      <p style="font-size:15px;color:var(--txt-mid);line-height:1.75">Um conteúdo perfeito para mães que querem dar um "up" na energia e na autoconfiança no meio da correria do dia a dia. Aprenda técnicas simples que fazem toda a diferença em poucos minutos.</p>
+    </div>
+
+    <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:12px">⏱️ Principais Tópicos</p>
+    <div style="display:flex;flex-direction:column;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">00:03</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Introdução</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Myrnna compartilha os desafios de autoestima no pós-parto e a maquiagem como virada rápida de energia.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">03:28</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Conheça Julia Pavanelli</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como a maquiagem comunica a nossa imagem e transforma como enxergamos o próprio dia.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">07:29</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Remoção e limpeza</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Água Micelar × Demaquilante e por que fugir de produtos bifásicos se tiver pele oleosa.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">11:17</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ O mito da pele oleosa</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O perigoso mito de que "pele oleosa não precisa de hidratante" e dicas para peles com psoríase.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">17:28</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Como identificar seu tipo de pele</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Oleosa, Mista, Seca, Sensível ou Madura apenas observando os poros e a textura.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">20:14</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 A Preparação de Milhões</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A ordem correta (Tônico, Hidratante, Protetor Solar) e o segredo da "Blindagem" para a make durar o dia.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">28:02</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Pele perfeita SÓ com corretivo</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Onde aplicar (triângulo, queixo, testa) e por que NUNCA colocar corretivo direto no nariz.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">31:15</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 A técnica da esponjinha</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como esfumar com "batidinhas" e usar o excesso para uniformizar as pálpebras.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">35:38</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Pó Solto × Compacto</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como selar o rosto sem marcar o bigode chinês nem as linhas de expressão.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">43:17</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 O milagre da Bruma Fixadora</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O segredo para tirar aquele aspecto pesado de "cara cheia de pó".</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">47:20</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Contorno sem mistério</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O truque da altura da orelha para criar luz e sombra e afinar o nariz.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">57:25</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Blush e Iluminador</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A regra dos "dois dedinhos" para não achatar o rosto e o efeito bronzeado natural.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">59:54</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Sobrancelhas estimuladas</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como usar apenas máscara incolor para colocar no lugar e estimular o crescimento.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">01:01:21</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Delineado estratégico</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O que fazer para aumentar olhos pequenos × o que usar para diminuir olhos grandes.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">01:03:33</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 O truque de ouro do rímel</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como usar o espelho baixo para não borrar nunca mais e como limpar sem estragar a pele.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">01:14:51</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Curso completo de automaquiagem</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como acessar o curso completo da Julia com super desconto para alunas da mentoria.</p></div>
+      </div>    </div>
+
+        <div style="margin-top:22px;background:var(--purple-pale);border-radius:var(--r);padding:18px;border:1px solid var(--purple-soft)">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:6px">Siga <strong style="color:var(--plum)">Julia Pavanelli</strong> no Instagram para mais dicas e inspiração.</p>
+      <p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6;margin-bottom:14px">💄 Inspire-se todos os dias e tire um tempinho para cuidar da pessoa mais importante: você!</p>
+      <a href="https://instagram.com/juliapavanelli" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_julia_pavanelli'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+        📸 @juliapavanelli
+      </a>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+<div class="page" id="pg-mt5">
+  <div class="cb">
+
+    <div style="margin-bottom:14px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#EDE6F8;color:var(--purple);font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:.04em">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Mentoria
+      </span>
+    </div>
+
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--plum);line-height:1.3;margin-bottom:8px">O Fim da Culpa Materna: Como Parar de Carregar Tudo Sozinha e Ter uma Maternidade Mais Leve</h1>
+    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Com a psicóloga clínica <strong style="color:var(--plum)">Beatriz Rodrigues</strong>.</p>
+
+    <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
+      <iframe src="https://www.youtube.com/embed/Yv55qW3lIoA" title="Psicóloga Beatriz Rodrigues" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+    </div>
+
+    <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 O Fim da Culpa Materna</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">A psicóloga <strong>Beatriz Rodrigues</strong> desconstrui a ideia de que pedir ajuda te faz "menos mãe". Como lidar com a exaustão, a ansiedade de separação, a volta ao trabalho e o peso dos palpites alheios tudo sem julgamentos.</p>
+    </div>
+
+    <div style="margin-bottom:22px">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">📝 Sobre essa Mentoria</p>
+      <p style="font-size:15px;color:var(--txt-mid);line-height:1.75">Uma sessão essencial para aprender a tratar a si mesma com a mesma gentileza e compaixão que você oferece às outras mães. Ser mãe não é sobre perfeição é sobre presença.</p>
+    </div>
+
+    <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:12px">⏱️ Principais Tópicos</p>
+
+    <div style="display:flex;flex-direction:column;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)">
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">00:06</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Introdução</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O medo de Myrnna de delegar os cuidados do filho e a pressão de querer controlar tudo.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">03:27</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Conheça Beatriz Rodrigues</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A criação de um espaço seguro e acolhedor para mães.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">10:29</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 A História de Alice</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que é tão fácil sermos empáticas com outras mães, mas tão duras e cruéis com nós mesmas?</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">20:20</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ O Mito dos Pratos Equilibrados</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Você realmente precisa dar conta de tudo ou aprender a soltar alguns pratos?</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">24:38</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">A raiz da sobrecarga</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A dificuldade de pedir ajuda e o hábito de "aguentar tudo" existiam antes da maternidade?</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">36:04</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Cuidar também é compartilhar</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como permitir que o pai e a rede de apoio criem vínculos e assumam responsabilidades com o bebê.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">39:45</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Ansiedade de separação</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que a criança precisa (e se beneficia muito) da convivência com outros adultos de confiança.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">48:11</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ O erro de sair escondida</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como dialogar e passar segurança emocional para o bebê na hora de sair para trabalhar ou descansar.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">51:19</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">O fantasma da creche</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como lidar com a culpa da volta ao trabalho e a quebra das expectativas sociais.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">57:12</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">A verdade sobre os palpites</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que os palpites indesejados doem tanto? Geralmente porque confirmam nossas próprias cobranças internas.</p></div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">1:06:41</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Reflexão Final</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">"Ser mãe não é sobre perfeição, é sobre presença" inclusive com você mesma.</p></div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:22px;background:var(--purple-pale);border-radius:var(--r);padding:18px;border:1px solid var(--purple-soft)">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:6px">Quer aprender a lidar com as cobranças da maternidade de forma mais gentil e sem culpa? Siga <strong style="color:var(--plum)">Beatriz Rodrigues</strong> para reflexões, acolhimento e ferramentas práticas para mães que desejam cuidar da própria saúde mental.</p>
+      <p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6;margin-bottom:14px">💜 A agenda dela está aberta para acompanhamento individual!</p>
+      <a href="https://instagram.com/psi.beatrizrodrigues" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_beatriz'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+        📸 @psi.beatrizrodrigues
+      </a>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+<div class="page" id="pg-mt6">
+  <div class="cb">
+    
+    <div style="margin-bottom:14px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#EDE6F8;color:var(--purple);font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:.04em">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Mentoria
+      </span>
+    </div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--plum);line-height:1.3;margin-bottom:8px">O Caminho Real para Recuperar o Corpo no Pós-Parto (Sem Dietas Malucas e Treinos Intermináveis)</h1>
+    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Parte 1 Com a Personal Trainer <strong style="color:var(--plum)">Carol Cavalcante</strong>.</p>
+
+        <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
+      <iframe src="https://www.youtube.com/embed/I3wER20VFkE" title="Personal Trainer Carol Cavalcanti pt.1" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+    </div>
+
+    <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 Recuperar o Corpo no Pós-Parto</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">A verdade sobre a diástase, como adaptar os treinos para a rotina caótica da maternidade, os perigos do "efeito rebote" dos emagrecedores e a diferença vital entre motivação e constância.</p>
+    </div>
+
+    <div style="margin-bottom:22px">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">📝 Sobre essa Mentoria</p>
+      <p style="font-size:15px;color:var(--txt-mid);line-height:1.75">Um papo direto ao ponto para mães que querem resultados estéticos, resgatar a autoestima e viver com mais energia respeitando a fisiologia do próprio corpo.</p>
+    </div>
+
+    <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:12px">⏱️ Principais Tópicos</p>
+    <div style="display:flex;flex-direction:column;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">00:00</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Introdução</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A história real de Myrnna como eliminou 23kg da gestação e recuperou a autoestima com treinos curtos.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">04:14</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">É possível voltar ao corpo de antes?</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Retenção de líquido, inchaço uterino e a importância da rede de apoio no processo.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">06:39</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Sem tempo para academia?</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como adaptar os treinos para a realidade exaustiva de quem acabou de ser mãe.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">09:51</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 O fantasma da Diástase</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O que é, como fazer o teste em casa para identificar e como fechar a musculatura do abdômen.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">16:03</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Fui mãe há mais de 10 anos</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Ainda é possível recuperar a barriga? A influência da idade e a perda de massa muscular após os 30.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">20:46</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ Exercícios de impacto no puerpério</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que evitar pular corda e exercícios de impacto logo após o parto para proteger o períneo.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">23:16</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Em quanto tempo os resultados aparecem?</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Alívio imediato nas dores nas costas e resultados estéticos a partir de 15 dias.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">26:29</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Sono e queima de gordura</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A importância do sono reparador no processo de emagrecimento.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">28:30</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Liberação médica</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O tempo certo para voltar aos treinos Parto Normal × Cesárea.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">29:11</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ O Efeito Platô</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O que fazer quando o corpo estagna e a balança para de descer após os primeiros meses.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">33:23</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ Dietas extremas e remédios</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Efeito rebote e como identificar a Fome Física × Fome Emocional.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">37:58</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">O mito da amamentação</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Dar de mamar realmente emagrece ou dá mais fome?</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">39:55</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Motivação vs. Constância</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que você nunca vai acordar motivada todos os dias e o poder de registrar a evolução por fotos.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">52:13</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Consultoria Online da Carol</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como funciona a consultoria e as oportunidades exclusivas do Guia.</p></div>
+      </div>    </div>
+
+        <div style="margin-top:22px;background:var(--purple-pale);border-radius:var(--r);padding:18px;border:1px solid var(--purple-soft)">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:6px">Siga <strong style="color:var(--plum)">Carol Cavalcante</strong> no Instagram para mais dicas e inspiração.</p>
+      <p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6;margin-bottom:14px">💪 Não espere a motivação chegar dê o primeiro passo hoje!</p>
+      <a href="https://instagram.com/carolcavalcantefit" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_carol_cavalcanti'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+        📸 @carolcavalcantefit
+      </a>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+<div class="page" id="pg-mt7">
+  <div class="cb">
+
+    <div style="margin-bottom:14px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#EDE6F8;color:var(--purple);font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:.04em">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Mentoria
+      </span>
+    </div>
+
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--plum);line-height:1.3;margin-bottom:8px">Mentoria com Personal: Do Cansaço ao Corpo dos Sonhos (Os Bastidores do Emagrecimento)</h1>
+    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Parte 2 Com a Personal Trainer <strong style="color:var(--plum)">Carol Cavalcante</strong>.</p>
+
+    <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
+      <iframe src="https://www.youtube.com/embed/qvi822EYTD8" title="Personal Trainer Carol Cavalcanti pt.2" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+    </div>
+
+    <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 Do Cansaço ao Corpo dos Sonhos</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">Myrnna mostra como eliminou 28kg do pós-parto com <strong>Carol Cavalcante</strong>. Descubra por que treinar igual a uma "louca" quase arruinou tudo, como funciona a flacidez muscular e aprenda a técnica de respiração que afina a cintura.</p>
+    </div>
+
+    <div style="margin-bottom:22px">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">📝 Sobre essa Mentoria</p>
+      <p style="font-size:15px;color:var(--txt-mid);line-height:1.75">Uma aula indispensável sobre o que realmente funciona quando o assunto é o corpo e a mente após a maternidade com aula prática ao vivo de respiração e postura.</p>
+    </div>
+
+    <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:12px">⏱️ Principais Tópicos</p>
+
+    <div style="display:flex;flex-direction:column;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">00:00</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Introdução</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Os erros ao voltar a treinar no pós-parto e a frustração de não ver resultados antes do acompanhamento profissional.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">11:23</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">As três fases do emagrecimento</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Mobilidade/Consciência Corporal, Fortalecimento do Core e Força o método de Carol.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">15:10</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">O relato pessoal da Carol</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como ela lidou com incontinência urinária e diástase após o segundo parto, isolada na pandemia.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">18:43</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ O mito da cinta modeladora</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que fortalecer seu "cinturão natural" é mais eficaz e saudável do que depender de cintas.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">24:53</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Amamentar emagrece?</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A verdade sobre por que algumas mães secam rapidinho, enquanto outras ganham peso amamentando.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">27:53</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ O temido efeito rebote</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O que acontece no corpo quando paramos de amamentar e como evitar o ganho de peso repentino.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">36:00</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 O ato de amor-próprio</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que encontrar tempo para se cuidar é o maior presente que você pode dar à sua família.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">39:15</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 A técnica de respiração</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A diferença entre "puxar a barriga" (vácuo) e a respiração ativada que fortalece a diástase.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">40:39</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Dores no joelho e costas</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que fortalecer os glúteos eles não são só estética, são estabilizadores do corpo!</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">46:26</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 A prova do antes e depois</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Análise detalhada da evolução e da melhora postural impressionante de Myrnna.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">55:39</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Flacidez Muscular × Pele</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como identificar seu caso e o que os exercícios podem (e não podem) resolver.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">01:07:36</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Aula Prática ao Vivo</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Respiração, liberação do diafragma e alinhamento da postura passo a passo.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">01:13:46</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ Abdominal é proibido?</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que não fazer abdominais tradicionais antes de recuperar o Core e a linha do abdômen.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">01:31:43</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Caminhar faz mal para a diástase?</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A desmistificação do que significa "pressão intra-abdominal" e como agachamentos mal executados prejudicam.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">01:37:57</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Consultoria Personalizada</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Carol apresenta o modelo de consultoria e lança bônus especial para as mães da mentoria.</p></div>
+      </div>
+    </div>
+
+    <div style="margin-top:22px;background:var(--purple-pale);border-radius:var(--r);padding:18px;border:1px solid var(--purple-soft)">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:6px">Quer acompanhamento 100% focado no seu corpo, sua postura e sua rotina? Siga <strong style="color:var(--plum)">Carol Cavalcante</strong> no Instagram!</p>
+      <p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6;margin-bottom:14px">💪 Cuidar de si mesma é o primeiro passo para cuidar bem da sua família.</p>
+      <a href="https://instagram.com/carolcavalcantefit" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_carol_pt2'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+        📸 @carolcavalcantefit
+      </a>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+<div class="page" id="pg-mt8">
+  <div class="cb">
+
+    <div style="margin-bottom:14px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#EDE6F8;color:var(--purple);font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:.04em">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Mentoria
+      </span>
+    </div>
+
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--plum);line-height:1.3;margin-bottom:8px">O Guia Definitivo da APLV: Descomplicando a Dieta de Exclusão sem Parar de Amamentar</h1>
+    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Com a nutricionista materno-infantil <strong style="color:var(--plum)">Renata Magalhães</strong>.</p>
+
+    <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
+      <iframe src="https://www.youtube.com/embed/cclqSYFG0P4" title="Nutrição Materno-Infantil Renata Magalhães" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+    </div>
+
+    <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 Guia Definitivo da APLV</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7"><strong>Renata Magalhães</strong> explica tudo sobre a Alergia à Proteína do Leite de Vaca diferença entre alergia e intolerância, como identificar os sintomas e o passo a passo para fazer a dieta de exclusão de forma segura sem abrir mão da amamentação.</p>
+    </div>
+
+    <div style="margin-bottom:22px">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">📝 Sobre essa Mentoria</p>
+      <p style="font-size:15px;color:var(--txt-mid);line-height:1.75">Conteúdo essencial para mães que querem garantir a saúde e o desenvolvimento do bebê sem abrir mão da amamentação e sem sofrer com a falta de nutrientes durante a dieta de exclusão.</p>
+    </div>
+
+    <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:12px">⏱️ Principais Tópicos</p>
+
+    <div style="display:flex;flex-direction:column;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">02:00</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Introdução</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A importância do acolhimento materno e apresentação da especialista Renata Magalhães.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">10:19</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">APLV × Intolerância à Lactose</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A diferença definitiva e por que você não deve confundir as duas coisas.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">12:50</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Como a alergia funciona no corpo</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Mecanismos mediados por IgE (rápidos) e não mediados (tardios).</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">17:00</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">⚠️ Principais Sintomas de Alerta</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Do inchaço e urticária até sangue nas fezes, refluxo e déficit de crescimento.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">25:15</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Amamentação e APLV</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A mãe precisa parar de amamentar? Quando é realmente necessário fazer a dieta de exclusão?</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">27:20</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ Desvendando Mitos</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Tudo o que te falam sobre APLV que não é verdade ex: cortar leite na gravidez previne a alergia?</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">38:00</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Dieta de Exclusão na Prática</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O que a mãe deve cortar e as pegadinhas dos ingredientes escondidos.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">40:49</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Substituições Inteligentes</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como garantir Cálcio, Vitamina D, B12 e Proteínas sem consumir leite.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">43:46</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 A Regra do Rótulo</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como ler embalagens corretamente para evitar os "traços" e contaminações cruzadas.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">47:38</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Estudo de Caso</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como a dieta correta reverteu o déficit de crescimento de um bebê na prática.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">51:35</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Mentoria e Acompanhamento</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como funciona o programa nutricional para ajudar mães na dieta de exclusão.</p></div>
+      </div>
+    </div>
+
+    <div style="margin-top:22px;background:var(--purple-pale);border-radius:var(--r);padding:18px;border:1px solid var(--purple-soft)">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:6px">Quer fazer a dieta de exclusão de forma segura para você e para o seu bebê? Siga <strong style="color:var(--plum)">Renata Magalhães</strong> para dicas de ouro sobre APLV, introdução alimentar e nutrição materno-infantil.</p>
+      <p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6;margin-bottom:14px">🥗 Não passe por esse processo sozinha!</p>
+      <a href="https://instagram.com/reboaventuranutri" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_renata'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+        📸 @reboaventuranutri
+      </a>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
+<div class="page" id="pg-mt9">
+  <div class="cb">
+
+    <div style="margin-bottom:14px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#EDE6F8;color:var(--purple);font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:.04em">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Mentoria
+      </span>
+    </div>
+
+    <h1 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--plum);line-height:1.3;margin-bottom:8px">Como Secar no Pós-Parto sem Afetar a Amamentação (e sem Dieta Maluca!)</h1>
+    <p style="font-size:14px;color:var(--txt-mid);line-height:1.55;margin-bottom:18px">Com a Nutricionista <strong style="color:var(--plum)">Myrthe Emilyana</strong>.</p>
+
+    <div style="position:relative;padding-bottom:56.25%;height:0;background:var(--purple-pale);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-md)">
+      <iframe src="https://www.youtube.com/embed/XNAkGXtSfMY" title="Nutricionista Myrthe Emilyana" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"></iframe>
+    </div>
+
+    <div style="background:#FAFAFA;border-radius:var(--r-sm);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+      <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:8px">🔥 Secar no Pós-Parto sem Dieta Maluca</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7">Como perder gordura de forma saudável e prática, sem prejudicar a produção de leite. Os perigos do jejum prolongado, as três regras de ouro da alimentação pós-parto e como usar a suplementação na rotina caótica.</p>
+    </div>
+
+    <div style="margin-bottom:22px">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">📝 Sobre essa Mentoria</p>
+      <p style="font-size:15px;color:var(--txt-mid);line-height:1.75">Uma aula libertadora para quem quer resgatar a autoestima comendo comida de verdade sem terrorismo nutricional e respeitando a fisiologia do corpo pós-parto.</p>
+    </div>
+
+    <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:12px">⏱️ Principais Tópicos</p>
+
+    <div style="display:flex;flex-direction:column;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">00:03</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Introdução</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O desespero com o corpo no pós-parto e o acolhimento para tirar as angústias da cabeça.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">01:21</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Conheça Myrthe Emilyana</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A experiência real da Myrnna eliminou 23kg com o direcionamento correto.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">04:26</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 "Não tenho tempo para comer"</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">A estratégia prática de levar a comida até o ambiente onde você amamenta.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#D95F5F;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">07:12</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">❌ Os perigos do jejum prolongado</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que ficar sem comer deixa o metabolismo lento e faz você perder massa magra em vez de gordura.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">08:18</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Snacks rápidos e nutritivos</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Frutas, porções de castanhas e suco de uva integral que toda mãe deve ter à mão.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">10:19</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">É possível emagrecer amamentando?</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O perigo das dietas extremas que acabam secando a produção de leite.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">12:10</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">O verdadeiro emagrecimento</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Por que o foco deve ser a perda de gordura e não apenas o número na balança.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">14:02</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 As 3 Regras de Ouro</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Água (mínimo 3L/dia), Frutas (3-4 porções) e o "Top 4" de Proteínas para acelerar o metabolismo.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">18:21</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Suplementação salva a rotina</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como usar Polivitamínicos, Creatina e Whey Protein quando falta tempo para preparar refeições.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">21:23</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 Virada de chave</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Troque "dieta" (que gera bloqueio) por reeducação alimentar com equilíbrio.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">23:59</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Restrições reais na amamentação</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">O impacto de ultraprocessados, excesso de açúcar e cafeína no sono e agitação do bebê.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">28:36</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">🎯 A estratégia do "Passe Livre"</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como manter a constância e comer o seu doce favorito sem culpa e sem chutar o balde.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#fff;border-bottom:1px solid var(--border);">
+        <span style="flex-shrink:0;background:var(--purple);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">32:07</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">Atendimentos da Nutri Myrthe</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Como funcionam os atendimentos online e presencial focados em mães e tentantes.</p></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:#FAFAFA;">
+        <span style="flex-shrink:0;background:#5CAE82;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;margin-top:2px">35:23</span>
+        <div><p style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px">O Guia Completo</p><p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6">Myrnna explica o material exclusivo Planner, Checklist, Diário e Manual do Sono.</p></div>
+      </div>
+    </div>
+
+    <div style="margin-top:22px;background:var(--purple-pale);border-radius:var(--r);padding:18px;border:1px solid var(--purple-soft)">
+      <p style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:10px">🎯 Siga a Especialista</p>
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.7;margin-bottom:6px">Quer emagrecer de forma leve, respeitando o seu corpo e nutrindo o seu bebê com qualidade? Siga <strong style="color:var(--plum)">Myrthe Emilyana</strong> para dicas nutricionais de ouro, sem terrorismo.</p>
+      <p style="font-size:13.5px;color:var(--txt-mid);line-height:1.6;margin-bottom:14px">🥗 Atendimentos online e presencial disponíveis para mães e tentantes!</p>
+      <a href="https://instagram.com/myrtheemilyana.nutri" target="_blank" onclick="gtag('event','click',{event_category:'especialista',event_label:'instagram_myrthe'})" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-size:13.5px;font-weight:800;padding:11px 20px;border-radius:50px;text-decoration:none">
+        📸 @myrtheemilyana.nutri
+      </a>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
+</div>
 <div class="page" id="pg-mc1"><div class="cb"><div class="await">
   <span class="await-i">🔒</span>
   <h3>Aguarde!</h3>
@@ -2360,6 +3137,17 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 
 <!-- PLANO UPSELL -->
 <div class="page" id="pg-plano">
+    <!-- PDF Download Button -->
+    <div style="display:flex;justify-content:flex-end;padding:10px 20px 0;background:#fff;border-bottom:1px solid var(--border)">
+      <button id="pdf-btn-plano" onclick="downloadPDF('plano','Plano de Sono Personalizado')"
+        style="display:inline-flex;align-items:center;gap:6px;background:transparent;border:1.5px solid var(--purple-soft);color:var(--txt-mid);font-size:12px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;transition:.2s;font-family:'Nunito',sans-serif"
+        onmouseover="this.style.background='var(--purple-pale)';this.style.color='var(--purple)'"
+        onmouseout="this.style.background='transparent';this.style.color='var(--txt-mid)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Baixar PDF
+      </button>
+    </div>
+    <div id="pdf-content-plano">
   <div class="up-hero">
     <span class="up-badge">⭐ Oferta Especial</span>
     <h1>Plano de Sono Personalizado</h1>
@@ -2367,7 +3155,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div class="up-price-tag"><div class="up-from">de R$97,00</div><div class="up-price"><sup>R$</sup>47,90</div><div class="up-sub">pagamento único · acesso imediato</div></div>
     <br>
     <a class="btn-main" href="https://www.myrnnagurgel.com.br/wpp-pix-plano-sono" target="_blank" onclick="gtag('event','click',{event_category:'upsell',event_label:'plano_personalizado_hero'})">Quero meu Plano Personalizado →</a>
-    <p class="up-guar">🔒 Garantia de 7 dias — satisfação ou reembolso total</p>
+    <p class="up-guar">🔒 Garantia de 7 dias satisfação ou reembolso total</p>
   </div>
   <div class="cb">
     <div class="sh">🎯 O que está incluído</div>
@@ -2375,9 +3163,9 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     <div class="feat"><span class="feat-i">🌙</span><div><h4>Rotina Individualizada</h4><p>Horários, rituais e estratégias desenhados especificamente para a idade e temperamento do seu bebê.</p></div></div>
     <div class="feat"><span class="feat-i">📞</span><div><h4>Suporte Exclusivo</h4><p>Acesso ao suporte da equipe Myrnna Gurgel para tirar dúvidas sobre o seu plano.</p></div></div>
     <div class="feat"><span class="feat-i">⚡</span><div><h4>Entrega Rápida</h4><p>Seu plano personalizado entregue em até 3 dias úteis após o preenchimento do formulário.</p></div></div>
-    <div class="quote" style="margin-top:16px">Cada bebê é único. E o seu merece um plano que respeite exatamente quem ele é — seu temperamento, sua fase, suas necessidades.<span class="quote-by">— Myrnna Gurgel</span></div>
+    <div class="quote" style="margin-top:16px">Cada bebê é único. E o seu merece um plano que respeite exatamente quem ele é seu temperamento, sua fase, suas necessidades.<span class="quote-by"> Myrnna Gurgel</span></div>
     <div style="text-align:center;padding:6px 0 18px">
-      <a class="btn-main" href="https://www.myrnnagurgel.com.br/wpp-pix-plano-sono" target="_blank" onclick="gtag('event','click',{event_category:'upsell',event_label:'plano_personalizado_rodape'})">Solicitar meu Plano — R$47,90 →</a>
+      <a class="btn-main" href="https://www.myrnnagurgel.com.br/wpp-pix-plano-sono" target="_blank" onclick="gtag('event','click',{event_category:'upsell',event_label:'plano_personalizado_rodape'})">Solicitar meu Plano R$47,90 →</a>
       <p style="font-size:12px;color:var(--txt-mid);margin-top:10px">Após a compra, você receberá o form por whatsapp para preencher as informações do seu bebê. <em>(Se você já comprou o Plano Personalizado clique no botão acima e avise que já comprou enviando o seu e-mail para verificar.)</em></p>
     </div>
   </div>
@@ -2389,7 +3177,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 </div>
 
 <script>
-const T={pt:{nav_home:"Sono Sem Choro",nav_inicio:"Início",nav_ma:"Master Aulas",nav_ma1:"Sono Dia 1 — Métodos e Soluções",nav_ma2:"Sono Dia 2 — Noites Tranquilas",nav_ma3:"Mentoria com Thaís Neves",nav_ma4:"Aula 1 — Manual do Sono",nav_ma5:"Aula 2 — Manual do Sono Prático",nav_ts:"Técnicas Secretas Desmame Noturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabela de Rotina Ideal",nav_ts3:"Checklist Organização do Sono",nav_ts4:"Frases de Acolhimento",nav_bonus:"Bônus Exclusivos",nav_b1:"Mapa de Crise do Sono",nav_b2:"Guia de Emergência",nav_mt:"Mentoria com Profissionais",nav_mt1:"Sono do Bebê — Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquiagem — Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementar",nav_mc1:"Cardápio — Alimentos Para Dormir",nav_mc2:"Manual — Rituais Que Funcionam",nav_plano:"Plano de Sono Personalizado",btn_wa:"Resgatar meu brinde e salvar o link do app!"},es:{nav_home:"Sueño Sin Llanto",nav_inicio:"Inicio",nav_ma:"Master Clases",nav_ma1:"Sueño Día 1 — Métodos y Soluciones",nav_ma2:"Sueño Día 2 — Noches Tranquilas",nav_ma3:"Mentoría con Thaís Neves",nav_ma4:"Clase 1 — Manual del Sueño",nav_ma5:"Clase 2 — Manual del Sueño Práctico",nav_ts:"Técnicas Secretas Destete Nocturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabla de Rutina Ideal",nav_ts3:"Checklist Organización del Sueño",nav_ts4:"Frases de Acogida",nav_bonus:"Bonos Exclusivos",nav_b1:"Mapa de Crisis del Sueño",nav_b2:"Guía de Emergencia",nav_mt:"Mentoría con Profesionales",nav_mt1:"Sueño del Bebé — Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquillaje — Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementario",nav_mc1:"Menú — Alimentos Para Dormir",nav_mc2:"Manual — Rituales Que Funcionan",nav_plano:"Plan de Sueño Personalizado",btn_wa:"¡Canjear mi regalo y guardar el link!"}};
+const T={pt:{nav_home:"Sono Sem Choro",nav_inicio:"Início",nav_ma:"Master Aulas",nav_ma1:"Sono Dia 1 Métodos e Soluções",nav_ma2:"Sono Dia 2 Noites Tranquilas",nav_ma3:"Mentoria com Thaís Neves",nav_ma4:"Aula 1 Manual do Sono",nav_ma5:"Aula 2 Manual do Sono Prático",nav_ts:"Técnicas Secretas Desmame Noturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabela de Rotina Ideal",nav_ts3:"Checklist Organização do Sono",nav_ts4:"Frases de Acolhimento",nav_bonus:"Bônus Exclusivos",nav_b1:"Mapa de Crise do Sono",nav_b2:"Guia de Emergência",nav_mt:"Mentoria com Profissionais",nav_mt1:"Sono do Bebê Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquiagem Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. APLV Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementar",nav_mc1:"Cardápio Alimentos Para Dormir",nav_mc2:"Manual Rituais Que Funcionam",nav_plano:"Plano de Sono Personalizado",btn_wa:"Resgatar meu brinde e salvar o link do app!"},es:{nav_home:"Sueño Sin Llanto",nav_inicio:"Inicio",nav_ma:"Master Clases",nav_ma1:"Sueño Día 1 Métodos y Soluciones",nav_ma2:"Sueño Día 2 Noches Tranquilas",nav_ma3:"Mentoría con Thaís Neves",nav_ma4:"Clase 1 Manual del Sueño",nav_ma5:"Clase 2 Manual del Sueño Práctico",nav_ts:"Técnicas Secretas Destete Nocturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabla de Rutina Ideal",nav_ts3:"Checklist Organización del Sueño",nav_ts4:"Frases de Acogida",nav_bonus:"Bonos Exclusivos",nav_b1:"Mapa de Crisis del Sueño",nav_b2:"Guía de Emergencia",nav_mt:"Mentoría con Profesionales",nav_mt1:"Sueño del Bebé Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquillaje Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. APLV Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementario",nav_mc1:"Menú Alimentos Para Dormir",nav_mc2:"Manual Rituales Que Funcionan",nav_plano:"Plan de Sueño Personalizado",btn_wa:"¡Canjear mi regalo y guardar el link!"}};
 
 let lang=localStorage.getItem('snc_lang')||'pt';
 function setLang(l){lang=l;localStorage.setItem('snc_lang',l);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',b.textContent.trim().toLowerCase()===l));document.querySelectorAll('[data-key]').forEach(el=>{const k=el.dataset.key;if(T[l]&&T[l][k])el.textContent=T[l][k]});document.documentElement.lang=l==='pt'?'pt-BR':'es'}
@@ -2416,7 +3204,7 @@ function go(id,el){
   window.scrollTo({top:0,behavior:'smooth'});
   if(window.innerWidth<=768)closeSB();
   if(typeof gtag!=='undefined'){gtag('event','page_view',{page_title:id,page_path:'/#'+id});}
-  // GA4 — rastreia troca de seção como page_view
+  // GA4 rastreia troca de seção como page_view
   if(typeof gtag!=='undefined'){
     gtag('event','page_view',{
       page_title: id,
