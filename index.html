@@ -1023,6 +1023,12 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
       <span data-key="btn_ig">Seguir no Instagram!</span>
     </a>
+    <button onclick="openInstallModal()"
+      style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 12px;border-radius:var(--r-sm);background:linear-gradient(135deg,#1a73e8,#4285f4);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:.2s;border:none"
+      onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      Como Baixar o App no Celular
+    </button>
   </div>
 </aside>
 
@@ -2099,6 +2105,15 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         Baixar PDF
       </button>
     </div>
+
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('intro-ts1',this)">Introdução</button>
+        <button class="pill" onclick="scrl('parte1-ts1',this)">Parte 1</button>
+        <button class="pill" onclick="scrl('parte2-ts1',this)">Parte 2</button>
+        <button class="pill" onclick="scrl('parte3-ts1',this)">Parte 3</button>
+        <button class="pill" onclick="scrl('parte4-ts1',this)">Parte 4</button>
+        <button class="pill" onclick="scrl('parte5-ts1',this)">Parte 5</button>
+    </div>
     <div id="pdf-content-ts1">
   <div class="cb">
 
@@ -2330,6 +2345,12 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
     </div><!-- /pdf-content-ts1 -->
 <div class="page" id="pg-ts2">
   <div class="cb">
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('tabela-ts2',this)">Tabela</button>
+        <button class="pill" onclick="scrl('como-usar-ts2',this)">Como Usar</button>
+        <button class="pill" onclick="scrl('substituicoes-ts2',this)">Substituições</button>
+    </div>
+
 
     <div class="intro-c">
       <h3>Tabela de Rotina Ideal Para o Desmame Noturno</h3>
@@ -2433,6 +2454,13 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 </div>
 <div class="page" id="pg-ts3">
   <div class="cb">
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('antes-ts3',this)">Antes de Dormir</button>
+        <button class="pill" onclick="scrl('durante-ts3',this)">Durante o Sono</button>
+        <button class="pill" onclick="scrl('madrugada-ts3',this)">De Madrugada</button>
+        <button class="pill" onclick="scrl('dia-ts3',this)">Durante o Dia</button>
+    </div>
+
 
     <div class="intro-c">
       <h3>Checklist Para Organizar o Sono do Bebê</h3>
@@ -2518,6 +2546,15 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 </div>
 <div class="page" id="pg-ts4">
   <div class="cb">
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('inquieto-ts4',this)">Bebê Inquieto</button>
+        <button class="pill" onclick="scrl('chorando-ts4',this)">Bebê Chorando</button>
+        <button class="pill" onclick="scrl('rotina-ts4',this)">Nova Rotina</button>
+        <button class="pill" onclick="scrl('seguranca-ts4',this)">Segurança</button>
+        <button class="pill" onclick="scrl('transicao-ts4',this)">Transição</button>
+        <button class="pill" onclick="scrl('dicas-ts4',this)">Dicas</button>
+    </div>
+
 
     <div class="intro-c">
       <h3>Frases de Acolhimento Para Acalmar o Bebê</h3>
@@ -2573,12 +2610,27 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
   </div>
   <div style="text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--txt-soft)">Criado com ❤️ by Myrnna Gurgel</div>
 </div>
-<div class="page" id="pg-b1"><div class="cb"><div class="await">
+<div class="page" id="pg-b1"><div class="cb">
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('o-que-e-b1',this)">O que é?</button>
+        <button class="pill" onclick="scrl('checklist-b1',this)">Checklist</button>
+        <button class="pill" onclick="scrl('mapa-b1',this)">Por Idade</button>
+        <button class="pill" onclick="scrl('como-superar-b1',this)">Como Superar</button>
+        <button class="pill" onclick="scrl('faq-b1',this)">FAQ</button>
+    </div>
+<div class="await">
   <span class="await-i">🔒</span>
   <h3>Aguarde!</h3>
   <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
 </div></div></div>
-<div class="page" id="pg-b2"><div class="cb"><div class="await">
+<div class="page" id="pg-b2"><div class="cb">
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('diagnostico-b2',this)">Diagnóstico</button>
+        <button class="pill" onclick="scrl('pronto-socorro-b2',this)">Pronto-Socorro</button>
+        <button class="pill" onclick="scrl('especificas-b2',this)">Estratégias</button>
+        <button class="pill" onclick="scrl('recuperacao-b2',this)">Recuperação</button>
+    </div>
+<div class="await">
   <span class="await-i">🔒</span>
   <h3>Aguarde!</h3>
   <p>Esse conteúdo vai ser liberado amanhã para você, enquanto isso aproveite os materiais que já estão liberados!</p>
@@ -3536,6 +3588,15 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         Baixar PDF
       </button>
     </div>
+
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('intro-mc1',this)">Intro</button>
+        <button class="pill" onclick="scrl('cap1-mc1',this)">Cap. 1</button>
+        <button class="pill" onclick="scrl('cap2-mc1',this)">Cap. 2</button>
+        <button class="pill" onclick="scrl('cap3-mc1',this)">Cap. 3</button>
+        <button class="pill" onclick="scrl('cap4-mc1',this)">Cap. 4</button>
+        <button class="pill" onclick="scrl('cap5-mc1',this)">FAQ</button>
+    </div>
     <div id="pdf-content-mc1">
 
     <div class="intro-c">
@@ -3716,6 +3777,14 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         Baixar PDF
       </button>
     </div>
+
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('cardapio-mc2',this)">Cardápio</button>
+        <button class="pill" onclick="scrl('segunda-mc2',this)">Seg-Qua</button>
+        <button class="pill" onclick="scrl('quinta-mc2',this)">Qui-Sab</button>
+        <button class="pill" onclick="scrl('domingo-mc2',this)">Domingo</button>
+        <button class="pill" onclick="scrl('substituicoes-mc2',this)">Substituições</button>
+    </div>
     <div id="pdf-content-mc2">
 
     <div class="intro-c">
@@ -3872,6 +3941,14 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         Baixar PDF
       </button>
     </div>
+
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('lista-mc3',this)">Lista</button>
+        <button class="pill" onclick="scrl('frutas-mc3',this)">Frutas</button>
+        <button class="pill" onclick="scrl('graos-mc3',this)">Grãos</button>
+        <button class="pill" onclick="scrl('proteinas-mc3',this)">Proteínas</button>
+        <button class="pill" onclick="scrl('dicas-mc3',this)">Dicas</button>
+    </div>
     <div id="pdf-content-mc3">
 
     <div class="intro-c">
@@ -3966,6 +4043,15 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Baixar PDF
       </button>
+    </div>
+
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('cap1-mc4',this)">Fundamentos</button>
+        <button class="pill" onclick="scrl('cap2-mc4',this)">Rituais</button>
+        <button class="pill" onclick="scrl('cap3-mc4',this)">Sono Contínuo</button>
+        <button class="pill" onclick="scrl('cap4-mc4',this)">Ambiente</button>
+        <button class="pill" onclick="scrl('cap5-mc4',this)">Desafios</button>
+        <button class="pill" onclick="scrl('checklist-mc4',this)">Checklist</button>
     </div>
     <div id="pdf-content-mc4">
 
@@ -4167,6 +4253,15 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         Baixar PDF
       </button>
     </div>
+
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('quantidade-mc5',this)">Quantidade</button>
+        <button class="pill" onclick="scrl('duracao-mc5',this)">Duração</button>
+        <button class="pill" onclick="scrl('horarios-mc5',this)">Horários</button>
+        <button class="pill" onclick="scrl('sinais-mc5',this)">Sinais</button>
+        <button class="pill" onclick="scrl('prolongar-mc5',this)">Prolongar</button>
+        <button class="pill" onclick="scrl('armadilhas-mc5',this)">Armadilhas</button>
+    </div>
     <div id="pdf-content-mc5">
 
     <div class="intro-c">
@@ -4281,6 +4376,12 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
         Baixar PDF
       </button>
     </div>
+
+    <div class="pills" style="position:sticky;top:var(--top-h);z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <button class="pill on" onclick="scrl('hero-plano',this)">Plano</button>
+        <button class="pill" onclick="scrl('beneficios-plano',this)">Benefícios</button>
+        <button class="pill" onclick="scrl('como-funciona-plano',this)">Como Funciona</button>
+    </div>
     <div id="pdf-content-plano">
   <div class="up-hero">
     <span class="up-badge">⭐ Oferta Especial</span>
@@ -4311,7 +4412,7 @@ src="https://www.facebook.com/tr?id=449193154116638&ev=PageView&noscript=1"
 </div>
 
 <script>
-const T={pt:{nav_home:"Sono Sem Choro",nav_inicio:"Início",nav_ma:"Master Aulas",nav_ma1:"Sono Dia 1 Métodos e Soluções",nav_ma2:"Sono Dia 2 Noites Tranquilas",nav_ma3:"Mentoria com Thaís Neves",nav_ma4:"Aula 1 Manual do Sono",nav_ma5:"Aula 2 Manual do Sono Prático",nav_ts:"Técnicas Secretas Desmame Noturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabela de Rotina Ideal",nav_ts3:"Checklist Organização do Sono",nav_ts4:"Frases de Acolhimento",nav_bonus:"Bônus Exclusivos",nav_b1:"Mapa de Crise do Sono",nav_b2:"Guia de Emergência",nav_mt:"Mentoria com Profissionais",nav_mt1:"Sono do Bebê Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquiagem Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. APLV Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementar",nav_mc1:"Cardápio Alimentos Para Dormir",nav_mc2:"Manual Rituais Que Funcionam",nav_plano:"Plano de Sono Personalizado",btn_wa:"Resgatar meu brinde no WhatsApp e salvar o link do app!"},es:{nav_home:"Sueño Sin Llanto",nav_inicio:"Inicio",nav_ma:"Master Clases",nav_ma1:"Sueño Día 1 Métodos y Soluciones",nav_ma2:"Sueño Día 2 Noches Tranquilas",nav_ma3:"Mentoría con Thaís Neves",nav_ma4:"Clase 1 Manual del Sueño",nav_ma5:"Clase 2 Manual del Sueño Práctico",nav_ts:"Técnicas Secretas Destete Nocturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabla de Rutina Ideal",nav_ts3:"Checklist Organización del Sueño",nav_ts4:"Frases de Acogida",nav_bonus:"Bonos Exclusivos",nav_b1:"Mapa de Crisis del Sueño",nav_b2:"Guía de Emergencia",nav_mt:"Mentoría con Profesionales",nav_mt1:"Sueño del Bebé Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquillaje Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. APLV Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementario",nav_mc1:"Menú Alimentos Para Dormir",nav_mc2:"Manual Rituales Que Funcionan",nav_plano:"Plan de Sueño Personalizado",btn_wa:"¡Canjear mi regalo y guardar el link!"}};
+const T={pt:{nav_home:"Sono Sem Choro",nav_inicio:"Início",nav_ma:"Master Aulas",nav_ma1:"Sono Dia 1 Métodos e Soluções",nav_ma2:"Sono Dia 2 Noites Tranquilas",nav_ma3:"Mentoria com Thaís Neves",nav_ma4:"Aula 1 Manual do Sono",nav_ma5:"Aula 2 Manual do Sono Prático",nav_ts:"Técnicas Secretas Desmame Noturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabela de Rotina Ideal",nav_ts3:"Checklist Organização do Sono",nav_ts4:"Frases de Acolhimento",nav_bonus:"Bônus Exclusivos",nav_b1:"Mapa de Crise do Sono",nav_b2:"Guia de Emergência",nav_mt:"Mentoria com Profissionais",nav_mt1:"Sono do Bebê Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquiagem Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. APLV Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementar",nav_mc1:"Cardápio Alimentos Para Dormir",nav_mc2:"Cardápio Semanal do Sono",nav_mc3:"Checklist de Compras",nav_mc4:"Manual Rituais Que Funcionam",nav_mc5:"Guia Sonecas Perfeitas",nav_plano:"Plano de Sono Personalizado",btn_wa:"Resgatar meu brinde no WhatsApp e salvar o link do app!"},es:{nav_home:"Sueño Sin Llanto",nav_inicio:"Inicio",nav_ma:"Master Clases",nav_ma1:"Sueño Día 1 Métodos y Soluciones",nav_ma2:"Sueño Día 2 Noches Tranquilas",nav_ma3:"Mentoría con Thaís Neves",nav_ma4:"Clase 1 Manual del Sueño",nav_ma5:"Clase 2 Manual del Sueño Práctico",nav_ts:"Técnicas Secretas Destete Nocturno",nav_ts1:"Técnicas Secretas",nav_ts2:"Tabla de Rutina Ideal",nav_ts3:"Checklist Organización del Sueño",nav_ts4:"Frases de Acogida",nav_bonus:"Bonos Exclusivos",nav_b1:"Mapa de Crisis del Sueño",nav_b2:"Guía de Emergencia",nav_mt:"Mentoría con Profesionales",nav_mt1:"Sueño del Bebé Thaís Neves",nav_mt2:"Pediatra Camila Bastos",nav_mt3:"Psicóloga Rayanny Cavalcanti",nav_mt4:"Maquillaje Júlia Pavanelli",nav_mt5:"Psicóloga Beatriz Rodrigues",nav_mt6:"Personal Carol Cavalcanti pt.1",nav_mt7:"Personal Carol Cavalcanti pt.2",nav_mt8:"Nutri. APLV Renata Magalhães",nav_mt9:"Nutricionista Myrthe Emilyana",nav_mc:"Material Complementario",nav_mc1:"Menú Alimentos Para Dormir",nav_mc2:"Menú Semanal del Sueño",nav_mc3:"Checklist de Compras",nav_mc4:"Manual Rituales Que Funcionan",nav_mc5:"Guía Siestas Perfectas",nav_plano:"Plan de Sueño Personalizado",btn_wa:"¡Canjear mi regalo y guardar el link!"}};
 
 let lang=localStorage.getItem('snc_lang')||'pt';
 function setLang(l){lang=l;localStorage.setItem('snc_lang',l);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',b.textContent.trim().toLowerCase()===l));document.querySelectorAll('[data-key]').forEach(el=>{const k=el.dataset.key;if(T[l]&&T[l][k])el.textContent=T[l][k]});document.documentElement.lang=l==='pt'?'pt-BR':'es'}
@@ -4359,5 +4460,211 @@ overlay.addEventListener('click',closeSB);
 
 function scrl(id,btn){const el=document.getElementById(id);if(!el)return;const top=el.getBoundingClientRect().top+window.scrollY-60;window.scrollTo({top,behavior:'smooth'});document.querySelectorAll('.pills .pill').forEach(p=>p.classList.remove('on'));if(btn)btn.classList.add('on')}
 </script>
+
+<!-- ══ MODAL: Como Baixar o App ══ -->
+<div id="install-modal" onclick="if(event.target===this)closeInstallModal()"
+  style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center">
+  <div style="background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:520px;margin:0 auto;max-height:92vh;overflow-y:auto;padding-bottom:32px">
+
+    <!-- handle -->
+    <div style="display:flex;justify-content:center;padding:12px 0 4px">
+      <div style="width:40px;height:4px;background:#E0D8F0;border-radius:2px"></div>
+    </div>
+
+    <!-- header -->
+    <div style="padding:14px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1a73e8,#4285f4);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <div>
+        <p style="font-size:16px;font-weight:800;color:var(--plum);font-family:'Playfair Display',serif;margin-bottom:2px">Como Baixar o App no Celular</p>
+        <p style="font-size:12px;color:var(--txt-mid)">Adicione o Sono Sem Choro na tela inicial</p>
+      </div>
+      <button onclick="closeInstallModal()" style="margin-left:auto;font-size:20px;color:var(--txt-soft);cursor:pointer;background:none;border:none;padding:4px;line-height:1">✕</button>
+    </div>
+
+    <!-- body -->
+    <div style="padding:20px 20px 0">
+      <p style="font-size:14px;color:var(--txt-mid);line-height:1.65;margin-bottom:18px">Adicione o app na tela inicial do seu celular para acessar como um aplicativo de verdade, sem precisar abrir o navegador toda vez!</p>
+
+      <!-- tabs -->
+      <div style="display:flex;gap:6px;margin-bottom:20px">
+        <button id="tab-iphone" onclick="switchTab('iphone')"
+          style="flex:1;padding:10px;border-radius:var(--r-sm);background:var(--purple);color:#fff;font-size:13px;font-weight:800;cursor:pointer;border:none;font-family:'Nunito',sans-serif">
+          🍎 iPhone
+        </button>
+        <button id="tab-android" onclick="switchTab('android')"
+          style="flex:1;padding:10px;border-radius:var(--r-sm);background:var(--purple-pale);color:var(--purple);font-size:13px;font-weight:800;cursor:pointer;border:1.5px solid var(--purple-soft);font-family:'Nunito',sans-serif">
+          🤖 Android
+        </button>
+      </div>
+
+      <!-- iPhone steps -->
+      <div id="steps-iphone">
+        <div style="display:flex;flex-direction:column;gap:10px">
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--purple-pale);border-radius:var(--r-sm);border:1px solid var(--purple-soft)">
+            <span style="width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:3px">Abra no Safari</p>
+              <p style="font-size:13px;color:var(--txt-mid);line-height:1.55;margin-bottom:10px">Abra esse link no navegador <strong>Safari</strong> do iPhone. O Chrome não permite adicionar à tela inicial.</p>
+              <button onclick="copyAppLink(this)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#F0EBF9;border:1.5px solid var(--purple-soft);color:var(--purple);font-size:12px;font-weight:700;padding:7px 14px;border-radius:50px;cursor:pointer;font-family:'Nunito',sans-serif;transition:.2s">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span id="copy-btn-text-iphone">Copiar link do app</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--purple-pale);border-radius:var(--r-sm);border:1px solid var(--purple-soft)">
+            <span style="width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:3px">Toque no botão Compartilhar ⬆️</p>
+              <p style="font-size:13px;color:var(--txt-mid);line-height:1.55">Na barra inferior do Safari, toque no ícone de compartilhar (quadrado com seta para cima).</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--purple-pale);border-radius:var(--r-sm);border:1px solid var(--purple-soft)">
+            <span style="width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:3px">Toque em "Adicionar à Tela de Início"</p>
+              <p style="font-size:13px;color:var(--txt-mid);line-height:1.55">Role o menu para baixo e toque em <strong>"Adicionar à Tela de Início"</strong> (ícone de quadrado com +).</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--purple-pale);border-radius:var(--r-sm);border:1px solid var(--purple-soft)">
+            <span style="width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:var(--plum);margin-bottom:3px">Confirme e toque em "Adicionar"</p>
+              <p style="font-size:13px;color:var(--txt-mid);line-height:1.55">O nome já vai aparecer como <strong>"Sono Sem Choro"</strong>. Toque em <strong>"Adicionar"</strong> no canto superior direito.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:#F0FAF4;border-radius:var(--r-sm);border:1px solid #A8D5B5">
+            <span style="font-size:22px;flex-shrink:0">🎉</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:#2D6A4F;margin-bottom:3px">Pronto!</p>
+              <p style="font-size:13px;color:#52796F;line-height:1.55">O ícone aparece na tela inicial. Abre sem a barra do Safari, como um app de verdade!</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Android steps -->
+      <div id="steps-android" style="display:none">
+        <div style="display:flex;flex-direction:column;gap:10px">
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:#EBF3FE;border-radius:var(--r-sm);border:1px solid #BBDEFB">
+            <span style="width:28px;height:28px;border-radius:50%;background:#1a73e8;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:#1a237e;margin-bottom:3px">Abra no Chrome</p>
+              <p style="font-size:13px;color:#3949AB;line-height:1.55;margin-bottom:10px">Abra esse link no navegador <strong>Google Chrome</strong> do Android.</p>
+              <button onclick="copyAppLink(this)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#EBF3FE;border:1.5px solid #BBDEFB;color:#1a73e8;font-size:12px;font-weight:700;padding:7px 14px;border-radius:50px;cursor:pointer;font-family:'Nunito',sans-serif;transition:.2s">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span id="copy-btn-text-android">Copiar link do app</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:#EBF3FE;border-radius:var(--r-sm);border:1px solid #BBDEFB">
+            <span style="width:28px;height:28px;border-radius:50%;background:#1a73e8;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:#1a237e;margin-bottom:3px">Toque nos 3 pontinhos ⋮</p>
+              <p style="font-size:13px;color:#3949AB;line-height:1.55">No canto superior direito do Chrome, toque nos <strong>3 pontinhos</strong> para abrir o menu.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:#EBF3FE;border-radius:var(--r-sm);border:1px solid #BBDEFB">
+            <span style="width:28px;height:28px;border-radius:50%;background:#1a73e8;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:#1a237e;margin-bottom:3px">Toque em "Adicionar à tela inicial"</p>
+              <p style="font-size:13px;color:#3949AB;line-height:1.55">No menu, toque em <strong>"Adicionar à tela inicial"</strong> ou <strong>"Instalar app"</strong>.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:#EBF3FE;border-radius:var(--r-sm);border:1px solid #BBDEFB">
+            <span style="width:28px;height:28px;border-radius:50%;background:#1a73e8;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:#1a237e;margin-bottom:3px">Confirme tocando em "Adicionar"</p>
+              <p style="font-size:13px;color:#3949AB;line-height:1.55">Uma janela vai aparecer com o nome <strong>"Sono Sem Choro"</strong>. Toque em <strong>"Adicionar"</strong>.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:#F0FAF4;border-radius:var(--r-sm);border:1px solid #A8D5B5">
+            <span style="font-size:22px;flex-shrink:0">🎉</span>
+            <div>
+              <p style="font-size:14px;font-weight:700;color:#2D6A4F;margin-bottom:3px">Pronto!</p>
+              <p style="font-size:13px;color:#52796F;line-height:1.55">O ícone aparece na tela inicial do Android. Abre tela cheia como um app nativo!</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="margin-top:16px;background:var(--purple-pale);border-radius:var(--r-sm);padding:13px 14px;border:1px solid var(--purple-soft)">
+        <p style="font-size:13px;color:var(--txt-mid);line-height:1.6">💜 <strong>Dica:</strong> Salve o link nos favoritos para compartilhar com amigas que também são mães!</p>
+      </div>
+
+      <button onclick="closeInstallModal()"
+        style="width:100%;margin-top:16px;padding:13px;border-radius:50px;background:linear-gradient(135deg,var(--purple),var(--purple-lt));color:#fff;font-size:14px;font-weight:800;cursor:pointer;border:none;font-family:'Nunito',sans-serif">
+        Entendi! ✓
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyAppLink(btn){
+  const link='https://myrnnas.pages.dev/';
+  navigator.clipboard.writeText(link).then(()=>{
+    const span=btn.querySelector('span');
+    const origText=span.textContent;
+    const origBg=btn.style.background;
+    span.textContent='✅ Link copiado!';
+    btn.style.background='#D4EDDA';
+    btn.style.borderColor='#A8D5B5';
+    btn.style.color='#2D6A4F';
+    setTimeout(()=>{
+      span.textContent=origText;
+      btn.style.background=origBg;
+      btn.style.borderColor='';
+      btn.style.color='';
+    },2500);
+  }).catch(()=>{
+    // fallback for older browsers
+    const ta=document.createElement('textarea');
+    ta.value=link;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.focus();ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    const span=btn.querySelector('span');
+    span.textContent='✅ Link copiado!';
+    setTimeout(()=>{ span.textContent='Copiar link do app'; },2500);
+  });
+}
+function openInstallModal(){
+  const m=document.getElementById('install-modal');
+  m.style.display='flex';
+  document.body.style.overflow='hidden';
+  if(window.innerWidth<=768)closeSB();
+}
+function closeInstallModal(){
+  document.getElementById('install-modal').style.display='none';
+  document.body.style.overflow='';
+}
+function switchTab(tab){
+  const isIphone=tab==='iphone';
+  document.getElementById('steps-iphone').style.display=isIphone?'block':'none';
+  document.getElementById('steps-android').style.display=isIphone?'none':'block';
+  const active='background:var(--purple);color:#fff;border:none';
+  const inactive='background:var(--purple-pale);color:var(--purple);border:1.5px solid var(--purple-soft)';
+  document.getElementById('tab-iphone').setAttribute('style',
+    'flex:1;padding:10px;border-radius:var(--r-sm);font-size:13px;font-weight:800;cursor:pointer;font-family:"Nunito",sans-serif;'+(isIphone?active:inactive));
+  document.getElementById('tab-android').setAttribute('style',
+    'flex:1;padding:10px;border-radius:var(--r-sm);font-size:13px;font-weight:800;cursor:pointer;font-family:"Nunito",sans-serif;'+(isIphone?inactive:active));
+}
+</script>
+
 </body>
 </html>
